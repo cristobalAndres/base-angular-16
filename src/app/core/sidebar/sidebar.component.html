@@ -1,17 +1,10 @@
 <nav class="sidebar">
     <ul class="nav flex-column">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/users">
-          <i class="bi bi-house"></i>
-          <span class="menu-text">Usuarios</span>
+      <li class="nav-item" *ngFor="let menu of menus">
+        <a class="nav-link" routerLink="{{menu.link}}">
+          <i class="bi bi-{{menu.icon}}"></i>
+          <span class="menu-text">{{menu.name}}</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/users">
-          <i class="bi bi-cart3"></i>
-          <span class="menu-text">Transacciones</span>
-        </a>
-      </li>
-      <!-- Agrega más elementos de menú aquí -->
     </ul>
   </nav>

@@ -6,5 +6,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
-
+  menus = [{
+    name: 'Home',
+    link: '/home',
+    icon: 'house'
+  }, {
+    name: 'Clientes',
+    link: '/users',
+    icon: 'file-person'
+  }]
 }
