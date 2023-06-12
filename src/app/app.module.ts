@@ -3,6 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginModule } from './core/authentication/login/login.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UsersModule } from './pages/users/users.module';
+import { HomeModule } from './pages/home/home.module';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +15,12 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    LoginModule,
+    UsersModule,
+    HomeModule,
+    NgbModule,
+    CoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
