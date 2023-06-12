@@ -21,7 +21,8 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "src/window-global-fix.ts"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -30,17 +31,51 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "uuid",
+              "@aws-amplify/analytics",
+              "@aws-amplify/auth",
+              "url",
+              "buffer",
+              "ulid",
+              "camelcase-keys",
+              "events",
+              "classnames",
+              "qrcode",
+              "xstate/lib/waitFor.js",
+              "style-dictionary/lib/utils/deepExtend.js",
+              "style-dictionary/lib/utils/flattenProperties.js",
+              "style-dictionary/lib/utils/references/usesReference.js",
+              "@aws-crypto/sha256-browser",
+              "fast-xml-parser",
+              "@aws-crypto/crc32",
+              "isomorphic-unfetch",
+              "js-cookie",
+              "cookie"
+            ]
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -50,7 +85,27 @@
               ],
               "outputHashing": "all"
             },
-            "development": {
+            "develop": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
+            "qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa.ts"
+                }
+              ],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -67,11 +122,11 @@
             "production": {
               "browserTarget": "cw-cl-users-web-manager:build:production"
             },
-            "development": {
-              "browserTarget": "cw-cl-users-web-manager:build:development"
+            "develop": {
+              "browserTarget": "cw-cl-users-web-manager:build:develop"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "develop"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
