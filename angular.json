@@ -122,11 +122,11 @@
             "production": {
               "browserTarget": "cw-cl-users-web-manager:build:production"
             },
-            "development": {
-              "browserTarget": "cw-cl-users-web-manager:build:development"
+            "develop": {
+              "browserTarget": "cw-cl-users-web-manager:build:develop"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "develop"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
