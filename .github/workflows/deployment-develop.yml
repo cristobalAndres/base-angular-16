@@ -58,5 +58,5 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           env
-          docker build --build-arg ANGULAR_PUBLIC_ENV=${GITHUB_REF#refs/heads/} -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} .
+          docker build --build-arg ANGULAR_PUBLIC_ENV=${GITHUB_REF#refs/heads/} -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} -t $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_REF#refs/heads/} .
           docker image push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
