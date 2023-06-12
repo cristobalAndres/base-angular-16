@@ -1,0 +1,17 @@
+<nav class="navbar bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="../../../../assets/logo-CencoPay-2023.svg" alt="" width="80" height="50" class="d-inline-block align-text-top">
+    </a>
+    <div class="d-flex">
+      <div ngbDropdown class="d-inline-block">
+        <button type="button" class="btn btn-primary text-white" id="dropdownBasic1" ngbDropdownToggle>
+          {{ user?.attributes?.email }}
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button ngbDropdownItem (click)="logout()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

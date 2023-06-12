@@ -1,0 +1,20 @@
+<div class="authenticator-full">
+  <amplify-authenticator data-variation="modal" [hideSignUp]="true" va>
+    <ng-template amplifySlot="header">
+      <div style="padding: var(--amplify-space-large); text-align: center">
+        <img
+          class="amplify-image"
+          alt="Amplify logo"
+          src="../../../../assets/logo-CencoPay-2023.svg"
+        />
+      </div>
+    </ng-template>
+  
+      <ng-template
+        amplifySlot="authenticated"
+        let-user="user"
+        let-signOut="signOut"
+      >
+      </ng-template>
+    </amplify-authenticator>
+</div>

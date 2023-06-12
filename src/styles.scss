@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@aws-amplify/ui-angular/theme.css';
+
+/* Importing Bootstrap SCSS file. */
+// @import 'bootstrap/scss/bootstrap';
+@import '~bootstrap/dist/css/bootstrap.css';
+// @import '~@ng-bootstrap/ng-bootstrap/index';
+
+$primary-color: #123456;
+
+html,
+body,
+app-root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.text-white {
+  color: white;
+}
