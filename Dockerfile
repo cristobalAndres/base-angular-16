@@ -7,6 +7,7 @@ ENV ANGULAR_PUBLIC_ENV=$ANGULAR_PUBLIC_ENV
 COPY package*.json ./
 RUN npm install
 COPY . .
+
 RUN npm run build -- --configuration $ANGULAR_PUBLIC_ENV
 
 FROM nginx:alpine
