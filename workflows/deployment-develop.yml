@@ -1,0 +1,39 @@
+name: CI Pipeline develop
+on:
+  workflow_dispatch:
+  push:
+    branches: ["develop"]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  Sonar:
+    name: Sonar
+    uses: Cencosud-Cencopay/workflows/.github/workflows/sonar.yml@master
+    secrets: inherit
+  build:
+    name: build
+    needs: Sonar
+    runs-on: cencosud-helios
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      - name: Install Dependencies
+        run: npm i
+      - name: Run Test
+        run: npm run test
+      - name: Build
+        run: npm run build
+  get-vault-aws-credentials:
+    name: Get AWS credentials from Vault
+    uses: Cencosud-Cencopay/workflows/.github/workflows/aws-credentials.yml@master
+    secrets: inherit
+
