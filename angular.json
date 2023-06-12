@@ -85,7 +85,7 @@
               ],
               "outputHashing": "all"
             },
-            "development": {
+            "develop": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
