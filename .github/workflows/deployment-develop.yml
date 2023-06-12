@@ -13,7 +13,7 @@ jobs:
     secrets: inherit
   build:
     name: build
-    needs: Sonar
+    needs: [sonar, get-vault-aws-credentials]
     runs-on: cencosud-helios
     strategy:
       matrix:
