@@ -1,0 +1,4 @@
+{
+  "**/*.ts": ["ng-lint-staged lint --fix --"],
+  "*": ["npm run format --"]
+}
