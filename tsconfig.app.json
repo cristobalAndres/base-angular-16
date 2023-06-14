@@ -3,15 +3,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": [
-      "@angular/localize"
-    ]
+    "types": ["@angular/localize"]
   },
-  "files": [
-    "src/main.ts",
-    "src/window-global-fix.ts"
-  ],
-  "include": [
-    "src/**/*.d.ts"
-  ]
+  "files": ["src/main.ts", "src/window-global-fix.ts"],
+  "include": ["src/**/*.d.ts"],
+  "exclude": ["src/**/*.spec.ts"]
 }
