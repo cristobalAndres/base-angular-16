@@ -6,6 +6,6 @@
     "types": ["@angular/localize"]
   },
   "files": ["src/main.ts", "src/window-global-fix.ts"],
-  "include": ["src/**/*.d.ts"],
+  "include": ["src/**/*.d.ts", "src/**/index.ts"],
   "exclude": ["src/**/*.spec.ts"]
 }
