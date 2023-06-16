@@ -13,10 +13,19 @@ const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-      { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
+      {
+        path: 'home',
+        component: HomeComponent,
+        canActivate: [AuthGuard.canActivate],
+      },
+      {
+        path: 'users',
+        component: UsersComponent,
+        canActivate: [AuthGuard.canActivate],
+      },
       {
         path: 'transactions',
+        canMatch: [AuthGuard.canLoad],
         loadChildren: () =>
           import('./pages/transactions').then((m) => m.TransactionsModule),
       },
