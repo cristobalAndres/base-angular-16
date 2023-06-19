@@ -23,7 +23,8 @@
     "paths": {
       "@app/*": ["src/app/*"],
       "@core/*": ["src/app/core/*"],
-      "@shared/*": ["src/app/shared/*"]
+      "@shared/*": ["src/app/shared/*"],
+      "@environment": ["src/environments"]
     }
   },
   "angularCompilerOptions": {

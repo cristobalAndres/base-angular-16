@@ -15,7 +15,7 @@ module.exports = {
         'plugin:prettier/recommended',
       ],
       parserOptions: {
-        project: ['tsconfig.(app|spec).json'],
+        project: ['tsconfig.json', 'tsconfig.(app|spec).json'],
       },
       rules: {
         '@angular-eslint/directive-selector': [
