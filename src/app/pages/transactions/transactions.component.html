@@ -1,10 +1,41 @@
-<div class="container">
-  <!-- Back button -->
-  <app-navigate-button to="/" message="Volver" />
-
-  <p>transactions works!</p>
-  <!-- Transactions -->
-  <!-- Transactions: Filters -->
-  <!-- Transactions: Pagination -->
-  <!-- Transactions: Table -->
+<div class="container d-grid gap-4">
+  <div class="row">
+    <app-navigate-button to="/" message="Volver" />
+  </div>
+  <div class="card row px-3 py-4">
+    <div class="card-body">
+      <div class="mb-2">
+        <h5 class="card-title">Transacciones</h5>
+        <p class="card-subtitle text-body-secondary">
+          Visualización de las transacciones realizadas
+        </p>
+      </div>
+      <div class="container-fluid">
+        <div class="row justify-content-between align-items-center">
+          <div class="col-auto">
+            <app-transactions-filters />
+          </div>
+          <div class="col-auto">
+            <app-pagination
+              *ngIf="paginationData() as vm"
+              itemName="Transacciones"
+              [page]="vm.currentPage"
+              [totalPages]="vm.totalPages"
+              [totalItems]="vm.totalItems"
+              [itemsPerPage]="vm.itemsPerPage"
+            />
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col">
+          <app-transactions-table
+            *ngIf="transactions() as vm"
+            [transactions]="vm"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -9,7 +9,7 @@ import { TransactionsService } from './transactions-service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionsComponent {
-  private static readonly ITEMS_PER_PAGE = 11;
+  private static readonly ITEMS_PER_PAGE = 10;
 
   private readonly transactionsService = inject(TransactionsService);
 
