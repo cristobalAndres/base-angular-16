@@ -7,12 +7,14 @@ import { HeaderComponent } from './header/header.component';
 import { InterceptorsModule } from './interceptors';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { NgHttpCachingModule } from 'ng-http-caching';
 
 @NgModule({
   declarations: [HeaderComponent, MainLayoutComponent, SidebarComponent],
   imports: [
     CommonModule,
     HttpClientModule,
+    NgHttpCachingModule,
     InterceptorsModule,
     RouterModule,
     NgbDropdownModule,
