@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -15,7 +21,8 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
       <ngb-pagination
         [collectionSize]="totalItems"
         [pageSize]="itemsPerPage"
-        [(page)]="page"
+        [page]="page"
+        (pageChange)="updatePage($event)"
         [maxSize]="3"
         [rotate]="true"
         [boundaryLinks]="true"
@@ -34,8 +41,15 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class PaginationComponent {
   @Input({ required: true }) itemName!: string;
-  @Input({ required: true }) page!: number;
   @Input({ required: true }) totalPages!: number;
   @Input({ required: true }) itemsPerPage!: number;
   @Input({ required: true }) totalItems!: number;
+
+  @Input({ required: true }) page!: number;
+  @Output() pageChange = new EventEmitter<number>();
+
+  protected updatePage(page: number): void {
+    this.page = page;
+    this.pageChange.emit(page);
+  }
 }

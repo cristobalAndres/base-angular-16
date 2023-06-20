@@ -19,7 +19,7 @@
             <app-pagination
               *ngIf="paginationData() as vm"
               itemName="Transacciones"
-              [page]="vm.currentPage"
+              [(page)]="vm.currentPage"
               [totalPages]="vm.totalPages"
               [totalItems]="vm.totalItems"
               [itemsPerPage]="vm.itemsPerPage"
