@@ -1,4 +1,17 @@
-<app-range-datepicker
-  (startDateChange)="onStartDateChange($event)"
-  (endDateChange)="onEndDateChange($event)"
-/>
+<div class="container">
+  <div class="row g-4">
+    <div class="col-md-7">
+      <app-range-datepicker
+        (startDateChange)="onStartDateChange($event)"
+        (endDateChange)="onEndDateChange($event)"
+      />
+    </div>
+    <div class="col-md-auto">
+      <app-select
+        placeholder="Estados"
+        [options]="statusOptions"
+        (optionChange)="onStatusChange($event)"
+      />
+    </div>
+  </div>
+</div>
