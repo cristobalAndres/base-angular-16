@@ -1,18 +1,23 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header/header.component';
-import { MainLayoutComponent } from './main-layout/main-layout.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { HeaderComponent } from './header/header.component';
+import { InterceptorsModule } from './interceptors';
+import { MainLayoutComponent } from './main-layout/main-layout.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-
+import { NgHttpCachingModule } from 'ng-http-caching';
 
 @NgModule({
   declarations: [HeaderComponent, MainLayoutComponent, SidebarComponent],
   imports: [
     CommonModule,
+    HttpClientModule,
+    NgHttpCachingModule,
+    InterceptorsModule,
     RouterModule,
-    NgbDropdownModule
+    NgbDropdownModule,
   ],
 })
-export class CoreModule { }
+export class CoreModule {}

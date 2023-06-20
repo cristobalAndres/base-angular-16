@@ -1,0 +1,53 @@
+<div class="table-responsive">
+  <table class="table table-hover table-striped">
+    <thead class="table-light text-uppercase">
+      <tr class="d-flex">
+        <th class="col-3" scope="col">Transacción ID</th>
+        <th class="col-1" scope="col">Fecha</th>
+        <th class="col-2" scope="col">Estado</th>
+        <th class="col-1" scope="col">Monto</th>
+        <th class="col-1" scope="col">Descuento</th>
+        <th class="col-1" scope="col">Total</th>
+        <th class="col-1" scope="col">Comercio</th>
+        <th class="col-1" scope="col">Metodo</th>
+        <th class="col-3" scope="col">ID referencia</th>
+        <th class="col-1" scope="col">Tienda</th>
+        <th class="col-1" scope="col">Devolución</th>
+        <th class="col-2" scope="col">Número de confirmación</th>
+        <th class="col-2" scope="col">Orden de pago</th>
+        <th class="col-2" scope="col">Código de autorización</th>
+        <th class="col-3" scope="col">ID de tarjeta</th>
+        <th class="col-3" scope="col">Cognito ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let transaction of transactions; trackBy: trackByTransactionId"
+        class="d-flex"
+      >
+        <th class="col-3" scope="row">{{ transaction.transaction_id }}</th>
+        <td class="col-1">{{ transaction.date | date : 'medium' }}</td>
+        <td class="col-2">{{ transaction.status | transactionStatus }}</td>
+        <td class="currency col-1">
+          {{ transaction.amount | number : '1.0-2' }}
+        </td>
+        <td class="currency col-1">
+          {{ transaction.saving | number : '1.0-2' }}
+        </td>
+        <td class="currency col-1">
+          {{ transaction.total | number : '1.0-2' }}
+        </td>
+        <td class="col-1">{{ transaction.store_name }}</td>
+        <td class="col-1">{{ transaction.payment_method }}</td>
+        <td class="col-3">{{ transaction.reference_id }}</td>
+        <td class="col-1">{{ transaction.simple_code }}</td>
+        <td class="col-1">{{ transaction.reference_id ? 'SÍ' : 'NO' }}</td>
+        <td class="col-2">{{ transaction.confirmation_number }}</td>
+        <td class="col-2">{{ transaction.buy_order }}</td>
+        <td class="col-2">{{ transaction.authorization_code }}</td>
+        <td class="col-3">{{ transaction.card_id }}</td>
+        <td class="col-3">{{ transaction.user_id }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
