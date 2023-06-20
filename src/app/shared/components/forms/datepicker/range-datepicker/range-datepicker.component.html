@@ -1,0 +1,57 @@
+<form class="row row-cols-sm-auto g-3">
+  <div class="col-md-6">
+    <div class="dp-hidden position-absolute">
+      <div class="input-group">
+        <input
+          name="datepicker"
+          class="form-control"
+          ngbDatepicker
+          #datepicker="ngbDatepicker"
+          [autoClose]="'outside'"
+          (dateSelect)="onDateSelection($event)"
+          [displayMonths]="2"
+          [dayTemplate]="dayTemplate"
+          outsideDays="hidden"
+          [startDate]="startDate()!"
+          tabindex="-1"
+        />
+        <ng-template #dayTemplate let-date let-focused="focused">
+          <span
+            class="custom-day"
+            [class.focused]="focused"
+            [class.range]="isRange(date)"
+            [class.faded]="isHovered(date) || isInnerRange(date)"
+            (mouseenter)="hoveredDate.set(date)"
+            (mouseleave)="hoveredDate.set(null)"
+          >
+            {{ date.day }}
+          </span>
+        </ng-template>
+      </div>
+    </div>
+    <ng-container
+      *ngTemplateOutlet="datePicker; context: { date: startDate }"
+    />
+  </div>
+  <div class="col-md-6">
+    <ng-container *ngTemplateOutlet="datePicker; context: { date: endDate }" />
+  </div>
+</form>
+
+<ng-template #datePicker let-date="date">
+  <div class="input-group">
+    <input
+      #dpDate
+      class="form-control"
+      placeholder="yyyy-mm-dd"
+      name="dpFromDate"
+      [value]="formatter.format(date())"
+      (input)="date.set(validateInput(date(), dpDate.value))"
+    />
+    <button
+      class="btn btn-outline-secondary bi bi-calendar3"
+      (click)="datepicker.toggle()"
+      type="button"
+    ></button>
+  </div>
+</ng-template>
