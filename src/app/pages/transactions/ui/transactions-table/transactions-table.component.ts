@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TransactionDto } from '../../shared';
+import { TransactionStatusPipe } from '../../utils';
 
 @Component({
   selector: 'app-transactions-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TransactionStatusPipe],
   templateUrl: './transactions-table.component.html',
   styles: [
     `

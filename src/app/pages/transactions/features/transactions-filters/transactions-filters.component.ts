@@ -4,6 +4,7 @@ import { SharedModule } from '@app/shared';
 import { TransactionsFiltersService } from '../../data-access';
 import { TransactionStatus } from '../../shared';
 import { SelectionDto } from '@app/shared/components/forms';
+import { TransactionStatusPipe } from '../../utils';
 
 @Component({
   selector: 'app-transactions-filters',
@@ -17,24 +18,11 @@ export class TransactionsFiltersComponent {
     TransactionsFiltersService,
   );
 
-  protected readonly statusOptions: SelectionDto<TransactionStatus>[] = [
-    { value: TransactionStatus.ALL, label: 'Todos' },
-    { value: TransactionStatus.CONFIRMED, label: 'Confirmado' },
-    {
-      value: TransactionStatus.REJECTED_BY_USER,
-      label: 'Rechazado por usuario',
-    },
-    {
-      value: TransactionStatus.INIT_TRANSACTION,
-      label: 'Transacción iniciada',
-    },
-    { value: TransactionStatus.REVERSED, label: 'Reversado' },
-    { value: TransactionStatus.REJECTED, label: 'Rechazado' },
-    {
-      value: TransactionStatus.NOTIFICATION_SUCCESS,
-      label: 'Notificación exitosa',
-    },
-  ];
+  protected readonly statusOptions: SelectionDto<TransactionStatus>[] =
+    Object.values(TransactionStatus).map((transactionStatus) => ({
+      value: transactionStatus,
+      label: TransactionStatusPipe.TRANSACTION_STATUSES[transactionStatus],
+    }));
 
   protected onStartDateChange(date: Date | undefined) {
     this.transactionsFiltersService.updateTransactionsFilters({

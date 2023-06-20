@@ -27,7 +27,7 @@
       >
         <th class="col-3" scope="row">{{ transaction.transaction_id }}</th>
         <td class="col-1">{{ transaction.date | date : 'medium' }}</td>
-        <td class="col-2">{{ transaction.status }}</td>
+        <td class="col-2">{{ transaction.status | transactionStatus }}</td>
         <td class="currency col-1">
           {{ transaction.amount | number : '1.0-2' }}
         </td>
