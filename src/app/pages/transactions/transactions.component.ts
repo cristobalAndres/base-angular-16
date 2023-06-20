@@ -1,6 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  finalize,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { TransactionsService } from './data-access';
 
 @Component({
@@ -13,22 +19,39 @@ export class TransactionsComponent {
 
   private readonly transactionsService = inject(TransactionsService);
 
-  private readonly transactions$ = this.transactionsService.getTransactions({
-    perPage: TransactionsComponent.ITEMS_PER_PAGE,
-  });
+  private readonly currentPageSubject = new BehaviorSubject(1);
+  protected readonly currentPage$ = this.currentPageSubject.asObservable();
 
-  protected readonly transactions = toSignal(
-    this.transactions$.pipe(map(({ transactions }) => transactions)),
-  );
+  private readonly isLoadingSubject = new BehaviorSubject(false);
+  protected readonly isLoading$ = this.isLoadingSubject.asObservable();
 
-  protected readonly paginationData = toSignal(
-    this.transactions$.pipe(
-      map(({ total_items, total_pages, current_page }) => ({
-        totalItems: total_items,
-        totalPages: total_pages,
-        currentPage: current_page,
-        itemsPerPage: TransactionsComponent.ITEMS_PER_PAGE,
-      })),
+  private readonly transactionsApi$ = this.currentPageSubject.pipe(
+    tap(() => this.isLoadingSubject.next(true)),
+    debounceTime(300),
+    switchMap((currentPage) =>
+      this.transactionsService
+        .getTransactions({
+          perPage: TransactionsComponent.ITEMS_PER_PAGE,
+          currentPage,
+        })
+        .pipe(finalize(() => this.isLoadingSubject.next(false))),
     ),
   );
+
+  protected readonly transactions$ = this.transactionsApi$.pipe(
+    map(({ transactions }) => transactions),
+  );
+
+  protected readonly pagination$ = this.transactionsApi$.pipe(
+    map(({ total_items, total_pages, current_page }) => ({
+      totalItems: total_items,
+      totalPages: total_pages,
+      currentPage: current_page,
+      itemsPerPage: TransactionsComponent.ITEMS_PER_PAGE,
+    })),
+  );
+
+  protected onCurrentPageChange(currentPage: number) {
+    this.currentPageSubject.next(currentPage);
+  }
 }

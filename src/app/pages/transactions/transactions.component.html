@@ -17,12 +17,13 @@
           </div>
           <div class="col-auto">
             <app-pagination
-              *ngIf="paginationData() as vm"
+              *ngIf="pagination$ | async as pagination"
               itemName="Transacciones"
-              [(page)]="vm.currentPage"
-              [totalPages]="vm.totalPages"
-              [totalItems]="vm.totalItems"
-              [itemsPerPage]="vm.itemsPerPage"
+              [page]="(currentPage$ | async)!"
+              (pageChange)="onCurrentPageChange($event)"
+              [totalPages]="pagination.totalPages"
+              [totalItems]="pagination.totalItems"
+              [itemsPerPage]="pagination.itemsPerPage"
             />
           </div>
         </div>
@@ -31,8 +32,8 @@
       <div class="row">
         <div class="col">
           <app-transactions-table
-            *ngIf="transactions() as vm"
-            [transactions]="vm"
+            *ngIf="transactions$ | async as transactions"
+            [transactions]="transactions"
           />
         </div>
       </div>
