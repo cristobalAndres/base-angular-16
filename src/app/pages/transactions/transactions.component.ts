@@ -32,7 +32,7 @@ export class TransactionsComponent {
     this.currentPageSubject,
   ]).pipe(
     tap(() => this.isLoadingSubject.next(true)),
-    debounceTime(200),
+    debounceTime(300),
     switchMap(([filters, currentPage]) =>
       this.transactionsService
         .getTransactions({

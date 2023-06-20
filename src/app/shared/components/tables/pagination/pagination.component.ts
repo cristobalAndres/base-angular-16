@@ -13,20 +13,24 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
   imports: [CommonModule, NgbPaginationModule],
   template: `
-    <div class="d-grid gap-2 align-items-center">
-      <div class="d-none d-md-grid gap-1 text-muted">
-        <p>Página {{ page }} de {{ totalPages }}</p>
-        <p>Mostrando {{ itemsPerPage }} de {{ totalItems }} {{ itemName }}</p>
+    <div class="container">
+      <div class="row g-2">
+        <div class="col-12 d-none d-md-grid gap-1 text-muted">
+          <p>Página {{ page }} de {{ totalPages }}</p>
+          <p>Mostrando {{ itemsPerPage }} de {{ totalItems }} {{ itemName }}</p>
+        </div>
+        <div class="col-12">
+          <ngb-pagination
+            [collectionSize]="totalItems"
+            [pageSize]="itemsPerPage"
+            [page]="page"
+            (pageChange)="updatePage($event)"
+            [maxSize]="3"
+            [rotate]="true"
+            [boundaryLinks]="true"
+          />
+        </div>
       </div>
-      <ngb-pagination
-        [collectionSize]="totalItems"
-        [pageSize]="itemsPerPage"
-        [page]="page"
-        (pageChange)="updatePage($event)"
-        [maxSize]="3"
-        [rotate]="true"
-        [boundaryLinks]="true"
-      />
     </div>
   `,
   styles: [

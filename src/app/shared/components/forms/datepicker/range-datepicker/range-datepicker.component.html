@@ -1,5 +1,5 @@
 <form class="row row-cols-sm-auto g-3">
-  <div class="col-md-6">
+  <div class="col-12 col-md-6">
     <div class="dp-hidden position-absolute">
       <div class="input-group">
         <input
@@ -33,7 +33,7 @@
       *ngTemplateOutlet="datePicker; context: { date: startDate }"
     />
   </div>
-  <div class="col-md-6">
+  <div class="col-12 col-md-6">
     <ng-container *ngTemplateOutlet="datePicker; context: { date: endDate }" />
   </div>
 </form>
