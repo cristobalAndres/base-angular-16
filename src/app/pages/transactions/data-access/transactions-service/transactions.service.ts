@@ -5,8 +5,11 @@ import {
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { GetTransactionsParams, TransactionsResponseDto } from '../dtos';
-import { TransactionStatus } from '../enums';
+import {
+  GetTransactionsParams,
+  TransactionsResponseDto,
+  TransactionStatus,
+} from '../../shared';
 
 @Injectable()
 export class TransactionsService {

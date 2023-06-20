@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
-import { TransactionsFiltersComponent } from './transactions-filters';
+import { TransactionsService } from './data-access';
+import { TransactionsFiltersComponent } from './features';
 import { TransactionsRoutingModule } from './transactions-routing.module';
-import { TransactionsService } from './transactions-service';
-import { TransactionsTableComponent } from './transactions-table';
 import { TransactionsComponent } from './transactions.component';
+import { TransactionsTableComponent } from './ui';
 
 @NgModule({
   declarations: [TransactionsComponent],

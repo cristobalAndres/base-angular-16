@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { TransactionsService } from './transactions-service';
+import { TransactionsService } from './data-access';
 
 @Component({
   selector: 'app-transactions',
