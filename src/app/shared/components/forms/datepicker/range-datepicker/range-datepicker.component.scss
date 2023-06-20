@@ -15,19 +15,19 @@
   display: inline-block;
   height: 2rem;
   width: 2rem;
-}
 
-.custom-day.focused {
-  background-color: #e6e6e6;
-}
+  &.focused {
+    background-color: #e6e6e6;
+  }
 
-.custom-day.range,
-.custom-day:hover {
-  background-color: var(--primary-color);
-  color: white;
-}
+  &.range,
+  &:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
 
-.custom-day.faded {
-  background-color: var(--primary-color);
-  opacity: 0.5;
+  &.faded {
+    background-color: var(--primary-color);
+    opacity: 0.5;
+  }
 }
