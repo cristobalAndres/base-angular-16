@@ -22,13 +22,20 @@ export class TransactionsService {
       currentPage = 1,
       statusFilter = TransactionStatus.ALL,
       perPage = 10,
+      startDate,
+      endDate,
     } = getTransactionsParams;
 
-    const httpParams: HttpParamsOptions['fromObject'] = {
+    const httpParams = Object.entries({
       perPage,
       currentPage,
       statusFilter,
-    };
+      startDate: startDate?.toISOString(),
+      endDate: endDate?.toISOString(),
+    }).reduce((params, [key, value]) => {
+      if (value !== undefined) params[key] ??= value;
+      return params;
+    }, {} as NonNullable<HttpParamsOptions['fromObject']>);
 
     return this.httpClient.get<TransactionsResponseDto>('transaction', {
       params: new HttpParams({ fromObject: httpParams }),

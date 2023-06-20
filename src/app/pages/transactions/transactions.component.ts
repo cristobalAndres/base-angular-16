@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   BehaviorSubject,
+  combineLatest,
   debounceTime,
   finalize,
   map,
   switchMap,
   tap,
 } from 'rxjs';
-import { TransactionsService } from './data-access';
+import { TransactionsFiltersService, TransactionsService } from './data-access';
 
 @Component({
   selector: 'app-transactions',
@@ -18,6 +19,7 @@ export class TransactionsComponent {
   private static readonly ITEMS_PER_PAGE = 10;
 
   private readonly transactionsService = inject(TransactionsService);
+  private readonly transactionsFilters = inject(TransactionsFiltersService);
 
   private readonly currentPageSubject = new BehaviorSubject(1);
   protected readonly currentPage$ = this.currentPageSubject.asObservable();
@@ -25,14 +27,18 @@ export class TransactionsComponent {
   private readonly isLoadingSubject = new BehaviorSubject(false);
   protected readonly isLoading$ = this.isLoadingSubject.asObservable();
 
-  private readonly transactionsApi$ = this.currentPageSubject.pipe(
+  private readonly transactionsApi$ = combineLatest([
+    this.transactionsFilters.transactionsFilters$,
+    this.currentPageSubject,
+  ]).pipe(
     tap(() => this.isLoadingSubject.next(true)),
-    debounceTime(300),
-    switchMap((currentPage) =>
+    debounceTime(200),
+    switchMap(([filters, currentPage]) =>
       this.transactionsService
         .getTransactions({
           perPage: TransactionsComponent.ITEMS_PER_PAGE,
           currentPage,
+          ...filters,
         })
         .pipe(finalize(() => this.isLoadingSubject.next(false))),
     ),
