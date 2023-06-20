@@ -53,7 +53,10 @@ export class TransactionsComponent {
       totalItems: total_items,
       totalPages: total_pages,
       currentPage: current_page,
-      itemsPerPage: TransactionsComponent.ITEMS_PER_PAGE,
+      itemsPerPage:
+        TransactionsComponent.ITEMS_PER_PAGE > total_items
+          ? total_items
+          : TransactionsComponent.ITEMS_PER_PAGE,
     })),
   );
 
