@@ -1,0 +1,30 @@
+<div class="table-responsive">
+  <table class="table table-hover table-striped">
+    <thead class="table-light text-uppercase">
+      <tr class="d-flex">
+        <th class="col-3" scope="col">Email</th>
+        <th class="col-3" scope="col">Nombre</th>
+        <th class="col-2" scope="col">Rut</th>
+        <th class="col-2" scope="col">Teléfono</th>
+        <th class="col-2" scope="col">Creación</th>
+        <th class="col-1" scope="col">Herramientas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of clients" class="d-flex">
+        <th class="col-3" scope="col" [routerLink]="'/'">
+          {{ client?.email }}
+        </th>
+        <th class="col-3" scope="col">
+          {{ client?.name }} {{ client?.lastName }}
+        </th>
+        <th class="col-2" scope="col">{{ client?.rut }}</th>
+        <th class="col-2" scope="col">{{ client?.phone_number }}</th>
+        <th class="col-2" scope="col">{{ client?.created_at }}</th>
+        <th class="col-1" scope="col">
+          <button>herramientas</button>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</div>

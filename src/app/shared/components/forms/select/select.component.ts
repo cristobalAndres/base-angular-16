@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,7 +6,6 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { SelectionDto } from './selection.dto';
 
 @Component({
@@ -18,7 +18,7 @@ import { SelectionDto } from './selection.dto';
       #appSelect
       (change)="onOptionChange(appSelect.value)"
     >
-      <option selected disabled>
+      <option selected disabled *ngIf="withPlaceholder">
         {{ placeholder ?? 'Selecciona un valor' }}
       </option>
       <option *ngFor="let option of options" [value]="option.value">
@@ -31,6 +31,7 @@ import { SelectionDto } from './selection.dto';
 })
 export class SelectComponent<TSelectionValue extends string = string> {
   @Input() placeholder?: string;
+  @Input() withPlaceholder?: boolean = true;
 
   @Input({ required: true }) options!: ReadonlyArray<
     SelectionDto<TSelectionValue>
