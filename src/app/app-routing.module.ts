@@ -4,6 +4,7 @@ import { LoginComponent } from './core/authentication/login/login.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './core/main-layout/main-layout.component';
 import { ClientsComponent } from './pages/clients/clients.component';
+import { ClientDetailTsComponent } from './pages/clients/features/client-detail.ts/client-detail.ts.component';
 import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
@@ -21,6 +22,11 @@ const routes: Routes = [
       {
         path: 'clients',
         component: ClientsComponent,
+        canActivate: [AuthGuard.canActivate],
+      },
+      {
+        path: 'clients/:id',
+        component: ClientDetailTsComponent,
         canActivate: [AuthGuard.canActivate],
       },
       {

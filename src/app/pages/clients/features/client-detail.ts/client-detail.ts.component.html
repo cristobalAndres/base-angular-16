@@ -1,0 +1,70 @@
+<div class="container d-grid gap-4">
+  <div class="row">
+    <app-navigate-button to="/clients" message="Volver" />
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-lg-4 mb-4">
+      <app-card-photo-info
+        [isLoading]="isClientLoading()"
+        [clientName]="clienName"
+        (signoutAccountButtonClickEvent)="signoutClick()"
+      ></app-card-photo-info>
+    </div>
+    <div class="col-md-12 col-lg-4 mb-4">
+      <app-card-info
+        [isLoading]="isClientLoading()"
+        [title]="basicInfoCardData.title"
+        [data]="basicInfoCardData.data"
+        [elementCount]="5"
+      ></app-card-info>
+    </div>
+    <div class="col-md-12 col-lg-4 mb-4">
+      <app-card-info
+        [isLoading]="isClientLoading()"
+        [title]="statusCardData.title"
+        [data]="statusCardData.data"
+        [elementCount]="4"
+      ></app-card-info>
+    </div>
+  </div>
+
+  <!-- Ecommerces -->
+  <div class="card shadow border-light row px-3 py-4">
+    <div class="row">
+      <div class="col-md-8 align-self-center">
+        <h3 *ngIf="!isEcommercesLoading() || ecommercesResponse()">
+          Comercios Vinculados
+        </h3>
+      </div>
+      <div class="col-md-4">
+        <app-pagination
+          *ngIf="ecommercesResponse()"
+          itemName="Transacciones"
+          (pageChange)="onEcommerceCurrentPageChange($event)"
+          [page]="ecommercesResponse()?.current_page!"
+          [totalPages]="ecommercesResponse()?.total_pages!"
+          [totalItems]="ecommercesResponse()?.total_items!"
+          [itemsPerPage]="ecommercesPerPage"
+        />
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <p *ngIf="!isEcommercesLoading() && !ecommercesResponse()">
+              No hay comercios vinculados
+            </p>
+            <app-client-deatil-ecommerces-table
+              *ngIf="!isEcommercesLoading() && ecommercesResponse()"
+              [ecommerces]="ecommerceList"
+            ></app-client-deatil-ecommerces-table>
+            <app-spinner *ngIf="isEcommercesLoading()"></app-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Ecommerces -->
+</div>

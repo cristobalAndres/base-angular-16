@@ -30,7 +30,7 @@ import { CLientsFilters, ClientParameter } from '../../shared';
     <div class="row g-4">
       <div class="col-md-auto">
         <div class="input-row">
-          <div class="d-flex justify-content-between">
+          <div class="d-flex">
             <app-select
               [withPlaceholder]="false"
               [options]="statusOptions"

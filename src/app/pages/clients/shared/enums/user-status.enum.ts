@@ -1,4 +1,4 @@
-export declare enum UserStatusType {
+export enum UserStatusType {
   ARCHIVED = 'ARCHIVED',
   COMPROMISED = 'COMPROMISED',
   CONFIRMED = 'CONFIRMED',

@@ -1,8 +1,8 @@
-<div class="container d-grid gap-4">
-  <div class="row">
+<div class="container">
+  <div class="row pb-4">
     <app-navigate-button to="/" message="Volver" />
   </div>
-  <div class="card shadow border-light row px-3 py-4">
+  <div class="card shadow border-light row">
     <div class="card-body">
       <div class="mb-2">
         <h5 class="card-title">Administra clientes</h5>
@@ -23,7 +23,6 @@
           </div>
           <div class="col-12 col-xl-4">
             <app-pagination
-              *ngIf="pagination()"
               itemName="Transacciones"
               [page]="pagination().current_page"
               (pageChange)="onCurrentPageChange($event)"
@@ -39,9 +38,9 @@
         <div class="col">
           <app-clients-table
             *ngIf="!isLoading()"
-            [clients]="clients()"
+            [clients]="clientsList"
           ></app-clients-table>
-          <h1 *ngIf="isLoading()">cargando...</h1>
+          <app-spinner *ngIf="isLoading()"></app-spinner>
         </div>
       </div>
     </div>

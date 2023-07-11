@@ -44,4 +44,20 @@ export class ClientsComponentService {
       this.isLoading.set(false);
     }
   }
+
+  cleanLocalData() {
+    this.isLoading.set(false);
+    this.currentPage.set(1);
+
+    this.clients.set([]);
+    this.pagination.set({
+      current_page: 1,
+      per_page: 0,
+      total_items: 0,
+      total_pages: 0,
+    });
+
+    this.searchBy.set(undefined);
+    this.search.set(undefined);
+  }
 }

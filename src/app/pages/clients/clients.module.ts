@@ -3,18 +3,38 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
 import { ClientsComponent } from './clients.component';
-import { ClientsComponentService, ClientsService } from './data-access';
-import { ClientsFiltersComponent, ClientsTableComponent } from './ui';
+import {
+  ClientDetailServiceComponentService,
+  ClientsComponentService,
+  ClientsService,
+  EcommercesService,
+} from './data-access';
+import { ClientDetailTsComponent } from './features/client-detail.ts/client-detail.ts.component';
+import {
+  CardInfoComponent,
+  CardPhotoInfoComponent,
+  ClientDeatilEcommercesTableComponent,
+  ClientsFiltersComponent,
+  ClientsTableComponent,
+} from './ui';
 
 @NgModule({
-  declarations: [ClientsComponent],
-  providers: [ClientsService, ClientsComponentService],
+  declarations: [ClientsComponent, ClientDetailTsComponent],
+  providers: [
+    ClientsService,
+    ClientsComponentService,
+    ClientDetailServiceComponentService,
+    EcommercesService,
+  ],
   imports: [
     CommonModule,
     SharedModule,
     ClientsTableComponent,
     ClientsFiltersComponent,
+    CardInfoComponent,
+    CardPhotoInfoComponent,
+    ClientDeatilEcommercesTableComponent,
     RouterModule,
   ],
 })
-export class CLientsModule {}
+export class ClientsModule {}

@@ -49,9 +49,9 @@ export type ClientDto = Readonly<{
   username?: string;
   blocked?: boolean;
   phone_number?: string;
-  created_at?: Date;
+  created_at?: string;
   rut?: string;
   name?: string;
-  lastName?: string;
+  last_name?: string;
   dynamo?: UserDynamo;
 }>;
