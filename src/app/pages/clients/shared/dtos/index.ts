@@ -1,3 +1,6 @@
+export * from './account.dto';
+export * from './cards-response.dto';
+export * from './cards.dto';
 export * from './client-list.dto';
 export * from './client.dto';
 export * from './clients-filters.dto';

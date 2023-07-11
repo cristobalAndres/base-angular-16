@@ -6,6 +6,7 @@ import {
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  CardsResponse,
   ClientDto,
   ClientParameter,
   ClientsResponseDto,
@@ -47,5 +48,9 @@ export class ClientsService {
 
   clientSignOut(clientId: string) {
     return this.httpClient.post(`/client/${clientId}/sign-out`, {});
+  }
+
+  getCards(clientId: string) {
+    return this.httpClient.get<CardsResponse>(`/card/${clientId}`, {});
   }
 }

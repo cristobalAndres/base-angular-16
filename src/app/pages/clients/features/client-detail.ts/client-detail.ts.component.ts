@@ -43,6 +43,11 @@ export class ClientDetailTsComponent implements OnInit, OnDestroy {
     data: [],
   };
 
+  protected readonly isCardsLoading =
+    this.clientDetailService.isCardsLoading.asReadonly();
+  protected readonly cardsResponse =
+    this.clientDetailService.cardsResponse.asReadonly();
+
   constructor() {
     effect(() => {
       this.loadBasicInfoCardData();
@@ -65,7 +70,11 @@ export class ClientDetailTsComponent implements OnInit, OnDestroy {
     const { id } = params;
     this.clientId = id as string;
 
-    await this.clientDetailService.loadClient(this.clientId);
+    await Promise.all([
+      this.clientDetailService.loadClient(this.clientId),
+      this.clientDetailService.loadCardsOfClient(this.clientId),
+    ]);
+
     if (this.client()?.dynamo?.id?.s) {
       await this.clientDetailService.loadEcommerces(
         this.client()?.dynamo!.id?.s,

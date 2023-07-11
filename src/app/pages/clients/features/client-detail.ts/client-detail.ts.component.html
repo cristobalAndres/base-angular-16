@@ -30,7 +30,7 @@
   </div>
 
   <!-- Ecommerces -->
-  <div class="card shadow border-light row px-3 py-4">
+  <div class="card shadow border-light row px-3 py-4 mb-4">
     <div class="row">
       <div class="col-md-8 align-self-center">
         <h3 *ngIf="!isEcommercesLoading() || ecommercesResponse()">
@@ -67,4 +67,34 @@
     </div>
   </div>
   <!-- End Ecommerces -->
+
+  <!-- payment mehtods -->
+  <div class="card shadow border-light row px-3 py-4">
+    <div class="row">
+      <div class="col-md-8 align-self-center">
+        <h3 *ngIf="!isCardsLoading()">Medios de pago</h3>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <p
+              *ngIf="
+                !isCardsLoading() &&
+                cardsResponse() &&
+                (cardsResponse()?.accounts?.length === 0 ||
+                  cardsResponse()?.cards?.length === 0)
+              "
+            >
+              No hay medios de pago
+            </p>
+            <!-- TODO: Table de medios de pago -->
+            <app-spinner *ngIf="isEcommercesLoading()"></app-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- payment mehtods -->
 </div>

@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { ClientDto, EcommerceResponseDto } from '../../shared';
+import { CardsResponse, ClientDto, EcommerceResponseDto } from '../../shared';
 import { ClientsService } from '../clients-service';
 import { EcommercesService } from '../ecommerces-service';
 
@@ -22,6 +22,12 @@ export class ClientDetailServiceComponentService {
   readonly clientCurrentPage = signal(1);
   readonly hasclientError = signal(false);
   readonly client: WritableSignal<ClientDto> = signal({});
+
+  //Cards
+  readonly isCardsLoading = signal(false);
+  readonly hasCardsError = signal(false);
+  readonly cardsResponse: WritableSignal<CardsResponse | undefined> =
+    signal(undefined);
 
   async loadClient(clientId: string) {
     this.isclientLoading.set(true);
@@ -58,6 +64,21 @@ export class ClientDetailServiceComponentService {
     }
   }
 
+  async loadCardsOfClient(clientId: string) {
+    this.isCardsLoading.set(true);
+    try {
+      const result = await lastValueFrom(
+        this.clientsService.getCards(clientId),
+      );
+      this.cardsResponse.set(result);
+      this.hasCardsError.set(false);
+    } catch (error) {
+      this.hasCardsError.set(true);
+    } finally {
+      this.isCardsLoading.set(false);
+    }
+  }
+
   cleanLocalData() {
     this.isclientLoading.set(false);
     this.clientCurrentPage.set(1);
@@ -68,5 +89,9 @@ export class ClientDetailServiceComponentService {
     this.ecommercesCurrentPage.set(1);
     this.hasEcommercesError.set(false);
     this.ecommercesResponse.set(undefined);
+
+    this.isCardsLoading.set(false);
+    this.hasCardsError.set(false);
+    this.cardsResponse.set(undefined);
   }
 }
