@@ -43,10 +43,14 @@ export class ClientDetailTsComponent implements OnInit, OnDestroy {
     data: [],
   };
 
-  protected readonly isCardsLoading =
-    this.clientDetailService.isCardsLoading.asReadonly();
-  protected readonly cardsResponse =
-    this.clientDetailService.cardsResponse.asReadonly();
+  protected readonly isPaymentsMethodsLoading =
+    this.clientDetailService.isPaymentsMethodsLoading.asReadonly();
+  protected readonly paymentsMethodsResponse =
+    this.clientDetailService.paymentsMethodsResponse.asReadonly();
+  protected paymenthsMethodsList =
+    this.clientDetailService.paymenthsMethodsList.asReadonly();
+  protected isAllPaymentMethodsSelected =
+    this.clientDetailService.isAllPaymentMethodsSelected.asReadonly();
 
   constructor() {
     effect(() => {
@@ -72,7 +76,7 @@ export class ClientDetailTsComponent implements OnInit, OnDestroy {
 
     await Promise.all([
       this.clientDetailService.loadClient(this.clientId),
-      this.clientDetailService.loadCardsOfClient(this.clientId),
+      this.clientDetailService.loadPaymentsMethodsOfClient(this.clientId),
     ]);
 
     if (this.client()?.dynamo?.id?.s) {
@@ -135,6 +139,17 @@ export class ClientDetailTsComponent implements OnInit, OnDestroy {
 
   signoutClick() {
     //TODO: implementar
+  }
+
+  onAllPaymentMethodsCheck() {
+    this.clientDetailService.isAllPaymentMethodsSelected.set(
+      !this.isAllPaymentMethodsSelected(),
+    );
+    this.clientDetailService.loadPaymentsMethodsList();
+  }
+
+  onOnePaymentMethodsChek() {
+    //TODO: Implementar
   }
 
   private loadBasicInfoCardData() {

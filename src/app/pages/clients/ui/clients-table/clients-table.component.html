@@ -2,8 +2,8 @@
   <table class="table table-hover table-striped">
     <thead class="table-light text-uppercase">
       <tr class="d-flex">
-        <th class="col-3" scope="col">Email</th>
-        <th class="col-3" scope="col">Nombre</th>
+        <th class="col-2" scope="col">Email</th>
+        <th class="col-2" scope="col">Nombre</th>
         <th class="col-2" scope="col">Rut</th>
         <th class="col-2" scope="col">Teléfono</th>
         <th class="col-2" scope="col">Creación</th>
@@ -13,13 +13,13 @@
     <tbody>
       <tr *ngFor="let client of clients" class="d-flex">
         <th
-          class="col-3"
+          class="col-2"
           scope="col"
           routerLink="{{ '/clients/' + client?.id }}"
         >
           <p class="link-primary">{{ client?.email }}</p>
         </th>
-        <th class="col-3" scope="col">
+        <th class="col-2" scope="col">
           {{ client?.name }} {{ client?.last_name }}
         </th>
         <th class="col-2" scope="col">{{ client?.rut }}</th>

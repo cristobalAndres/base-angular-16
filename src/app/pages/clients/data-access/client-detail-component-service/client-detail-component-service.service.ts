@@ -1,6 +1,13 @@
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import { getDate, getTime } from '@app/shared/helpers';
 import { lastValueFrom } from 'rxjs';
-import { CardsResponse, ClientDto, EcommerceResponseDto } from '../../shared';
+import {
+  CardsResponse,
+  ClientDto,
+  EcommerceResponseDto,
+  PaymentsMethodsType,
+} from '../../shared';
+import { PaymentsMethodsListDto } from '../../shared/dtos/payments-methods-list.dto';
 import { ClientsService } from '../clients-service';
 import { EcommercesService } from '../ecommerces-service';
 
@@ -23,11 +30,14 @@ export class ClientDetailServiceComponentService {
   readonly hasclientError = signal(false);
   readonly client: WritableSignal<ClientDto> = signal({});
 
-  //Cards
-  readonly isCardsLoading = signal(false);
-  readonly hasCardsError = signal(false);
-  readonly cardsResponse: WritableSignal<CardsResponse | undefined> =
+  //PaymentsMethods
+  readonly isPaymentsMethodsLoading = signal(false);
+  readonly hasPaymentsMethodsError = signal(false);
+  readonly paymentsMethodsResponse: WritableSignal<CardsResponse | undefined> =
     signal(undefined);
+  readonly isAllPaymentMethodsSelected = signal(true);
+  readonly paymenthsMethodsList: WritableSignal<PaymentsMethodsListDto[]> =
+    signal([]);
 
   async loadClient(clientId: string) {
     this.isclientLoading.set(true);
@@ -64,18 +74,19 @@ export class ClientDetailServiceComponentService {
     }
   }
 
-  async loadCardsOfClient(clientId: string) {
-    this.isCardsLoading.set(true);
+  async loadPaymentsMethodsOfClient(clientId: string) {
+    this.isPaymentsMethodsLoading.set(true);
     try {
       const result = await lastValueFrom(
         this.clientsService.getCards(clientId),
       );
-      this.cardsResponse.set(result);
-      this.hasCardsError.set(false);
+      this.paymentsMethodsResponse.set(result);
+      this.loadPaymentsMethodsList();
+      this.hasPaymentsMethodsError.set(false);
     } catch (error) {
-      this.hasCardsError.set(true);
+      this.hasPaymentsMethodsError.set(true);
     } finally {
-      this.isCardsLoading.set(false);
+      this.isPaymentsMethodsLoading.set(false);
     }
   }
 
@@ -90,8 +101,53 @@ export class ClientDetailServiceComponentService {
     this.hasEcommercesError.set(false);
     this.ecommercesResponse.set(undefined);
 
-    this.isCardsLoading.set(false);
-    this.hasCardsError.set(false);
-    this.cardsResponse.set(undefined);
+    this.isPaymentsMethodsLoading.set(false);
+    this.hasPaymentsMethodsError.set(false);
+    this.paymentsMethodsResponse.set(undefined);
+  }
+
+  loadPaymentsMethodsList() {
+    const accountsInPaymentMethodsListDto =
+      this.paymentsMethodsResponse()?.accounts.map((account) => {
+        return {
+          id: account.id.toString(),
+          mask: '',
+          brand: 'CencoPay',
+          card_type: 'Wallet',
+          is_active: account?.enabled_account,
+          added_at: `${getDate(account?.created_at)} ${getTime(
+            account?.created_at,
+          )}`,
+          is_selected: this.isAllPaymentMethodsSelected(),
+          payment_method_type: PaymentsMethodsType.ACCOUNT,
+        } as PaymentsMethodsListDto;
+      });
+    const cardsInPaymentMethodsListDto =
+      this.paymentsMethodsResponse()?.cards.map((card) => {
+        return {
+          id: card.id.toString(),
+          mask: card?.mask,
+          brand: card?.brand,
+          card_type: card?.card_type,
+          is_active: !card?.deleted_at,
+          is_inherited: card?.is_inherited,
+          added_at: `${getDate(card?.added_at)} ${getTime(card?.added_at)}`,
+          is_selected: this.isAllPaymentMethodsSelected(),
+          payment_method_type: PaymentsMethodsType.CARD,
+          deleted_at: `${getDate(card?.deleted_at)} ${getTime(
+            card?.deleted_at,
+          )}`,
+        } as PaymentsMethodsListDto;
+      });
+
+    const updatePaymenthsMethodsList = [
+      ...(accountsInPaymentMethodsListDto ?? []),
+      ...(cardsInPaymentMethodsListDto ?? []),
+    ];
+
+    // eslint-disable-next-line no-console
+    console.log(updatePaymenthsMethodsList);
+
+    this.paymenthsMethodsList.set(updatePaymenthsMethodsList);
   }
 }

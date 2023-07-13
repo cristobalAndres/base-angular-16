@@ -1,0 +1,61 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead class="table-light text-uppercase">
+      <tr class="d-flex">
+        <th class="col-1 text-center" scope="col">
+          <input
+            type="checkbox"
+            aria-label="Checkbox for following text input"
+            (click)="onAllCheckBoxClick()"
+            [checked]="isAllCheckSelected"
+          />
+        </th>
+        <th class="col-2" scope="col">Número de tarjeta</th>
+        <th class="col-2" scope="col">Marca</th>
+        <th class="col-1" scope="col">Tipo</th>
+        <th class="col-1" scope="col">Activo</th>
+        <th class="col-1" scope="col">Heredada</th>
+        <th class="col-2" scope="col">Fecha vinculación</th>
+        <th class="col-2" scope="col">Fecha desvinculación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let paymentMethod of paymentsMehtods"
+        class="d-flex"
+        [class.table-primary]="paymentMethod.is_selected"
+      >
+        <td class="col-1 text-center">
+          <input
+            type="checkbox"
+            aria-label="Checkbox for following text input"
+            (click)="onCheckBoxItemClick(paymentMethod.id)"
+            [checked]="paymentMethod.is_selected"
+          />
+        </td>
+        <td class="col-2">
+          <p *ngIf="paymentMethod.payment_method_type === cardType">
+            **** **** **** {{ paymentMethod.mask }}
+          </p>
+        </td>
+        <td class="col-2">{{ paymentMethod.brand }}</td>
+        <td class="col-1">{{ paymentMethod.card_type }}</td>
+        <td class="col-1">
+          <app-default-badge
+            [text]="paymentMethod.is_active ? 'SI' : 'NO'"
+            [color]="paymentMethod.is_active ? successColor : dangerColor"
+          ></app-default-badge>
+        </td>
+        <td class="col-1">
+          <app-default-badge
+            *ngIf="paymentMethod.payment_method_type === cardType"
+            [text]="paymentMethod.is_inherited ? 'SI' : 'NO'"
+            [color]="paymentMethod.is_inherited ? successColor : dangerColor"
+          ></app-default-badge>
+        </td>
+        <td class="col-2">{{ paymentMethod.added_at }}</td>
+        <td class="col-2">{{ paymentMethod.deleted_at }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

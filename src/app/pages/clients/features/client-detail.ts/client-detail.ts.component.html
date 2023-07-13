@@ -1,4 +1,4 @@
-<div class="container d-grid gap-4">
+<div class="d-grid gap-4">
   <div class="row">
     <app-navigate-button to="/clients" message="Volver" />
   </div>
@@ -50,51 +50,59 @@
       </div>
     </div>
     <div class="card-body">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <p *ngIf="!isEcommercesLoading() && !ecommercesResponse()">
-              No hay comercios vinculados
-            </p>
-            <app-client-deatil-ecommerces-table
-              *ngIf="!isEcommercesLoading() && ecommercesResponse()"
-              [ecommerces]="ecommerceList"
-            ></app-client-deatil-ecommerces-table>
-            <app-spinner *ngIf="isEcommercesLoading()"></app-spinner>
-          </div>
+      <div class="row">
+        <div class="col">
+          <p *ngIf="!isEcommercesLoading() && !ecommercesResponse()">
+            No hay comercios vinculados
+          </p>
+          <app-client-deatil-ecommerces-table
+            *ngIf="!isEcommercesLoading() && ecommercesResponse()"
+            [ecommerces]="ecommerceList"
+          ></app-client-deatil-ecommerces-table>
+          <app-spinner *ngIf="isEcommercesLoading()"></app-spinner>
         </div>
       </div>
     </div>
   </div>
   <!-- End Ecommerces -->
 
-  <!-- payment mehtods -->
+  <!-- Payment mehtods -->
   <div class="card shadow border-light row px-3 py-4">
     <div class="row">
       <div class="col-md-8 align-self-center">
-        <h3 *ngIf="!isCardsLoading()">Medios de pago</h3>
+        <h3 *ngIf="!isPaymentsMethodsLoading()">Medios de pago</h3>
       </div>
     </div>
     <div class="card-body">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <p
-              *ngIf="
-                !isCardsLoading() &&
-                cardsResponse() &&
-                (cardsResponse()?.accounts?.length === 0 ||
-                  cardsResponse()?.cards?.length === 0)
-              "
-            >
-              No hay medios de pago
-            </p>
-            <!-- TODO: Table de medios de pago -->
-            <app-spinner *ngIf="isEcommercesLoading()"></app-spinner>
-          </div>
+      <div class="row">
+        <div class="col">
+          <p
+            *ngIf="
+              !isPaymentsMethodsLoading() &&
+                paymentsMethodsResponse() &&
+                (paymentsMethodsResponse()?.accounts?.length === 0 ||
+                  paymentsMethodsResponse()?.cards?.length === 0);
+              else elseShowPaymentsMethods
+            "
+          >
+            No hay medios de pago
+          </p>
+          <ng-template #elseShowPaymentsMethods>
+            <app-paymenths-methods-table
+              *ngIf="!isClientLoading()"
+              [paymentsMehtods]="paymenthsMethodsList()"
+              (allCheckBoxClickEvent)="onAllPaymentMethodsCheck()"
+              [isAllCheckSelected]="isAllPaymentMethodsSelected()"
+            ></app-paymenths-methods-table>
+          </ng-template>
+          <app-spinner *ngIf="isPaymentsMethodsLoading()"></app-spinner>
         </div>
       </div>
     </div>
   </div>
-  <!-- payment mehtods -->
+  <!-- Payment mehtods -->
+
+  <!-- Transactions  -->
+  <app-transaction></app-transaction>
+  <!-- EndTransactions  -->
 </div>

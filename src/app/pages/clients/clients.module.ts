@@ -17,9 +17,15 @@ import {
   ClientsFiltersComponent,
   ClientsTableComponent,
 } from './ui';
+import { PaymentsMethodsTableComponent } from './ui/paymenths-methods-table';
+import { TransactionComponent } from './features/client-detail.ts/features/transaction/transaction.component';
 
 @NgModule({
-  declarations: [ClientsComponent, ClientDetailTsComponent],
+  declarations: [
+    ClientsComponent,
+    ClientDetailTsComponent,
+    TransactionComponent,
+  ],
   providers: [
     ClientsService,
     ClientsComponentService,
@@ -34,6 +40,7 @@ import {
     CardInfoComponent,
     CardPhotoInfoComponent,
     ClientDeatilEcommercesTableComponent,
+    PaymentsMethodsTableComponent,
     RouterModule,
   ],
 })
