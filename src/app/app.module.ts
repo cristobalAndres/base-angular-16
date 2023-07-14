@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginModule } from './core/authentication/login/login.module';
 import { CoreModule } from './core/core.module';
-import { ClientsModule } from './pages/clients/clients.module';
 import { HomeModule } from './pages/home/home.module';
 
 @NgModule({
@@ -15,7 +14,6 @@ import { HomeModule } from './pages/home/home.module';
     BrowserModule,
     AppRoutingModule,
     LoginModule,
-    ClientsModule,
     HomeModule,
     NgbModule,
     CoreModule,
