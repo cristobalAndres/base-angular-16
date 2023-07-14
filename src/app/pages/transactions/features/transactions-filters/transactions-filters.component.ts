@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SharedModule } from '@app/shared';
-import { TransactionsFiltersService } from '../../data-access';
-import { TransactionStatus } from '../../shared';
 import { SelectionDto } from '@app/shared/components/forms';
-import { TransactionStatusPipe } from '../../utils';
+import { TransactionStatusPipe } from '@app/shared/pipes';
+import { TransactionStatus } from '@app/shared/services/transactions';
+import { TransactionsFiltersService } from '../../data-access';
 
 @Component({
   selector: 'app-transactions-filters',
