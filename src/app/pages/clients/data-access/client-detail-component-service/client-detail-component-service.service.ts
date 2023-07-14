@@ -1,4 +1,10 @@
-import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import {
+  Injectable,
+  WritableSignal,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { getDate, getTime } from '@app/shared/helpers';
 import { lastValueFrom } from 'rxjs';
 import {
@@ -38,6 +44,36 @@ export class ClientDetailServiceComponentService {
   readonly isAllPaymentMethodsSelected = signal(true);
   readonly paymenthsMethodsList: WritableSignal<PaymentsMethodsListDto[]> =
     signal([]);
+
+  private readonly selectedPaymentMethodIdsSig = signal<
+    Set<PaymentsMethodsListDto['id']>
+  >(new Set());
+
+  readonly selectedPaymentMethodIds = computed(
+    this.selectedPaymentMethodIdsSig,
+  );
+
+  toggleSelectedPaymentMethodId(id: PaymentsMethodsListDto['id']) {
+    this.selectedPaymentMethodIdsSig.update((selected) => {
+      if (selected.has(id)) selected.delete(id);
+      else selected.add(id);
+
+      return selected;
+    });
+  }
+
+  toggleSelectAllPaymentMethods() {
+    if (this.isAllPaymentMethodsSelected())
+      this.selectedPaymentMethodIdsSig.set(new Set());
+    else
+      this.selectedPaymentMethodIdsSig.set(
+        new Set(this.paymenthsMethodsList().map(({ id }) => id)),
+      );
+
+    this.isAllPaymentMethodsSelected.update(
+      (areAllSelected) => !areAllSelected,
+    );
+  }
 
   async loadClient(clientId: string) {
     this.isclientLoading.set(true);
@@ -145,9 +181,10 @@ export class ClientDetailServiceComponentService {
       ...(cardsInPaymentMethodsListDto ?? []),
     ];
 
-    // eslint-disable-next-line no-console
-    console.log(updatePaymenthsMethodsList);
-
     this.paymenthsMethodsList.set(updatePaymenthsMethodsList);
+
+    updatePaymenthsMethodsList.forEach((paymentMethod) => {
+      this.toggleSelectedPaymentMethodId(paymentMethod.id);
+    });
   }
 }

@@ -91,7 +91,9 @@
             <app-paymenths-methods-table
               *ngIf="!isClientLoading()"
               [paymentsMehtods]="paymenthsMethodsList()"
+              [selectedPaymentMethodIds]="selectedPaymentMethodIds()"
               (allCheckBoxClickEvent)="onAllPaymentMethodsCheck()"
+              (checkBoxItemClickEvent)="onOnePaymentMethodsChek($event)"
               [isAllCheckSelected]="isAllPaymentMethodsSelected()"
             ></app-paymenths-methods-table>
           </ng-template>

@@ -30,7 +30,7 @@
             type="checkbox"
             aria-label="Checkbox for following text input"
             (click)="onCheckBoxItemClick(paymentMethod.id)"
-            [checked]="paymentMethod.is_selected"
+            [checked]="selectedPaymentMethodIds.has(paymentMethod.id)"
           />
         </td>
         <td class="col-2">

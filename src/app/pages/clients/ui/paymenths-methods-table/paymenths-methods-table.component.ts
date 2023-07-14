@@ -18,6 +18,9 @@ export class PaymentsMethodsTableComponent {
   @Input({ required: true })
   paymentsMehtods!: ReadonlyArray<PaymentsMethodsListDto>;
   @Input({ required: true }) isAllCheckSelected!: boolean;
+  @Input({ required: true }) selectedPaymentMethodIds!: Set<
+    PaymentsMethodsListDto['id']
+  >;
 
   @Output() allCheckBoxClickEvent = new EventEmitter<void>();
   @Output() checkBoxItemClickEvent = new EventEmitter<string>();

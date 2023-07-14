@@ -51,6 +51,8 @@ export class ClientDetailTsComponent implements OnInit, OnDestroy {
     this.clientDetailService.paymenthsMethodsList.asReadonly();
   protected isAllPaymentMethodsSelected =
     this.clientDetailService.isAllPaymentMethodsSelected.asReadonly();
+  protected selectedPaymentMethodIds =
+    this.clientDetailService.selectedPaymentMethodIds;
 
   constructor() {
     effect(() => {
@@ -142,14 +144,11 @@ export class ClientDetailTsComponent implements OnInit, OnDestroy {
   }
 
   onAllPaymentMethodsCheck() {
-    this.clientDetailService.isAllPaymentMethodsSelected.set(
-      !this.isAllPaymentMethodsSelected(),
-    );
-    this.clientDetailService.loadPaymentsMethodsList();
+    this.clientDetailService.toggleSelectAllPaymentMethods();
   }
 
-  onOnePaymentMethodsChek() {
-    //TODO: Implementar
+  onOnePaymentMethodsChek(id: string) {
+    this.clientDetailService.toggleSelectedPaymentMethodId(id);
   }
 
   private loadBasicInfoCardData() {
