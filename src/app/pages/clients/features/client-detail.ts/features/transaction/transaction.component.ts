@@ -1,5 +1,6 @@
 import { Component, effect, inject } from '@angular/core';
-import { ClientDetailServiceComponentService } from '@app/pages/clients/data-access';
+import { PaymentsMethodsType } from '@app/pages/clients/shared';
+import { PaymentMethodsDataService } from '../../data-access';
 
 @Component({
   selector: 'app-transaction',
@@ -7,9 +8,12 @@ import { ClientDetailServiceComponentService } from '@app/pages/clients/data-acc
   styleUrls: ['./transaction.component.scss'],
 })
 export class TransactionComponent {
-  private clientDetailService = inject(ClientDetailServiceComponentService);
+  private paymentsMethodsDataService = inject(PaymentMethodsDataService);
 
-  protected paymentsMethodsIdSelected: string[] = [];
+  protected paymentsMethodsIdSelected: {
+    id: string;
+    type: PaymentsMethodsType;
+  }[] = [];
 
   constructor() {
     effect(() => {
@@ -18,10 +22,12 @@ export class TransactionComponent {
   }
 
   loadIdsSelected() {
-    this.paymentsMethodsIdSelected = this.clientDetailService
+    this.paymentsMethodsIdSelected = this.paymentsMethodsDataService
       .paymenthsMethodsList()
       .filter((payment) => payment.is_selected)
-      .map((payment) => payment.id);
+      .map((payment) => {
+        return { id: payment.id, type: payment.payment_method_type };
+      });
 
     // eslint-disable-next-line no-console
     console.log(this.paymentsMethodsIdSelected);

@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ClientDetailTsComponent } from './client-detail.ts.component';
+import { ClientDetailComponent } from './client-detail.component';
 
 describe('ClientDetailTsComponent', () => {
-  let component: ClientDetailTsComponent;
-  let fixture: ComponentFixture<ClientDetailTsComponent>;
+  let component: ClientDetailComponent;
+  let fixture: ComponentFixture<ClientDetailComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ClientDetailTsComponent],
+      declarations: [ClientDetailComponent],
     });
-    fixture = TestBed.createComponent(ClientDetailTsComponent);
+    fixture = TestBed.createComponent(ClientDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

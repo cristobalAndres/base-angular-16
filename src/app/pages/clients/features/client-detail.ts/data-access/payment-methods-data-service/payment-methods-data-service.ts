@@ -1,34 +1,13 @@
 import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import { ClientsService } from '@app/pages/clients/data-access';
+import { CardsResponse, PaymentsMethodsType } from '@app/pages/clients/shared';
+import { PaymentsMethodsListDto } from '@app/pages/clients/shared/dtos/payments-methods-list.dto';
 import { getDate, getTime } from '@app/shared/helpers';
 import { lastValueFrom } from 'rxjs';
-import {
-  CardsResponse,
-  ClientDto,
-  EcommerceResponseDto,
-  PaymentsMethodsType,
-} from '../../shared';
-import { PaymentsMethodsListDto } from '../../shared/dtos/payments-methods-list.dto';
-import { ClientsService } from '../clients-service';
-import { EcommercesService } from '../ecommerces-service';
 
 @Injectable()
-export class ClientDetailServiceComponentService {
-  //Ecommerces
-  private readonly ecommercesService = inject(EcommercesService);
-  readonly isEcommercesLoading = signal(true);
-  readonly ecommercesCurrentPage = signal(1);
-  readonly hasEcommercesError = signal(false);
-  readonly ecommercesResponse: WritableSignal<
-    EcommerceResponseDto | undefined
-  > = signal(undefined);
-  readonly ecommercesPerPage: number = 5;
-
-  //Client
+export class PaymentMethodsDataService {
   private readonly clientsService = inject(ClientsService);
-  readonly isclientLoading = signal(false);
-  readonly clientCurrentPage = signal(1);
-  readonly hasclientError = signal(false);
-  readonly client: WritableSignal<ClientDto> = signal({});
 
   //PaymentsMethods
   readonly isPaymentsMethodsLoading = signal(false);
@@ -38,41 +17,6 @@ export class ClientDetailServiceComponentService {
   readonly isAllPaymentMethodsSelected = signal(true);
   readonly paymenthsMethodsList: WritableSignal<PaymentsMethodsListDto[]> =
     signal([]);
-
-  async loadClient(clientId: string) {
-    this.isclientLoading.set(true);
-    try {
-      const result = await lastValueFrom(
-        this.clientsService.getClientDetail(clientId),
-      );
-
-      this.client.set(result);
-      this.hasclientError.set(false);
-    } catch (error) {
-      this.hasclientError.set(true);
-    } finally {
-      this.isclientLoading.set(false);
-    }
-  }
-
-  async loadEcommerces(clientId: string) {
-    this.isEcommercesLoading.set(true);
-    try {
-      const result = (await lastValueFrom(
-        this.ecommercesService.getEcommerces(clientId, {
-          currentPage: this.ecommercesCurrentPage(),
-          perPage: this.ecommercesPerPage,
-        }),
-      )) as EcommerceResponseDto;
-
-      this.ecommercesResponse.set(result);
-      this.hasEcommercesError.set(false);
-    } catch (error) {
-      this.hasEcommercesError.set(true);
-    } finally {
-      this.isEcommercesLoading.set(false);
-    }
-  }
 
   async loadPaymentsMethodsOfClient(clientId: string) {
     this.isPaymentsMethodsLoading.set(true);
@@ -88,22 +32,6 @@ export class ClientDetailServiceComponentService {
     } finally {
       this.isPaymentsMethodsLoading.set(false);
     }
-  }
-
-  cleanLocalData() {
-    this.isclientLoading.set(false);
-    this.clientCurrentPage.set(1);
-    this.hasclientError.set(false);
-    this.client.set({});
-
-    this.isEcommercesLoading.set(true);
-    this.ecommercesCurrentPage.set(1);
-    this.hasEcommercesError.set(false);
-    this.ecommercesResponse.set(undefined);
-
-    this.isPaymentsMethodsLoading.set(false);
-    this.hasPaymentsMethodsError.set(false);
-    this.paymentsMethodsResponse.set(undefined);
   }
 
   loadPaymentsMethodsList() {
@@ -149,5 +77,39 @@ export class ClientDetailServiceComponentService {
     console.log(updatePaymenthsMethodsList);
 
     this.paymenthsMethodsList.set(updatePaymenthsMethodsList);
+  }
+
+  selectPaymentMethodListById(id: string) {
+    const newPaymentMethodList = this.paymenthsMethodsList().map(
+      (paymentMethod) => {
+        if (paymentMethod.id == id) {
+          return {
+            ...paymentMethod,
+            is_selected: !paymentMethod.is_selected,
+          };
+        }
+        return paymentMethod;
+      },
+    );
+
+    this.paymenthsMethodsList.set(newPaymentMethodList);
+  }
+
+  allSelectPaymentMethodList() {
+    const newPaymentMethodList = this.paymenthsMethodsList().map(
+      (paymentMethod) => {
+        return {
+          ...paymentMethod,
+          is_selected: this.isAllPaymentMethodsSelected(),
+        };
+      },
+    );
+    this.paymenthsMethodsList.set(newPaymentMethodList);
+  }
+
+  cleanData() {
+    this.isPaymentsMethodsLoading.set(false);
+    this.hasPaymentsMethodsError.set(false);
+    this.paymentsMethodsResponse.set(undefined);
   }
 }

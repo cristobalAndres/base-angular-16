@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive-sm">
   <table class="table">
     <thead class="table-light text-uppercase">
       <tr class="d-flex">
@@ -34,9 +34,9 @@
           />
         </td>
         <td class="col-2">
-          <p *ngIf="paymentMethod.payment_method_type === cardType">
+          <span *ngIf="paymentMethod.payment_method_type === cardType">
             **** **** **** {{ paymentMethod.mask }}
-          </p>
+          </span>
         </td>
         <td class="col-2">{{ paymentMethod.brand }}</td>
         <td class="col-1">{{ paymentMethod.card_type }}</td>

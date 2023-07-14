@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DefaultBadgeComponent } from '@app/shared/components/badges/default/default-badge.component';
-import { EcommerceListDto } from '../../shared/dtos/ecommerce-list.dto';
+import { EcommerceListDto } from '../../../../shared/dtos/ecommerce-list.dto';
 
 @Component({
   standalone: true,

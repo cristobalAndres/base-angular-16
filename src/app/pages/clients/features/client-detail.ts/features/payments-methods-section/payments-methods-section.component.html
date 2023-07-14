@@ -1,0 +1,34 @@
+<div class="card shadow border-light row px-3 py-4">
+  <div class="row">
+    <div class="col-md-8 align-self-center">
+      <h3 *ngIf="!isPaymentsMethodsLoading()">Medios de pago</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <p
+          *ngIf="
+            !isPaymentsMethodsLoading() &&
+              paymentsMethodsResponse() &&
+              (paymentsMethodsResponse()?.accounts?.length === 0 ||
+                paymentsMethodsResponse()?.cards?.length === 0);
+            else elseShowPaymentsMethods
+          "
+        >
+          No hay medios de pago
+        </p>
+        <ng-template #elseShowPaymentsMethods>
+          <app-paymenths-methods-table
+            *ngIf="!isPaymentsMethodsLoading()"
+            [paymentsMehtods]="paymenthsMethodsList()"
+            (allCheckBoxClickEvent)="onAllPaymentMethodsCheck()"
+            (checkBoxItemClickEvent)="onOnePaymentMethodsChek($event)"
+            [isAllCheckSelected]="isAllPaymentMethodsSelected()"
+          ></app-paymenths-methods-table>
+        </ng-template>
+        <app-spinner *ngIf="isPaymentsMethodsLoading()"></app-spinner>
+      </div>
+    </div>
+  </div>
+</div>

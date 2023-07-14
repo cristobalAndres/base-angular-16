@@ -3,9 +3,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DefaultBadgeComponent } from '@app/shared/components/badges/default/default-badge.component';
-import { BadgeColors } from '../../../../shared/enums/badge-colors.enum';
-import { PaymentsMethodsType } from '../../shared';
-import { PaymentsMethodsListDto } from '../../shared/dtos/payments-methods-list.dto';
+import { BadgeColors } from '../../../../../../shared/enums/badge-colors.enum';
+import { PaymentsMethodsType } from '../../../../shared';
+import { PaymentsMethodsListDto } from '../../../../shared/dtos/payments-methods-list.dto';
 
 @Component({
   standalone: true,

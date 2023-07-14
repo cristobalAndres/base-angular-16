@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { EcommerceResponseDto, GetEcommercesParams } from '../../shared';
+import { EcommerceResponseDto, GetEcommercesParams } from '../../../../shared';
 
 @Injectable()
 export class EcommercesService {
