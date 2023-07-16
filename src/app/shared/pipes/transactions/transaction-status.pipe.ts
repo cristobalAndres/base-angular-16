@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TransactionStatus } from '../../shared';
+import { TransactionStatus } from '@app/shared/services/transactions';
 
 @Pipe({
   name: 'transactionStatus',

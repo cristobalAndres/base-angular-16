@@ -1,44 +1,14 @@
-import {
-  HttpClient,
-  HttpParams,
-  HttpParamsOptions,
-} from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import {
-  GetTransactionsParams,
-  TransactionsResponseDto,
-  TransactionStatus,
-} from '../../shared';
+import { TransactionsHttpService } from '@app/shared/services';
+import { GetTransactionsParamsDto } from './dtos';
 
 @Injectable()
 export class TransactionsService {
-  private readonly httpClient = inject(HttpClient);
+  private readonly transactionsHttpService = inject(TransactionsHttpService);
 
-  getTransactions(
-    getTransactionsParams: GetTransactionsParams = {},
-  ): Observable<TransactionsResponseDto> {
-    const {
-      currentPage = 1,
-      statusFilter = TransactionStatus.ALL,
-      perPage = 10,
-      startDate,
-      endDate,
-    } = getTransactionsParams;
-
-    const httpParams = Object.entries({
-      perPage,
-      currentPage,
-      statusFilter,
-      startDate: startDate?.toISOString(),
-      endDate: endDate?.toISOString(),
-    }).reduce((params, [key, value]) => {
-      if (value !== undefined) params[key] ??= value;
-      return params;
-    }, {} as NonNullable<HttpParamsOptions['fromObject']>);
-
-    return this.httpClient.get<TransactionsResponseDto>('transaction', {
-      params: new HttpParams({ fromObject: httpParams }),
-    });
+  getTransactions(getTransactionsParamsDto: GetTransactionsParamsDto) {
+    return this.transactionsHttpService.getTransactions(
+      getTransactionsParamsDto,
+    );
   }
 }

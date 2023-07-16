@@ -1,6 +1,5 @@
 import { TransactionStatus } from '../enums';
 
-// TODO: Change snake case to camel case
 export type TransactionDto = Readonly<{
   transaction_id: string;
   status: TransactionStatus;

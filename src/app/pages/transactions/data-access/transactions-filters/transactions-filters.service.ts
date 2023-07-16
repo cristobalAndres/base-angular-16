@@ -1,13 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { TransactionsFiltersDto } from '../../shared';
+import { TransactionFiltersDto } from './dtos';
 
 @Injectable()
 export class TransactionsFiltersService {
-  private readonly transactionsFilters = signal<TransactionsFiltersDto>({});
+  private readonly transactionsFilters = signal<TransactionFiltersDto>({});
   readonly transactionsFilters$ = toObservable(this.transactionsFilters);
 
-  updateTransactionsFilters(filters: Partial<TransactionsFiltersDto>) {
+  updateTransactionsFilters(filters: Partial<TransactionFiltersDto>) {
     this.transactionsFilters.update((currentFilters) => ({
       ...currentFilters,
       ...filters,

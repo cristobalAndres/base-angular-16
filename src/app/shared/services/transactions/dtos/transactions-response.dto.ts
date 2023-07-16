@@ -1,6 +1,5 @@
 import { TransactionDto } from './transaction.dto';
 
-// TODO: Change snake case to camel case
 export type TransactionsResponseDto = Readonly<{
   transactions: ReadonlyArray<TransactionDto>;
   current_page: number;

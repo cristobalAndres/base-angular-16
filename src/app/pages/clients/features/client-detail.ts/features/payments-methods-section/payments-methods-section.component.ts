@@ -23,15 +23,14 @@ export class PaymentsMethodsSectionComponent {
   protected isAllPaymentMethodsSelected =
     this.paymentsMethodsDataService.isAllPaymentMethodsSelected.asReadonly();
 
+  protected selectedPaymentMethodIds =
+    this.paymentsMethodsDataService.selectedPaymentMethodIds;
+
   onAllPaymentMethodsCheck() {
-    this.paymentsMethodsDataService.isAllPaymentMethodsSelected.set(
-      !this.isAllPaymentMethodsSelected(),
-    );
-    this.paymentsMethodsDataService.allSelectPaymentMethodList();
+    this.paymentsMethodsDataService.toggleSelectAllPaymentMethods();
   }
 
   onOnePaymentMethodsChek(id: string) {
-    this.paymentsMethodsDataService.isAllPaymentMethodsSelected.set(false);
-    this.paymentsMethodsDataService.selectPaymentMethodListById(id);
+    this.paymentsMethodsDataService.toggleSelectedPaymentMethodId(id);
   }
 }
