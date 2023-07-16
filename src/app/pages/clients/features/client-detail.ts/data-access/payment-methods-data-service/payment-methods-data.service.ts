@@ -9,9 +9,8 @@ import { lastValueFrom } from 'rxjs';
 export class PaymentMethodsDataService {
   private readonly clientsService = inject(ClientsService);
 
-  //PaymentsMethods
-  readonly isPaymentsMethodsLoading = signal(false);
-  readonly hasPaymentsMethodsError = signal(false);
+  readonly isLoading = signal(false);
+  readonly hasError = signal(false);
   readonly paymentsMethodsResponse: WritableSignal<CardsResponse | undefined> =
     signal(undefined);
   readonly isAllPaymentMethodsSelected = signal(true);
@@ -19,18 +18,18 @@ export class PaymentMethodsDataService {
     signal([]);
 
   async loadPaymentsMethodsOfClient(clientId: string) {
-    this.isPaymentsMethodsLoading.set(true);
+    this.isLoading.set(true);
     try {
       const result = await lastValueFrom(
         this.clientsService.getCards(clientId),
       );
       this.paymentsMethodsResponse.set(result);
       this.loadPaymentsMethodsList();
-      this.hasPaymentsMethodsError.set(false);
+      this.hasError.set(false);
     } catch (error) {
-      this.hasPaymentsMethodsError.set(true);
+      this.hasError.set(true);
     } finally {
-      this.isPaymentsMethodsLoading.set(false);
+      this.isLoading.set(false);
     }
   }
 
@@ -73,9 +72,6 @@ export class PaymentMethodsDataService {
       ...(cardsInPaymentMethodsListDto ?? []),
     ];
 
-    // eslint-disable-next-line no-console
-    console.log(updatePaymenthsMethodsList);
-
     this.paymenthsMethodsList.set(updatePaymenthsMethodsList);
   }
 
@@ -108,8 +104,8 @@ export class PaymentMethodsDataService {
   }
 
   cleanData() {
-    this.isPaymentsMethodsLoading.set(false);
-    this.hasPaymentsMethodsError.set(false);
+    this.isLoading.set(false);
+    this.hasError.set(false);
     this.paymentsMethodsResponse.set(undefined);
   }
 }

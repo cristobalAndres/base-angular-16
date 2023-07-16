@@ -1,18 +1,22 @@
 <div class="card shadow border-light row px-3 py-4 mb-4">
   <div class="row">
     <div class="col-md-8 align-self-center">
-      <h3 *ngIf="!isEcommercesLoading() || ecommercesResponse()">
+      <h3
+        *ngIf="
+          !isEcommercesLoadingSig() || ecommercesResponseSig().total_items != 0
+        "
+      >
         Comercios Vinculados
       </h3>
     </div>
     <div class="col-md-4">
       <app-pagination
-        *ngIf="ecommercesResponse()"
+        *ngIf="ecommercesResponseSig().total_items != 0"
         itemName="Transacciones"
         (pageChange)="onEcommerceCurrentPageChange($event)"
-        [page]="ecommercesResponse()?.current_page!"
-        [totalPages]="ecommercesResponse()?.total_pages!"
-        [totalItems]="ecommercesResponse()?.total_items!"
+        [page]="ecommercesResponseSig().current_page!"
+        [totalPages]="ecommercesResponseSig().total_pages!"
+        [totalItems]="ecommercesResponseSig().total_items!"
         [itemsPerPage]="ecommercesPerPage"
       />
     </div>
@@ -20,14 +24,22 @@
   <div class="card-body">
     <div class="row">
       <div class="col">
-        <p *ngIf="!isEcommercesLoading() && !ecommercesResponse()">
+        <p
+          *ngIf="
+            !isEcommercesLoadingSig() &&
+            ecommercesResponseSig().total_items == 0
+          "
+        >
           No hay comercios vinculados
         </p>
         <app-client-deatil-ecommerces-table
-          *ngIf="!isEcommercesLoading() && ecommercesResponse()"
+          *ngIf="
+            !isEcommercesLoadingSig() &&
+            ecommercesResponseSig().total_items != 0
+          "
           [ecommerces]="ecommerceList"
         ></app-client-deatil-ecommerces-table>
-        <app-spinner *ngIf="isEcommercesLoading()"></app-spinner>
+        <app-spinner *ngIf="isEcommercesLoadingSig()"></app-spinner>
       </div>
     </div>
   </div>

@@ -1,4 +1,10 @@
-import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import {
+  Injectable,
+  WritableSignal,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { ClientsService } from '@app/pages/clients/data-access';
 import { ClientDto } from '@app/pages/clients/shared';
 import { lastValueFrom } from 'rxjs';
@@ -6,31 +12,34 @@ import { lastValueFrom } from 'rxjs';
 @Injectable()
 export class ClientsDataService {
   private readonly clientsService = inject(ClientsService);
-  readonly isclientLoading = signal(false);
-  readonly clientCurrentPage = signal(1);
-  readonly hasclientError = signal(false);
-  readonly client: WritableSignal<ClientDto> = signal({});
+
+  private isLoadingSig = signal(false);
+  private hasErrorSig = signal(false);
+  readonly clientSig: WritableSignal<ClientDto> = signal({});
+
+  readonly client = computed(() => this.clientSig());
+  readonly isLoading = computed(() => this.isLoadingSig());
+  readonly hasError = computed(() => this.hasErrorSig());
 
   async loadClient(clientId: string) {
-    this.isclientLoading.set(true);
+    this.isLoadingSig.set(true);
     try {
       const result = await lastValueFrom(
         this.clientsService.getClientDetail(clientId),
       );
 
-      this.client.set(result);
-      this.hasclientError.set(false);
+      this.clientSig.set(result);
+      this.hasErrorSig.set(false);
     } catch (error) {
-      this.hasclientError.set(true);
+      this.hasErrorSig.set(true);
     } finally {
-      this.isclientLoading.set(false);
+      this.isLoadingSig.set(false);
     }
   }
 
   cleanData() {
-    this.isclientLoading.set(false);
-    this.clientCurrentPage.set(1);
-    this.hasclientError.set(false);
-    this.client.set({});
+    this.isLoadingSig.set(false);
+    this.hasErrorSig.set(false);
+    this.clientSig.set({});
   }
 }

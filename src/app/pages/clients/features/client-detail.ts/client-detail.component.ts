@@ -18,12 +18,12 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   private ecommerceDataService = inject(EcommercesDataService);
   private paymentsMethodsDataService = inject(PaymentMethodsDataService);
 
-  private routeParams$: Subscription | undefined;
+  private routeParamsSub: Subscription | undefined;
 
-  protected readonly client = this.clientDataService.client.asReadonly();
+  protected readonly client = this.clientDataService.client;
 
   ngOnInit() {
-    this.routeParams$ = this.route.params.subscribe((params: Params) => {
+    this.routeParamsSub = this.route.params.subscribe((params: Params) => {
       const { id } = params;
       void this.loadData(id as string);
     });
@@ -34,20 +34,12 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
       this.clientDataService.loadClient(clientId),
       this.paymentsMethodsDataService.loadPaymentsMethodsOfClient(clientId),
     ]);
-
-    if (this.client()?.dynamo?.id?.s) {
-      await this.ecommerceDataService.loadEcommerces(
-        this.client()?.dynamo!.id?.s,
-      );
-    } else {
-      this.ecommerceDataService.isLoading.set(false);
-    }
   }
 
   ngOnDestroy(): void {
     this.clientDataService.cleanData();
     this.ecommerceDataService.cleanData();
     this.paymentsMethodsDataService.cleanData();
-    this.routeParams$?.unsubscribe();
+    this.routeParamsSub?.unsubscribe();
   }
 }

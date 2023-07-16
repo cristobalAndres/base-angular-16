@@ -1,1 +1,1 @@
-export * from './payment-methods-data-service';
+export * from './payment-methods-data.service';

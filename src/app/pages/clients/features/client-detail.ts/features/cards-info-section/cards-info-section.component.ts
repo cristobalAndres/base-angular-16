@@ -20,11 +20,10 @@ import { ClientsDataService } from '../../data-access/clients-data-service';
 export class CardsInfoSectionComponent {
   private clientDataService = inject(ClientsDataService);
 
-  protected clienName = '';
+  protected readonly clientSig = this.clientDataService.client;
+  protected readonly isClientLoadingSig = this.clientDataService.isLoading;
 
-  protected readonly client = this.clientDataService.client.asReadonly();
-  protected readonly isClientLoading =
-    this.clientDataService.isclientLoading.asReadonly();
+  protected clientName = '';
 
   protected basicInfoCardData: { title: string; data: CardInfoDataDto[] } = {
     title: 'Información Básica',
@@ -37,6 +36,7 @@ export class CardsInfoSectionComponent {
   };
 
   constructor() {
+    // only change if ClientSig change
     effect(() => {
       this.loadBasicInfoCardData();
       this.loadStatusCardData();
@@ -52,37 +52,37 @@ export class CardsInfoSectionComponent {
     this.basicInfoCardData.data = [
       {
         title: 'Id',
-        value: this.client().id ?? '',
+        value: this.clientSig().id ?? '',
       },
       {
         title: 'Rut',
-        value: formatRut(this.client().rut),
+        value: formatRut(this.clientSig().rut),
       },
       {
         title: 'Email',
-        value: this.client().email ?? '',
+        value: this.clientSig().email ?? '',
       },
       {
         title: 'Fecha de creación',
-        value: `${getDate(this.client().created_at)} ${getTime(
-          this.client().created_at,
+        value: `${getDate(this.clientSig().created_at)} ${getTime(
+          this.clientSig().created_at,
         )}`,
       },
       {
         title: 'Teléfono',
-        value: this.client().phone_number ?? '',
+        value: this.clientSig().phone_number ?? '',
       },
     ];
   }
 
   private loadClientName() {
-    if (!this.client().name) {
-      this.clienName = '';
+    if (!this.clientSig().name) {
+      this.clientName = '';
       return;
     }
 
-    this.clienName = `${this.client().name ?? ''} ${
-      this.client().last_name ?? ''
+    this.clientName = `${this.clientSig().name ?? ''} ${
+      this.clientSig().last_name ?? ''
     }`;
   }
 
@@ -92,33 +92,33 @@ export class CardsInfoSectionComponent {
     this.statusCardData.data = [
       {
         title: 'Cliente',
-        value: !this.client().blocked ? 'Active' : 'Blocked',
+        value: !this.clientSig().blocked ? 'Active' : 'Blocked',
         isBadge: true,
-        color: !this.client().blocked
+        color: !this.clientSig().blocked
           ? BadgeColors.SUCCESS
           : BadgeColors.DANGER,
       },
       {
         title: 'Email',
-        value: this.client().status ?? '',
+        value: this.clientSig().status ?? '',
         isBadge: true,
         color:
-          this.client().status === UserStatusType.CONFIRMED
+          this.clientSig().status === UserStatusType.CONFIRMED
             ? BadgeColors.SUCCESS
             : BadgeColors.DANGER,
       },
       {
         title: 'Validación de identidad',
         value:
-          this.client()?.dynamo && this.client().dynamo?.kyc_valid
-            ? this.client()!.dynamo!.kyc_valid?.b_o_o_l
+          this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
+            ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
               ? 'success'
               : 'error'
             : 'No hay información disponible', //client.dynamo && client.dynamo.kyc_valid
         isBadge: true,
         color:
-          this.client()?.dynamo && this.client().dynamo?.kyc_valid
-            ? this.client()!.dynamo!.kyc_valid?.b_o_o_l
+          this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
+            ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
               ? BadgeColors.SUCCESS
               : BadgeColors.DANGER
             : BadgeColors.SECONDARY,
@@ -126,19 +126,19 @@ export class CardsInfoSectionComponent {
       {
         title: 'Wallet',
         value:
-          this.client() &&
-          this.client().dynamo &&
-          this.client().dynamo?.wallet_active
-            ? this.client()!.dynamo!.wallet_active.b_o_o_l
+          this.clientSig() &&
+          this.clientSig().dynamo &&
+          this.clientSig().dynamo?.wallet_active
+            ? this.clientSig()!.dynamo!.wallet_active.b_o_o_l
               ? 'Active'
               : 'Blocked'
             : 'No hay información disponible',
         isBadge: true,
         color:
-          this.client() &&
-          this.client().dynamo &&
-          this.client().dynamo!.wallet_active
-            ? this.client().dynamo!.wallet_active.b_o_o_l
+          this.clientSig() &&
+          this.clientSig().dynamo &&
+          this.clientSig().dynamo!.wallet_active
+            ? this.clientSig().dynamo!.wallet_active.b_o_o_l
               ? BadgeColors.SUCCESS
               : BadgeColors.DANGER
             : BadgeColors.SECONDARY,

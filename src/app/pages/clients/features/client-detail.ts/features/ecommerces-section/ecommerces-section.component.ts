@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { EcommerceDto } from '@app/pages/clients/shared';
 import { EcommerceListDto } from '@app/pages/clients/shared/dtos/ecommerce-list.dto';
 import { ClientDeatilEcommercesTableComponent } from '@app/pages/clients/ui';
@@ -26,32 +27,36 @@ export class EcommercesSectionComponent {
   private clientDataService = inject(ClientsDataService);
   private ecommerceDataService = inject(EcommercesDataService);
 
-  protected readonly client = this.clientDataService.client.asReadonly();
+  protected readonly client = this.clientDataService.client;
 
-  protected readonly ecommercesResponse =
-    this.ecommerceDataService.ecommercesServiceResponse.asReadonly();
-  protected readonly isEcommercesLoading =
-    this.ecommerceDataService.isLoading.asReadonly();
-  protected readonly ecommercesPerPage = this.ecommerceDataService.perPage;
+  ecommercesPerPage = this.ecommerceDataService.perPage;
+
+  protected readonly ecommercesResponseSig =
+    this.ecommerceDataService.ecommercesServiceResponse;
+  protected readonly isEcommercesLoadingSig =
+    this.ecommerceDataService.isLoading;
+  protected readonly ecommercesPerPageSig = this.ecommerceDataService.perPage;
 
   protected ecommerceList: EcommerceListDto[] = [];
 
   constructor() {
-    effect(() => {
-      this.loadEcommerceList();
-    });
+    toObservable(this.ecommercesResponseSig)
+      .pipe(takeUntilDestroyed())
+      .subscribe((ecommerceResponse) => {
+        if (ecommerceResponse.ecommerces.length == 0) this.ecommerceList = [];
+        this.ecommerceList = this.loadEcommerceList(
+          ecommerceResponse.ecommerces,
+        );
+      });
   }
 
-  protected async onEcommerceCurrentPageChange(currentPage: number) {
-    this.ecommerceDataService.currentPage.set(currentPage);
-    await this.ecommerceDataService.loadEcommerces(
-      this.client()?.dynamo!.id?.s,
-    );
+  protected onEcommerceCurrentPageChange(currentPage: number) {
+    this.ecommerceDataService.changePage(currentPage);
   }
 
-  private loadEcommerceList() {
-    this.ecommerceList =
-      this.ecommercesResponse()?.ecommerces.map((ecommerce) => {
+  private loadEcommerceList(ecommerces: EcommerceDto[]) {
+    return (
+      ecommerces.map((ecommerce) => {
         return {
           id: ecommerce.id ?? '',
           channel: ecommerce.channel ?? '',
@@ -62,7 +67,8 @@ export class EcommercesSectionComponent {
           statusValue: this.getStatusAndColorOfEcommerce(ecommerce).status,
           statusColor: this.getStatusAndColorOfEcommerce(ecommerce).color,
         };
-      }) ?? [];
+      }) ?? []
+    );
   }
 
   private getStatusAndColorOfEcommerce = (ecommerce: EcommerceDto) => {

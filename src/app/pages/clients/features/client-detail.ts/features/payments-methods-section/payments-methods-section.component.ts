@@ -14,8 +14,8 @@ import { PaymentMethodsDataService } from '../../data-access';
 export class PaymentsMethodsSectionComponent {
   private paymentsMethodsDataService = inject(PaymentMethodsDataService);
 
-  protected readonly isPaymentsMethodsLoading =
-    this.paymentsMethodsDataService.isPaymentsMethodsLoading.asReadonly();
+  protected readonly isLoading =
+    this.paymentsMethodsDataService.isLoading.asReadonly();
   protected readonly paymentsMethodsResponse =
     this.paymentsMethodsDataService.paymentsMethodsResponse.asReadonly();
   protected paymenthsMethodsList =
