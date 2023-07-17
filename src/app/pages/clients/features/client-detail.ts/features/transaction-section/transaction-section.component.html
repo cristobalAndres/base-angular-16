@@ -1,0 +1,40 @@
+<div class="d-grid gap-4">
+  <div class="card shadow border-light row px-3 py-4">
+    <div class="card-body">
+      <div class="mb-2">
+        <h5 class="card-title">Transacciones</h5>
+        <p class="card-subtitle text-body-secondary">
+          Visualización de las transacciones realizadas
+        </p>
+      </div>
+      <div class="container-fluid">
+        <div class="row justify-content-between align-items-center g-4">
+          <div class="col-12 col-xl-8">
+            <app-transactions-filters />
+          </div>
+          <div class="col-12 col-xl-4">
+            <app-pagination
+              *ngIf="pagination$ | async as pagination"
+              itemName="Transacciones"
+              [page]="(currentPage$ | async)!"
+              (pageChange)="onCurrentPageChange($event)"
+              [totalPages]="pagination.totalPages"
+              [totalItems]="pagination.totalItems"
+              [itemsPerPage]="pagination.itemsPerPage"
+            />
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col">
+          <!-- TODO: Add loading indicator using the isLoading$ property -->
+          <app-transactions-table
+            *ngIf="transactions$ | async as transactions"
+            [transactions]="transactions"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

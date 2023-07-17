@@ -2,6 +2,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
+import {
+  TransactionsFiltersService,
+  TransactionsService,
+} from '../transactions/data-access';
 import { ClientsRoutingModule } from './clients-routing.module';
 import { ClientsComponent } from './clients.component';
 import {
@@ -19,8 +23,8 @@ import {
   CardsInfoSectionComponent,
   EcommercesSectionComponent,
   PaymentsMethodsSectionComponent,
+  TransactionSectionComponent,
 } from './features/client-detail.ts/features';
-import { TransactionComponent } from './features/client-detail.ts/features/transaction/transaction.component';
 import { PaymentsMethodsTableComponent } from './features/client-detail.ts/ui/paymenths-methods-table';
 import {
   CardInfoComponent,
@@ -31,7 +35,7 @@ import {
 } from './ui';
 
 @NgModule({
-  declarations: [ClientsComponent, ClientDetailComponent, TransactionComponent],
+  declarations: [ClientsComponent, ClientDetailComponent],
   providers: [
     ClientsService,
     ClientsComponentService,
@@ -39,6 +43,8 @@ import {
     EcommercesDataService,
     ClientsDataService,
     PaymentMethodsDataService,
+    TransactionsService,
+    TransactionsFiltersService,
   ],
   imports: [
     CommonModule,
@@ -54,6 +60,7 @@ import {
     CardsInfoSectionComponent,
     EcommercesSectionComponent,
     PaymentsMethodsSectionComponent,
+    TransactionSectionComponent,
   ],
 })
 export class ClientsModule {}

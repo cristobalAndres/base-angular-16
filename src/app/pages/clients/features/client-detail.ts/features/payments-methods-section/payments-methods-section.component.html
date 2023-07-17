@@ -22,7 +22,6 @@
           <app-paymenths-methods-table
             *ngIf="!isLoading()"
             [selectedPaymentMethodIds]="selectedPaymentMethodIds()"
-            (checkBoxItemClickEvent)="onOnePaymentMethodsChek($event)"
             [paymentsMehtods]="paymenthsMethodsList()"
             (allCheckBoxClickEvent)="onAllPaymentMethodsCheck()"
             (checkBoxItemClickEvent)="onOnePaymentMethodsChek($event)"

@@ -114,34 +114,6 @@ export class PaymentMethodsDataService {
     );
   }
 
-  selectPaymentMethodListById(id: string) {
-    const newPaymentMethodList = this.paymenthsMethodsList().map(
-      (paymentMethod) => {
-        if (paymentMethod.id == id) {
-          return {
-            ...paymentMethod,
-            is_selected: !paymentMethod.is_selected,
-          };
-        }
-        return paymentMethod;
-      },
-    );
-
-    this.paymenthsMethodsList.set(newPaymentMethodList);
-  }
-
-  allSelectPaymentMethodList() {
-    const newPaymentMethodList = this.paymenthsMethodsList().map(
-      (paymentMethod) => {
-        return {
-          ...paymentMethod,
-          is_selected: this.isAllPaymentMethodsSelected(),
-        };
-      },
-    );
-    this.paymenthsMethodsList.set(newPaymentMethodList);
-  }
-
   cleanData() {
     this.isLoading.set(false);
     this.hasError.set(false);
