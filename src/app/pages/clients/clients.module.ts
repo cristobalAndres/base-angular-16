@@ -2,10 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
-import {
-  TransactionsFiltersService,
-  TransactionsService,
-} from '../transactions/data-access';
 import { ClientsRoutingModule } from './clients-routing.module';
 import { ClientsComponent } from './clients.component';
 import {
@@ -18,12 +14,15 @@ import {
   ClientsDataService,
   EcommercesDataService,
   PaymentMethodsDataService,
+  TransactionsService,
 } from './features/client-detail.ts/data-access';
+import { TransactionsFiltersService } from './features/client-detail.ts/data-access/transactions-filter-service';
 import {
   CardsInfoSectionComponent,
   EcommercesSectionComponent,
   PaymentsMethodsSectionComponent,
   TransactionSectionComponent,
+  TransactionsFiltersComponent,
 } from './features/client-detail.ts/features';
 import { PaymentsMethodsTableComponent } from './features/client-detail.ts/ui/paymenths-methods-table';
 import {
@@ -61,6 +60,7 @@ import {
     EcommercesSectionComponent,
     PaymentsMethodsSectionComponent,
     TransactionSectionComponent,
+    TransactionsFiltersComponent,
   ],
 })
 export class ClientsModule {}

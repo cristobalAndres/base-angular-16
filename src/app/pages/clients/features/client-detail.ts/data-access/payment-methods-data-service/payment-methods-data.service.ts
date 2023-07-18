@@ -51,7 +51,7 @@ export class PaymentMethodsDataService {
     const accountsInPaymentMethodsListDto =
       this.paymentsMethodsResponse()?.accounts.map((account) => {
         return {
-          id: account.id.toString(),
+          id: account.account_id.toString(),
           mask: '',
           brand: 'CencoPay',
           card_type: 'Wallet',
@@ -66,7 +66,7 @@ export class PaymentMethodsDataService {
     const cardsInPaymentMethodsListDto =
       this.paymentsMethodsResponse()?.cards.map((card) => {
         return {
-          id: card.id.toString(),
+          id: card.card_id.toString(),
           mask: card?.mask,
           brand: card?.brand,
           card_type: card?.card_type,
@@ -87,18 +87,23 @@ export class PaymentMethodsDataService {
     ];
 
     this.paymenthsMethodsList.set(updatePaymenthsMethodsList);
-    updatePaymenthsMethodsList.forEach((paymentMethod) => {
-      this.toggleSelectedPaymentMethodId(paymentMethod.id);
-    });
+    this.toggleSelectAllPaymentMethods();
+    // updatePaymenthsMethodsList.forEach((paymentMethod) => {
+    //   this.toggleSelectedPaymentMethodId(paymentMethod.id);
+    // });
   }
 
   toggleSelectedPaymentMethodId(id: PaymentsMethodsListDto['id']) {
     this.selectedPaymentMethodIdsSig.update((selected) => {
       if (selected.has(id)) selected.delete(id);
       else selected.add(id);
-
       return selected;
     });
+
+    this.isAllPaymentMethodsSelected.set(
+      this.selectedPaymentMethodIdsSig().size ==
+        this.paymenthsMethodsList().length,
+    );
   }
 
   toggleSelectAllPaymentMethods() {
@@ -118,5 +123,7 @@ export class PaymentMethodsDataService {
     this.isLoading.set(false);
     this.hasError.set(false);
     this.paymentsMethodsResponse.set(undefined);
+    this.isAllPaymentMethodsSelected.set(false);
+    this.selectedPaymentMethodIdsSig.set(new Set());
   }
 }

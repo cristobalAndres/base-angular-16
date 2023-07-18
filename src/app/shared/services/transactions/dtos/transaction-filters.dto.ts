@@ -6,8 +6,8 @@ export type TransactionFiltersDto = Readonly<
     endDate: Date;
     statusFilter: TransactionStatus;
     userId: string;
-    cardIds: string[];
-    accountIds: string[];
+    cardIds: string;
+    accountIds: string;
     amount: number;
     transactionType: TransactionType;
   }>

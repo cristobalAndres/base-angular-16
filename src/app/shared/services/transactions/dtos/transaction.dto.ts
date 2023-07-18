@@ -1,4 +1,4 @@
-import { TransactionStatus } from '../enums';
+import { TransactionStatus, TransactionType } from '../enums';
 
 export type TransactionDto = Readonly<{
   transaction_id: string;
@@ -19,4 +19,7 @@ export type TransactionDto = Readonly<{
   commerce_code?: string;
   pos_id?: string;
   user_id?: string;
+  type?: TransactionType;
+  sub_type?: string;
+  is_external?: boolean;
 }>;

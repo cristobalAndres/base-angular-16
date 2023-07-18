@@ -39,10 +39,11 @@ export class IconButtonComponent {
   @Input() message?: string;
   @Input({ required: true }) icon!: string;
   @Input() isLoading = false;
+  @Input() data = '';
 
-  @Output() clickEmiter: EventEmitter<void> = new EventEmitter<void>();
+  @Output() clickEmiter: EventEmitter<string> = new EventEmitter<string>();
 
   protected onClick() {
-    this.clickEmiter.emit();
+    this.clickEmiter.emit(this.data);
   }
 }

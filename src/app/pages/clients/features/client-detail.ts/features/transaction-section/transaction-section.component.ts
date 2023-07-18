@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { PaymentsMethodsType } from '@app/pages/clients/shared';
-import {
-  TransactionsFiltersService,
-  TransactionsService,
-} from '@app/pages/transactions/data-access';
-import { TransactionsFiltersComponent } from '@app/pages/transactions/features';
 import { TransactionsTableComponent } from '@app/pages/transactions/ui';
+import { SpinnerComponent } from '@app/shared/components/loaders/spinner';
 import { PaginationComponent } from '@app/shared/components/tables';
 import {
   BehaviorSubject,
@@ -18,15 +15,24 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { PaymentMethodsDataService } from '../../data-access';
+import {
+  ClientsDataService,
+  PaymentMethodsDataService,
+  TransactionsService,
+} from '../../data-access';
+import { TransactionsFiltersService } from '../../data-access/transactions-filter-service';
+import { ClientTransactionsTableComponent } from '../../ui/client-transactions-table';
+import { TransactionsFiltersComponent } from '../transactions-filters';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
-    TransactionsFiltersComponent,
     PaginationComponent,
     TransactionsTableComponent,
+    ClientTransactionsTableComponent,
+    SpinnerComponent,
+    TransactionsFiltersComponent,
   ],
   selector: 'app-transaction-section',
   templateUrl: './transaction-section.component.html',
@@ -34,23 +40,7 @@ import { PaymentMethodsDataService } from '../../data-access';
 })
 export class TransactionSectionComponent {
   private paymentsMethodsDataService = inject(PaymentMethodsDataService);
-
-  protected paymentsMethodsIdSelected: {
-    id: string;
-    type: PaymentsMethodsType;
-  }[] = [];
-
-  loadIdsSelected() {
-    this.paymentsMethodsIdSelected = this.paymentsMethodsDataService
-      .paymenthsMethodsList()
-      .filter((payment) => payment.is_selected)
-      .map((payment) => {
-        return { id: payment.id, type: payment.payment_method_type };
-      });
-
-    // eslint-disable-next-line no-console
-    console.log(this.paymentsMethodsIdSelected);
-  }
+  private clientDataService = inject(ClientsDataService);
 
   private static readonly ITEMS_PER_PAGE = 10;
 
@@ -66,20 +56,48 @@ export class TransactionSectionComponent {
   private readonly transactionsApi$ = combineLatest([
     this.transactionsFilters.transactionsFilters$,
     this.currentPageSubject,
+    toObservable(this.clientDataService.clientSig),
+    toObservable(this.paymentsMethodsDataService.selectedPaymentMethodIds),
   ]).pipe(
     debounceTime(300),
     distinctUntilChanged(),
     tap(() => this.isLoadingSubject.next(true)),
-    switchMap(([filters, currentPage]) =>
+    switchMap(([filters, currentPage, clientData, paymentSelected]) =>
       this.transactionsService
         .getTransactions({
           perPage: TransactionSectionComponent.ITEMS_PER_PAGE,
           currentPage,
+          userId: clientData.id,
+          cardIds: this.getElementsIdByType(
+            paymentSelected,
+            PaymentsMethodsType.CARD,
+          ),
+          accountIds: this.getElementsIdByType(
+            paymentSelected,
+            PaymentsMethodsType.ACCOUNT,
+          ),
           ...filters,
         })
         .pipe(finalize(() => this.isLoadingSubject.next(false))),
     ),
   );
+
+  getElementsIdByType(selected: Set<string>, type: PaymentsMethodsType) {
+    const ids = this.paymentsMethodsDataService
+      .paymenthsMethodsList()
+      .filter(
+        (paymentMethod) =>
+          selected.has(paymentMethod.id) &&
+          paymentMethod.payment_method_type === type,
+      )
+      .map((paymentMethod) => paymentMethod.id);
+
+    if (ids.length === 0) {
+      return '';
+    }
+
+    return ids.length === 1 ? ids.at(0) : ids.join(',');
+  }
 
   protected readonly transactions$ = this.transactionsApi$.pipe(
     map(({ transactions }) => transactions),
