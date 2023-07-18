@@ -1,0 +1,71 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ title }}</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      aria-label="Close"
+      (click)="activateModal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <input
+        class="form-control"
+        type="text"
+        name="first-name"
+        id="first-name"
+        placeholder="Nombre"
+        [(ngModel)]="firstName"
+      />
+      <input
+        class="form-control"
+        type="text"
+        name="last-name"
+        id="last-name"
+        placeholder="Apellido Paterno"
+        [(ngModel)]="lastName"
+      />
+      <input
+        type="date"
+        class="form-control"
+        [(ngModel)]="date"
+        name="date"
+        id="date"
+      />
+      <label class="gender-section" for="">Género</label>
+      <input
+        class="input-radio"
+        type="radio"
+        [(ngModel)]="gender"
+        name="gender"
+        id="gender-male"
+        value="Masculino"
+      />
+      <label class="label-input-radio" for="gender-male">Masculino</label>
+      <input
+        class="input-radio"
+        type="radio"
+        [(ngModel)]="gender"
+        name="gender"
+        value="Femenino"
+        id="gender-female"
+      />
+      <label for="gender-female">Femenino</label>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      data-bs-dismiss="modal"
+      (click)="activateModal.dismiss('Cross click')"
+    >
+      Cerrar
+    </button>
+    <button type="button" class="btn btn-primary" (click)="saveChanges()">
+      Enviar
+    </button>
+  </div>
+</div>
