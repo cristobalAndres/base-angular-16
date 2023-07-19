@@ -2,6 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
+import { RutPipe } from '@app/shared/pipes';
 import { ClientsRoutingModule } from './clients-routing.module';
 import { ClientsComponent } from './clients.component';
 import {
@@ -46,6 +47,7 @@ import {
     TransactionsService,
     TransactionsFiltersService,
     DatePipe,
+    RutPipe,
   ],
   imports: [
     CommonModule,

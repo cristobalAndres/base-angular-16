@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IconButtonComponent } from '@app/shared/components/buttons';
 import { ActionsModalComponent } from '@app/shared/components/modals/actions-modal';
+import { RutPipe } from '@app/shared/pipes';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateDataKYCModalFormComponent } from '../../features/update-data-kyc-modal-form';
 import { ClientListDto } from '../../shared/dtos';
@@ -15,6 +16,7 @@ import { ClientListDto } from '../../shared/dtos';
     IconButtonComponent,
     ActionsModalComponent,
     UpdateDataKYCModalFormComponent,
+    RutPipe,
   ],
   selector: 'app-clients-table',
   templateUrl: './clients-table.component.html',

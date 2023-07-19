@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { SelectionDto } from '@app/shared/components/forms';
-import { formatRut } from '@app/shared/helpers';
 import { ClientsComponentService } from './data-access';
 import { CLientsFilters, ClientListDto, ClientParameter } from './shared';
 
@@ -62,7 +61,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
       return {
         id: client.id ?? '',
         email: client.email ?? '',
-        rut: formatRut(client.rut) ?? '',
+        rut: client.rut ?? '',
         phone_number: client.phone_number ?? '',
         name: client.name ?? '',
         last_name: client.last_name ?? '',

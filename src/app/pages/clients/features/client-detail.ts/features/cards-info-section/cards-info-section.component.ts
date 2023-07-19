@@ -7,7 +7,7 @@ import {
   CardPhotoInfoComponent,
 } from '@app/pages/clients/ui';
 import { BadgeColors } from '@app/shared/enums';
-import { formatRut } from '@app/shared/helpers';
+import { RutPipe } from '@app/shared/pipes';
 import { ClientsDataService } from '../../data-access/clients-data-service';
 
 @Component({
@@ -19,6 +19,7 @@ import { ClientsDataService } from '../../data-access/clients-data-service';
 })
 export class CardsInfoSectionComponent {
   private readonly datePipe = inject(DatePipe);
+  private readonly rutPipe = inject(RutPipe);
   private clientDataService = inject(ClientsDataService);
 
   protected readonly clientSig = this.clientDataService.client;
@@ -57,7 +58,7 @@ export class CardsInfoSectionComponent {
       },
       {
         title: 'Rut',
-        value: formatRut(this.clientSig().rut),
+        value: this.rutPipe.transform(this.clientSig().rut),
       },
       {
         title: 'Email',

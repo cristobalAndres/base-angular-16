@@ -22,7 +22,7 @@
         <th class="col-2" scope="col">
           {{ client?.name }} {{ client?.last_name }}
         </th>
-        <th class="col-2" scope="col">{{ client?.rut }}</th>
+        <th class="col-2" scope="col">{{ client?.rut | rut }}</th>
         <th class="col-2" scope="col">{{ client?.phone_number }}</th>
         <th class="col-2" scope="col">{{ client?.created_at }}</th>
         <th class="col-2" scope="col">
