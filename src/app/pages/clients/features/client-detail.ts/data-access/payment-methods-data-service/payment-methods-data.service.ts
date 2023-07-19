@@ -9,41 +9,52 @@ import { lastValueFrom } from 'rxjs';
 export class PaymentMethodsDataService {
   private readonly clientsService = inject(ClientsService);
 
-  readonly isLoading = signal(false);
-  readonly hasError = signal(false);
-  readonly paymentsMethodsResponse = signal<CardsResponse | undefined>(
+  private isLoadingSig = signal(false);
+  private hasErrorSig = signal(false);
+  private paymentsMethodsResponseSig = signal<CardsResponse | undefined>(
     undefined,
   );
-  readonly isAllPaymentMethodsSelected = signal(true);
-  readonly paymenthsMethodsList = signal<PaymentsMethodsListDto[]>([]);
+  private isAllPaymentMethodsSelectedSig = signal(true);
+  private paymenthsMethodsListSig = signal<PaymentsMethodsListDto[]>([]);
 
   private readonly selectedPaymentMethodIdsSig = signal<
     Set<PaymentsMethodsListDto['id']>
   >(new Set());
 
+  readonly isLoading = computed(() => this.isLoadingSig());
+  readonly hasError = computed(() => this.hasErrorSig());
+  readonly paymentsMethodsResponse = computed(() =>
+    this.paymentsMethodsResponseSig(),
+  );
+  readonly isAllPaymentMethodsSelected = computed(() =>
+    this.isAllPaymentMethodsSelectedSig(),
+  );
+  readonly paymenthsMethodsList = computed(() =>
+    this.paymenthsMethodsListSig(),
+  );
   readonly selectedPaymentMethodIds = computed(
     this.selectedPaymentMethodIdsSig,
   );
 
   async loadPaymentsMethodsOfClient(clientId: string) {
-    this.isLoading.set(true);
+    this.isLoadingSig.set(true);
     try {
       const result = await lastValueFrom(
         this.clientsService.getCards(clientId),
       );
-      this.paymentsMethodsResponse.set(result);
+      this.paymentsMethodsResponseSig.set(result);
       this.loadPaymentsMethodsList();
-      this.hasError.set(false);
+      this.hasErrorSig.set(false);
     } catch (error) {
-      this.hasError.set(true);
+      this.hasErrorSig.set(true);
     } finally {
-      this.isLoading.set(false);
+      this.isLoadingSig.set(false);
     }
   }
 
   loadPaymentsMethodsList() {
     const accountsInPaymentMethodsListDto =
-      this.paymentsMethodsResponse()?.accounts.map((account) => {
+      this.paymentsMethodsResponseSig()?.accounts.map((account) => {
         return {
           id: account.account_id.toString(),
           mask: '',
@@ -53,12 +64,12 @@ export class PaymentMethodsDataService {
           added_at: `${getDate(account?.created_at)} ${getTime(
             account?.created_at,
           )}`,
-          is_selected: this.isAllPaymentMethodsSelected(),
+          is_selected: this.isAllPaymentMethodsSelectedSig(),
           payment_method_type: PaymentsMethodsType.ACCOUNT,
         } as PaymentsMethodsListDto;
       });
     const cardsInPaymentMethodsListDto =
-      this.paymentsMethodsResponse()?.cards.map((card) => {
+      this.paymentsMethodsResponseSig()?.cards.map((card) => {
         return {
           id: card.card_id.toString(),
           mask: card?.mask,
@@ -67,7 +78,7 @@ export class PaymentMethodsDataService {
           is_active: !card?.deleted_at,
           is_inherited: card?.is_inherited,
           added_at: `${getDate(card?.added_at)} ${getTime(card?.added_at)}`,
-          is_selected: this.isAllPaymentMethodsSelected(),
+          is_selected: this.isAllPaymentMethodsSelectedSig(),
           payment_method_type: PaymentsMethodsType.CARD,
           deleted_at: `${getDate(card?.deleted_at)} ${getTime(
             card?.deleted_at,
@@ -80,11 +91,8 @@ export class PaymentMethodsDataService {
       ...(cardsInPaymentMethodsListDto ?? []),
     ];
 
-    this.paymenthsMethodsList.set(updatePaymenthsMethodsList);
+    this.paymenthsMethodsListSig.set(updatePaymenthsMethodsList);
     this.toggleSelectAllPaymentMethods();
-    // updatePaymenthsMethodsList.forEach((paymentMethod) => {
-    //   this.toggleSelectedPaymentMethodId(paymentMethod.id);
-    // });
   }
 
   toggleSelectedPaymentMethodId(id: PaymentsMethodsListDto['id']) {
@@ -94,30 +102,30 @@ export class PaymentMethodsDataService {
       return selected;
     });
 
-    this.isAllPaymentMethodsSelected.set(
+    this.isAllPaymentMethodsSelectedSig.set(
       this.selectedPaymentMethodIdsSig().size ==
-        this.paymenthsMethodsList().length,
+        this.paymenthsMethodsListSig().length,
     );
   }
 
   toggleSelectAllPaymentMethods() {
-    if (this.isAllPaymentMethodsSelected())
+    if (this.isAllPaymentMethodsSelectedSig())
       this.selectedPaymentMethodIdsSig.set(new Set());
     else
       this.selectedPaymentMethodIdsSig.set(
-        new Set(this.paymenthsMethodsList().map(({ id }) => id)),
+        new Set(this.paymenthsMethodsListSig().map(({ id }) => id)),
       );
 
-    this.isAllPaymentMethodsSelected.update(
+    this.isAllPaymentMethodsSelectedSig.update(
       (areAllSelected) => !areAllSelected,
     );
   }
 
   cleanData() {
-    this.isLoading.set(false);
-    this.hasError.set(false);
-    this.paymentsMethodsResponse.set(undefined);
-    this.isAllPaymentMethodsSelected.set(false);
+    this.isLoadingSig.set(false);
+    this.hasErrorSig.set(false);
+    this.paymentsMethodsResponseSig.set(undefined);
+    this.isAllPaymentMethodsSelectedSig.set(false);
     this.selectedPaymentMethodIdsSig.set(new Set());
   }
 }

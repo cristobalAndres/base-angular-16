@@ -14,14 +14,13 @@ import { PaymentMethodsDataService } from '../../data-access';
 export class PaymentsMethodsSectionComponent {
   private paymentsMethodsDataService = inject(PaymentMethodsDataService);
 
-  protected readonly isLoading =
-    this.paymentsMethodsDataService.isLoading.asReadonly();
+  protected readonly isLoading = this.paymentsMethodsDataService.isLoading;
   protected readonly paymentsMethodsResponse =
-    this.paymentsMethodsDataService.paymentsMethodsResponse.asReadonly();
+    this.paymentsMethodsDataService.paymentsMethodsResponse;
   protected paymenthsMethodsList =
-    this.paymentsMethodsDataService.paymenthsMethodsList.asReadonly();
+    this.paymentsMethodsDataService.paymenthsMethodsList;
   protected isAllPaymentMethodsSelected =
-    this.paymentsMethodsDataService.isAllPaymentMethodsSelected.asReadonly();
+    this.paymentsMethodsDataService.isAllPaymentMethodsSelected;
 
   protected selectedPaymentMethodIds =
     this.paymentsMethodsDataService.selectedPaymentMethodIds;
