@@ -38,7 +38,7 @@ import { CLientsFilters, ClientParameter } from '../../shared';
             />
             <input
               type="text"
-              class="form-control input-text"
+              class="form-control input-text mx-3"
               placeholder="buscar..."
               aria-label="searchText"
               #searchText
