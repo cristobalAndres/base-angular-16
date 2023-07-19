@@ -1,12 +1,13 @@
+import { DatePipe } from '@angular/common';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { ClientsService } from '@app/pages/clients/data-access';
 import { CardsResponse, PaymentsMethodsType } from '@app/pages/clients/shared';
 import { PaymentsMethodsListDto } from '@app/pages/clients/shared/dtos/payments-methods-list.dto';
-import { getDate, getTime } from '@app/shared/helpers';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class PaymentMethodsDataService {
+  private readonly datePipe = inject(DatePipe);
   private readonly clientsService = inject(ClientsService);
 
   private isLoadingSig = signal(false);
@@ -61,9 +62,7 @@ export class PaymentMethodsDataService {
           brand: 'CencoPay',
           card_type: 'Wallet',
           is_active: account?.enabled_account,
-          added_at: `${getDate(account?.created_at)} ${getTime(
-            account?.created_at,
-          )}`,
+          added_at: this.datePipe.transform(account.created_at, 'medium'),
           is_selected: this.isAllPaymentMethodsSelectedSig(),
           payment_method_type: PaymentsMethodsType.ACCOUNT,
         } as PaymentsMethodsListDto;
@@ -77,12 +76,10 @@ export class PaymentMethodsDataService {
           card_type: card?.card_type,
           is_active: !card?.deleted_at,
           is_inherited: card?.is_inherited,
-          added_at: `${getDate(card?.added_at)} ${getTime(card?.added_at)}`,
+          added_at: this.datePipe.transform(card?.added_at, 'medium'),
           is_selected: this.isAllPaymentMethodsSelectedSig(),
           payment_method_type: PaymentsMethodsType.CARD,
-          deleted_at: `${getDate(card?.deleted_at)} ${getTime(
-            card?.deleted_at,
-          )}`,
+          deleted_at: this.datePipe.transform(card?.deleted_at, 'medium'),
         } as PaymentsMethodsListDto;
       });
 

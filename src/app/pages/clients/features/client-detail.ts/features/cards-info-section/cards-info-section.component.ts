@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
 import { UserStatusType } from '@app/pages/clients/shared';
 import { CardInfoDataDto } from '@app/pages/clients/shared/dtos/card-info-data.dto';
@@ -7,7 +7,7 @@ import {
   CardPhotoInfoComponent,
 } from '@app/pages/clients/ui';
 import { BadgeColors } from '@app/shared/enums';
-import { formatRut, getDate, getTime } from '@app/shared/helpers';
+import { formatRut } from '@app/shared/helpers';
 import { ClientsDataService } from '../../data-access/clients-data-service';
 
 @Component({
@@ -18,6 +18,7 @@ import { ClientsDataService } from '../../data-access/clients-data-service';
   styleUrls: ['./cards-info-section.component.scss'],
 })
 export class CardsInfoSectionComponent {
+  private readonly datePipe = inject(DatePipe);
   private clientDataService = inject(ClientsDataService);
 
   protected readonly clientSig = this.clientDataService.client;
@@ -64,9 +65,8 @@ export class CardsInfoSectionComponent {
       },
       {
         title: 'Fecha de creación',
-        value: `${getDate(this.clientSig().created_at)} ${getTime(
-          this.clientSig().created_at,
-        )}`,
+        value:
+          this.datePipe.transform(this.clientSig().created_at, 'medium') ?? '',
       },
       {
         title: 'Teléfono',

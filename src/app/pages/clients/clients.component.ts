@@ -1,6 +1,7 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { SelectionDto } from '@app/shared/components/forms';
-import { formatRut, getDate, getTime } from '@app/shared/helpers';
+import { formatRut } from '@app/shared/helpers';
 import { ClientsComponentService } from './data-access';
 import { CLientsFilters, ClientListDto, ClientParameter } from './shared';
 
@@ -10,6 +11,7 @@ import { CLientsFilters, ClientListDto, ClientParameter } from './shared';
   styleUrls: ['./clients.component.scss'],
 })
 export class ClientsComponent implements OnInit, OnDestroy {
+  private readonly datePipe = inject(DatePipe);
   private readonly clientsComponentService = inject(ClientsComponentService);
 
   protected readonly clients = this.clientsComponentService.clients;
@@ -65,7 +67,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
         name: client.name ?? '',
         last_name: client.last_name ?? '',
         created_at: client.created_at
-          ? `${getDate(client.created_at)} ${getTime(client.created_at)}`
+          ? this.datePipe.transform(client.created_at, 'medium')?.toString()
           : '',
       };
     });

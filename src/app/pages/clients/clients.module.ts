@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
@@ -45,6 +45,7 @@ import {
     PaymentMethodsDataService,
     TransactionsService,
     TransactionsFiltersService,
+    DatePipe,
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { PaymentsMethodsType } from '@app/pages/clients/shared';
@@ -6,7 +6,6 @@ import { TransactionModalDataDto } from '@app/pages/clients/shared/dtos/transact
 import { TransactionsTableComponent } from '@app/pages/transactions/ui';
 import { SpinnerComponent } from '@app/shared/components/loaders/spinner';
 import { PaginationComponent } from '@app/shared/components/tables';
-import { getDate, getTime } from '@app/shared/helpers';
 import { TransactionDto } from '@app/shared/services/transactions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -39,11 +38,13 @@ import { TransactionsFiltersComponent } from '../transactions-filters';
     SpinnerComponent,
     TransactionsFiltersComponent,
   ],
+  providers: [DatePipe],
   selector: 'app-transaction-section',
   templateUrl: './transaction-section.component.html',
   styleUrls: ['./transaction-section.component.scss'],
 })
 export class TransactionSectionComponent {
+  private readonly datePipe = inject(DatePipe);
   private paymentsMethodsDataService = inject(PaymentMethodsDataService);
   private clientDataService = inject(ClientsDataService);
   private modalService = inject(NgbModal);
@@ -174,7 +175,7 @@ export class TransactionSectionComponent {
       },
       {
         title: 'Fecha',
-        value: `${getDate(transaction.date)} ${getTime(transaction.date)}`,
+        value: this.datePipe.transform(transaction.date)?.toString(),
       },
       {
         title: 'Número de operación',
