@@ -114,7 +114,7 @@ export class CardsInfoSectionComponent {
             ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
               ? 'success'
               : 'error'
-            : 'No hay información disponible', //client.dynamo && client.dynamo.kyc_valid
+            : '-', //client.dynamo && client.dynamo.kyc_valid
         isBadge: true,
         color:
           this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
@@ -132,7 +132,7 @@ export class CardsInfoSectionComponent {
             ? this.clientSig()!.dynamo!.wallet_active.b_o_o_l
               ? 'Active'
               : 'Blocked'
-            : 'No hay información disponible',
+            : '-',
         isBadge: true,
         color:
           this.clientSig() &&

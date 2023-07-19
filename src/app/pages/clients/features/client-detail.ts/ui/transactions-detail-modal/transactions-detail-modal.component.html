@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Detalle transación</h4>
+  <button
+    type="button"
+    class="btn btn-primary"
+    aria-label="Close"
+    (click)="activateModal.dismiss()"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tbody>
+        <tr *ngFor="let data of transactionData">
+          <th scope="row" colspan="6">{{ data.title }}</th>
+          <td colspan="6">{{ data.value }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

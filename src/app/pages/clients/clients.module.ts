@@ -25,6 +25,7 @@ import {
   TransactionsFiltersComponent,
 } from './features/client-detail.ts/features';
 import { PaymentsMethodsTableComponent } from './features/client-detail.ts/ui/paymenths-methods-table';
+import { TransactionsDetailModalComponent } from './features/client-detail.ts/ui/transactions-detail-modal/transactions-detail-modal.component';
 import {
   CardInfoComponent,
   CardPhotoInfoComponent,
@@ -61,6 +62,7 @@ import {
     PaymentsMethodsSectionComponent,
     TransactionSectionComponent,
     TransactionsFiltersComponent,
+    TransactionsDetailModalComponent,
   ],
 })
 export class ClientsModule {}

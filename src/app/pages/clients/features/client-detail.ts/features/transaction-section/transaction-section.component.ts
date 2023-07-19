@@ -2,9 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { PaymentsMethodsType } from '@app/pages/clients/shared';
+import { TransactionModalDataDto } from '@app/pages/clients/shared/dtos/transaction-modal-data.dto';
 import { TransactionsTableComponent } from '@app/pages/transactions/ui';
 import { SpinnerComponent } from '@app/shared/components/loaders/spinner';
 import { PaginationComponent } from '@app/shared/components/tables';
+import { getDate, getTime } from '@app/shared/helpers';
+import { TransactionDto } from '@app/shared/services/transactions';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   combineLatest,
@@ -22,6 +26,7 @@ import {
 } from '../../data-access';
 import { TransactionsFiltersService } from '../../data-access/transactions-filter-service';
 import { ClientTransactionsTableComponent } from '../../ui/client-transactions-table';
+import { TransactionsDetailModalComponent } from '../../ui/transactions-detail-modal/transactions-detail-modal.component';
 import { TransactionsFiltersComponent } from '../transactions-filters';
 
 @Component({
@@ -41,6 +46,7 @@ import { TransactionsFiltersComponent } from '../transactions-filters';
 export class TransactionSectionComponent {
   private paymentsMethodsDataService = inject(PaymentMethodsDataService);
   private clientDataService = inject(ClientsDataService);
+  private modalService = inject(NgbModal);
 
   private static readonly ITEMS_PER_PAGE = 10;
 
@@ -117,5 +123,119 @@ export class TransactionSectionComponent {
 
   protected onCurrentPageChange(currentPage: number) {
     this.currentPageSubject.next(currentPage);
+  }
+
+  protected onDetailButtonClick(transactionId: string) {
+    const transactionsSub = this.transactionsApi$.subscribe((response) => {
+      const modalRef = this.modalService.open(
+        TransactionsDetailModalComponent,
+        {
+          size: 'lg',
+          centered: true,
+        },
+      );
+
+      if (
+        this.updateInstanceOfTransactionDetailModalCompponent(
+          modalRef.componentInstance,
+        )
+      ) {
+        modalRef.componentInstance.activateModal = modalRef;
+        modalRef.componentInstance.transactionData = response.transactions
+          .filter((transaction) => transaction.transaction_id === transactionId)
+          .map((transaction) => this.mapDataFromTransaction(transaction))
+          .at(0) as TransactionModalDataDto[];
+      }
+
+      modalRef.result.then(
+        () => {
+          transactionsSub.unsubscribe();
+        },
+        () => {
+          transactionsSub.unsubscribe();
+        },
+      );
+    });
+  }
+
+  private updateInstanceOfTransactionDetailModalCompponent(
+    componentIntance: unknown,
+  ): componentIntance is TransactionsDetailModalComponent {
+    return componentIntance instanceof TransactionsDetailModalComponent;
+  }
+
+  private mapDataFromTransaction(
+    transaction: TransactionDto,
+  ): TransactionModalDataDto[] {
+    return [
+      {
+        title: 'Transacción ID',
+        value: transaction.transaction_id,
+      },
+      {
+        title: 'Fecha',
+        value: `${getDate(transaction.date)} ${getTime(transaction.date)}`,
+      },
+      {
+        title: 'Número de operación',
+        value: transaction.authorization_code,
+      },
+      {
+        title: 'Estado',
+        value: transaction.status,
+      },
+      {
+        title: 'Monto',
+        value: `$ ${transaction.amount ?? ''}`,
+      },
+      {
+        title: 'Descuento',
+        value: `$ ${transaction.saving ?? ''}`,
+      },
+      {
+        title: 'Total',
+        value: `$ ${transaction.total ?? ''}`,
+      },
+      {
+        title: 'Comercio',
+        value: transaction.commerce_code,
+      },
+      {
+        title: 'Método de pago',
+        value: transaction.payment_method,
+      },
+      {
+        title: 'Referencia ID',
+        value: transaction.reference_id,
+      },
+      {
+        title: 'Nombre sucursal',
+        value: transaction.store_name,
+      },
+      {
+        title: 'Caja',
+        value: transaction.pos_id,
+      },
+      {
+        title: 'Devolución',
+        value: transaction.reference_id ? 'SÍ' : 'NO',
+      },
+      {
+        title: 'Número de confirmación',
+        value: transaction.confirmation_number,
+      },
+      {
+        title: 'Orden de pago',
+        value: transaction.buy_order,
+      },
+      {
+        title: 'Tipo',
+        value: transaction.type,
+      },
+      {
+        title: 'Sub Tipo',
+        value: transaction.sub_type,
+      },
+    ];
   }
 }

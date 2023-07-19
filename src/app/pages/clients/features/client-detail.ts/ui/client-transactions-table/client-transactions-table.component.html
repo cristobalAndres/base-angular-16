@@ -43,8 +43,7 @@
         <td class="col-1" scope="col">
           <app-icon-button
             icon="bi bi-eye"
-            [data]="transaction?.transaction_id ?? ''"
-            (clickEmiter)="onClickViewInfo($event)"
+            (clickEmiter)="onClickViewInfo(transaction.transaction_id)"
           />
         </td>
       </tr>

@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { IconButtonComponent } from '@app/shared/components/buttons';
 import { TransactionStatusPipe, TransactionTypePipe } from '@app/shared/pipes';
 import { TransactionDto } from '@app/shared/services/transactions';
@@ -26,6 +32,9 @@ import { TransactionDto } from '@app/shared/services/transactions';
 export class ClientTransactionsTableComponent {
   @Input({ required: true }) transactions!: ReadonlyArray<TransactionDto>;
 
+  @Output() viewTransactionDetailEmitter: EventEmitter<string> =
+    new EventEmitter<string>();
+
   protected trackByTransactionId(
     _: number,
     { transaction_id }: TransactionDto,
@@ -35,6 +44,6 @@ export class ClientTransactionsTableComponent {
 
   /* eslint-disable-next-line  */
   protected onClickViewInfo(id: string) {
-    //TODO: implement
+    this.viewTransactionDetailEmitter.emit(id);
   }
 }
