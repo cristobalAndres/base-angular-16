@@ -12,14 +12,11 @@ import { CLientsFilters, ClientListDto, ClientParameter } from './shared';
 export class ClientsComponent implements OnInit, OnDestroy {
   private readonly clientsComponentService = inject(ClientsComponentService);
 
-  protected readonly clients =
-    this.clientsComponentService.clients.asReadonly();
+  protected readonly clients = this.clientsComponentService.clients;
 
-  protected readonly isLoading =
-    this.clientsComponentService.isLoading.asReadonly();
+  protected readonly isLoading = this.clientsComponentService.isLoading;
 
-  protected readonly pagination =
-    this.clientsComponentService.pagination.asReadonly();
+  protected readonly pagination = this.clientsComponentService.pagination;
 
   protected clientsList: ClientListDto[] = [];
 
@@ -30,7 +27,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.clientsComponentService.currentPage.set(1);
+    this.clientsComponentService.changeCurrentPage(1);
     await this.clientsComponentService.loadClients();
   }
 
@@ -39,7 +36,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
   }
 
   protected async onCurrentPageChange(currentPage: number) {
-    this.clientsComponentService.currentPage.set(currentPage);
+    this.clientsComponentService.changeCurrentPage(currentPage);
     await this.clientsComponentService.loadClients();
   }
 
@@ -51,8 +48,10 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   async onSearchButtonClick(clientsFilters: CLientsFilters) {
     this.clientsComponentService.cleanLocalData();
-    this.clientsComponentService.search.set(clientsFilters.searchText);
-    this.clientsComponentService.searchBy.set(clientsFilters.searchBy);
+    this.clientsComponentService.changeFilter(
+      clientsFilters.searchText,
+      clientsFilters.searchBy ?? ClientParameter.EMAIL,
+    );
     await this.clientsComponentService.loadClients();
   }
 
