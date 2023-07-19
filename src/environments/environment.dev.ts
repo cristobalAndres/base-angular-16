@@ -4,4 +4,6 @@ export const environment: Environment = {
   production: false,
   apiUrl:
     'https://sqbtyilwv2.execute-api.us-east-1.amazonaws.com/dev/cw-cl-users-back-manager/api/v1',
+  apiKYC:
+    'https://cw-cl-user-data-develop.cencosud.net/user-data/user/KYC/enable',
 };

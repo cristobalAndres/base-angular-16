@@ -26,12 +26,30 @@
         <th class="col-2" scope="col">{{ client?.phone_number }}</th>
         <th class="col-2" scope="col">{{ client?.created_at }}</th>
         <th class="col-2" scope="col">
-          <app-icon-button
+          <!-- TODO: este botón espera desarrollo de funcionalidad -->
+          <!-- <app-icon-button
             [icon]="'bi-box-arrow-right'"
-            (onClickEmiter)="onClick()"
+            title="Cerrar sesión"
+            tooltip="Cerrar sesión"
+            (click)="signOff(content, client.rut)"
+          ></app-icon-button> -->
+          <app-icon-button
+            [icon]="'bi bi-plus'"
+            title="Agregar información"
+            tooltip="Agregar información"
+            (click)="addInfo(client.id)"
           ></app-icon-button>
         </th>
       </tr>
     </tbody>
   </table>
 </div>
+<!-- TODO: este modal espera desarrollo de funcionalidad -->
+<!-- <ng-template #content let-modal id="modal-basic-title">
+  <app-actions-modal
+    [title]="title"
+    [modal]="modal"
+    [body]="body"
+    [actions]="actions"
+  ></app-actions-modal>
+</ng-template> -->

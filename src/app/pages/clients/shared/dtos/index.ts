@@ -9,3 +9,4 @@ export * from './ecommerce-response.dto';
 export * from './ecommerce.dto';
 export * from './get-clients-params';
 export * from './get-ecommerce-params.dto';
+export * from './update.data-kyc.dto';
