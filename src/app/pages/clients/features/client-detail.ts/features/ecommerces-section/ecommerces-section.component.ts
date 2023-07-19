@@ -61,9 +61,7 @@ export class EcommercesSectionComponent {
           id: ecommerce.id ?? '',
           channel: ecommerce.channel ?? '',
           email: ecommerce.email ?? '',
-          timestamp: ecommerce.timestamp
-            ? this.datePipe.transform(ecommerce.timestamp, 'medium')?.toString()
-            : '',
+          timestamp: ecommerce.timestamp ?? '',
           statusValue: this.getStatusAndColorOfEcommerce(ecommerce).status,
           statusColor: this.getStatusAndColorOfEcommerce(ecommerce).color,
         };

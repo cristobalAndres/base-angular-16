@@ -59,9 +59,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
         phone_number: client.phone_number ?? '',
         name: client.name ?? '',
         last_name: client.last_name ?? '',
-        created_at: client.created_at
-          ? this.datePipe.transform(client.created_at, 'medium')?.toString()
-          : '',
+        created_at: client.created_at ?? '',
       };
     });
   }

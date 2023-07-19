@@ -12,7 +12,7 @@
       <tr *ngFor="let ecommerce of ecommerces" class="d-flex">
         <td class="col-3">{{ ecommerce?.channel }}</td>
         <td class="col-3">{{ ecommerce?.email }}</td>
-        <td class="col-3">{{ ecommerce?.timestamp }}</td>
+        <td class="col-3">{{ ecommerce?.timestamp | date : 'medium' }}</td>
         <td class="col-3">
           <app-default-badge
             [text]="ecommerce.statusValue"

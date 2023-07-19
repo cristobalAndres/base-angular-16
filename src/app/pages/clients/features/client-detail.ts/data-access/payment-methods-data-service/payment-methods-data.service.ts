@@ -62,7 +62,7 @@ export class PaymentMethodsDataService {
           brand: 'CencoPay',
           card_type: 'Wallet',
           is_active: account?.enabled_account,
-          added_at: this.datePipe.transform(account.created_at, 'medium'),
+          added_at: account.created_at,
           is_selected: this.isAllPaymentMethodsSelectedSig(),
           payment_method_type: PaymentsMethodsType.ACCOUNT,
         } as PaymentsMethodsListDto;
@@ -76,7 +76,7 @@ export class PaymentMethodsDataService {
           card_type: card?.card_type,
           is_active: !card?.deleted_at,
           is_inherited: card?.is_inherited,
-          added_at: this.datePipe.transform(card?.added_at, 'medium'),
+          added_at: card?.added_at,
           is_selected: this.isAllPaymentMethodsSelectedSig(),
           payment_method_type: PaymentsMethodsType.CARD,
           deleted_at: this.datePipe.transform(card?.deleted_at, 'medium'),

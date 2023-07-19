@@ -3,7 +3,7 @@
     <div class="col-md-8 align-self-center">
       <h3
         *ngIf="
-          !isEcommercesLoadingSig() || ecommercesResponseSig().total_items != 0
+          !isEcommercesLoadingSig() || ecommercesResponseSig().total_items !== 0
         "
       >
         Comercios Vinculados
@@ -11,7 +11,7 @@
     </div>
     <div class="col-md-4">
       <app-pagination
-        *ngIf="ecommercesResponseSig().total_items != 0"
+        *ngIf="ecommercesResponseSig().total_items !== 0"
         itemName="Transacciones"
         (pageChange)="onEcommerceCurrentPageChange($event)"
         [page]="ecommercesResponseSig().current_page!"
@@ -27,7 +27,7 @@
         <p
           *ngIf="
             !isEcommercesLoadingSig() &&
-            ecommercesResponseSig().total_items == 0
+            ecommercesResponseSig().total_items === 0
           "
         >
           No hay comercios vinculados
@@ -35,7 +35,7 @@
         <app-client-deatil-ecommerces-table
           *ngIf="
             !isEcommercesLoadingSig() &&
-            ecommercesResponseSig().total_items != 0
+            ecommercesResponseSig().total_items !== 0
           "
           [ecommerces]="ecommerceList"
         ></app-client-deatil-ecommerces-table>
