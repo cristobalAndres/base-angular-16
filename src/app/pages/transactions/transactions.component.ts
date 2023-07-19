@@ -3,6 +3,7 @@ import {
   BehaviorSubject,
   combineLatest,
   debounceTime,
+  distinctUntilChanged,
   finalize,
   map,
   switchMap,
@@ -31,8 +32,9 @@ export class TransactionsComponent {
     this.transactionsFilters.transactionsFilters$,
     this.currentPageSubject,
   ]).pipe(
-    tap(() => this.isLoadingSubject.next(true)),
     debounceTime(300),
+    distinctUntilChanged(),
+    tap(() => this.isLoadingSubject.next(true)),
     switchMap(([filters, currentPage]) =>
       this.transactionsService
         .getTransactions({

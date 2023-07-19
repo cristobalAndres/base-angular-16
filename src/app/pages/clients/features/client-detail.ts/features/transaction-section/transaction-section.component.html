@@ -1,0 +1,52 @@
+<div class="card shadow border-light row px-3 py-4 mb-4">
+  <div class="row align-items-baseline">
+    <div class="col-md-12">
+      <h3>Transacciones</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <app-transactions-filters />
+    </div>
+    <div class="col-md-4">
+      <app-pagination
+        *ngIf="pagination$ | async as pagination"
+        itemName="Transacciones"
+        [page]="(currentPage$ | async)!"
+        (pageChange)="onCurrentPageChange($event)"
+        [totalPages]="pagination.totalPages"
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+      />
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <p
+          *ngIf="
+            !(isLoading$ | async) &&
+            (transactions$ | async) &&
+            (transactions$ | async)?.length == 0
+          "
+        >
+          No hay transacciones
+        </p>
+        <div
+          *ngIf="
+            !(isLoading$ | async) &&
+            (transactions$ | async) &&
+            (transactions$ | async)?.length != 0
+          "
+        >
+          <app-client-transactions-table
+            *ngIf="transactions$ | async as transactions"
+            [transactions]="transactions"
+            (viewTransactionDetailEmitter)="onDetailButtonClick($event)"
+          />
+        </div>
+        <app-spinner *ngIf="isLoading$ | async"></app-spinner>
+      </div>
+    </div>
+  </div>
+</div>

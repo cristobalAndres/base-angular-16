@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class SidebarComponent {
   menus = [
     { name: 'Home', link: '/home', icon: 'house' },
-    { name: 'Clientes', link: '/users', icon: 'file-person' },
+    { name: 'Clientes', link: '/clients', icon: 'file-person' },
     { name: 'Transacciones', link: '/transactions', icon: 'cash-stack' },
   ];
 }

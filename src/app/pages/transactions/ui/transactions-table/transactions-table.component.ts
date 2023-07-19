@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TransactionDto } from '../../shared';
-import { TransactionStatusPipe } from '../../utils';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { TransactionStatusPipe } from '@app/shared/pipes';
+import { TransactionDto } from '@app/shared/services/transactions';
 
 @Component({
   selector: 'app-transactions-table',
