@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import { SelectionDto } from '@app/shared/components/forms';
 import { ClientsComponentService } from './data-access';
-import { CLientsFilters, ClientListDto, ClientParameter } from './shared';
+import { CLientsFilters, ClientParameter } from './shared';
 
 @Component({
   selector: 'app-clients',
@@ -19,13 +19,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   protected readonly pagination = this.clientsComponentService.pagination;
 
-  protected clientsList: ClientListDto[] = [];
-
-  constructor() {
-    effect(() => {
-      this.loadClientsList();
-    });
-  }
+  protected clientsList = computed(() => this.loadClientsList());
 
   async ngOnInit() {
     this.clientsComponentService.changeCurrentPage(1);
@@ -57,7 +51,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
   }
 
   private loadClientsList() {
-    this.clientsList = this.clients().map((client) => {
+    return this.clients().map((client) => {
       return {
         id: client.id ?? '',
         email: client.email ?? '',
