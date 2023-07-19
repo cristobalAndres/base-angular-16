@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { ClientDto, ClientParameter, Pagination } from '../../shared';
 import { ClientsService } from '../clients-service';
@@ -9,17 +9,16 @@ export class ClientsComponentService {
   readonly isLoading = signal(false);
   readonly currentPage = signal(1);
 
-  readonly clients: WritableSignal<ClientDto[]> = signal([]);
-  readonly pagination: WritableSignal<Pagination> = signal({
+  readonly clients = signal<ClientDto[]>([]);
+  readonly pagination = signal<Pagination>({
     current_page: 1,
     per_page: 0,
     total_items: 0,
     total_pages: 0,
   });
 
-  readonly searchBy: WritableSignal<ClientParameter | undefined> =
-    signal(undefined);
-  readonly search: WritableSignal<string | undefined> = signal(undefined);
+  readonly searchBy = signal<ClientParameter | undefined>(undefined);
+  readonly search = signal<string | undefined>(undefined);
 
   async loadClients() {
     this.isLoading.set(true);

@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  WritableSignal,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { ClientsService } from '@app/pages/clients/data-access';
 import { CardsResponse, PaymentsMethodsType } from '@app/pages/clients/shared';
 import { PaymentsMethodsListDto } from '@app/pages/clients/shared/dtos/payments-methods-list.dto';
@@ -17,11 +11,11 @@ export class PaymentMethodsDataService {
 
   readonly isLoading = signal(false);
   readonly hasError = signal(false);
-  readonly paymentsMethodsResponse: WritableSignal<CardsResponse | undefined> =
-    signal(undefined);
+  readonly paymentsMethodsResponse = signal<CardsResponse | undefined>(
+    undefined,
+  );
   readonly isAllPaymentMethodsSelected = signal(true);
-  readonly paymenthsMethodsList: WritableSignal<PaymentsMethodsListDto[]> =
-    signal([]);
+  readonly paymenthsMethodsList = signal<PaymentsMethodsListDto[]>([]);
 
   private readonly selectedPaymentMethodIdsSig = signal<
     Set<PaymentsMethodsListDto['id']>

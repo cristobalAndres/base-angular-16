@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  WritableSignal,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { EcommerceResponseDto } from '@app/pages/clients/shared';
 import { lastValueFrom } from 'rxjs';
@@ -21,13 +15,12 @@ export class EcommercesDataService {
   private isLoadingSig = signal(true);
   private currentPageSig = signal(1);
   private hasErrorSig = signal(false);
-  private ecommercesServiceResponseSig: WritableSignal<EcommerceResponseDto> =
-    signal({
-      ecommerces: [],
-      total_items: 0,
-      current_page: 1,
-      total_pages: 1,
-    });
+  private ecommercesServiceResponseSig = signal<EcommerceResponseDto>({
+    ecommerces: [],
+    total_items: 0,
+    current_page: 1,
+    total_pages: 1,
+  });
 
   perPage = 5;
   readonly isLoading = computed(() => this.isLoadingSig());
