@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../../../environments/environment.dev';
+import { environment } from '@environment';
+import { UpdateKycUserInformationDto } from './dtos';
 
 @Injectable()
 export class KycService {
@@ -8,21 +9,17 @@ export class KycService {
   private readonly url = environment.apiKYC;
 
   updateKycInformationUser(
-    clientData: {
-      name: string;
-      lastName: string;
-      birthDate: string;
-      gender: string;
-    },
+    clientData: UpdateKycUserInformationDto,
     clientId: string,
   ) {
-    if (!clientData || !clientId) {
-      throw new Error('clientId or clientData is required');
-    }
+    if (!clientData || !clientId)
+      throw new Error('clientId and clientData are required');
+
     const body = {
       ...clientData,
       cognitoId: clientId,
     };
-    return this.httpClient.post<unknown>(this.url, body);
+
+    return this.httpClient.post<void>(this.url, body);
   }
 }
