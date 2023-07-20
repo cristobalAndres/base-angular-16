@@ -35,7 +35,7 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
     lastName: ['', Validators.required],
     birthDate: new FormControl<Date | null>(null, Validators.required),
     gender: ['', Validators.required],
-  } satisfies Record<keyof UpdateKycUserInformationDto, unknown>);
+  });
 
   ngOnDestroy() {
     this.updateKycInformationUserSubscription?.unsubscribe();
@@ -61,20 +61,22 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
       .subscribe();
   }
 
-  protected getControl<TControlName extends keyof UpdateKycUserInformationDto>(
-    controlName: TControlName,
-  ) {
+  protected getControl<
+    TControlName extends keyof typeof this.updateKycUserInformationForm.controls,
+  >(controlName: TControlName) {
     return this.updateKycUserInformationForm.controls[controlName];
   }
 
-  protected isInvalidControl(controlName: keyof UpdateKycUserInformationDto) {
+  protected isInvalidControl(
+    controlName: keyof typeof this.updateKycUserInformationForm.controls,
+  ) {
     const control = this.getControl(controlName);
 
     return control.invalid && (control.touched || control.dirty);
   }
 
   protected hasError(
-    controlName: keyof UpdateKycUserInformationDto,
+    controlName: keyof typeof this.updateKycUserInformationForm.controls,
     errorName: string,
   ) {
     return (
