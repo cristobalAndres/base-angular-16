@@ -49,6 +49,11 @@ export class TransactionSectionComponent {
   private clientDataService = inject(ClientsDataService);
   private modalService = inject(NgbModal);
 
+  protected readonly paymentsMethodsResponse =
+    this.paymentsMethodsDataService.paymentsMethodsResponse;
+  protected readonly isPaymentMethodsLoading =
+    this.paymentsMethodsDataService.isLoading;
+
   private static readonly ITEMS_PER_PAGE = 10;
 
   private readonly transactionsService = inject(TransactionsService);
