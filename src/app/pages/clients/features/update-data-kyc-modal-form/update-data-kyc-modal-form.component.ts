@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { SharedModule } from '@app/shared';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize } from 'rxjs';
 import { KycService, UpdateKycUserInformationDto } from '../../data-access';
 
@@ -21,11 +21,11 @@ import { KycService, UpdateKycUserInformationDto } from '../../data-access';
 })
 export class UpdateDataKYCModalFormComponent implements OnDestroy {
   private readonly kycService = inject(KycService);
+  private readonly modalService = inject(NgbModal);
   private readonly formBuilder = inject(NonNullableFormBuilder);
 
   @Input({ required: true }) title!: string;
   @Input({ required: true }) clientId!: string;
-  @Input({ required: true }) modalRef!: NgbModalRef;
 
   private updateKycInformationUserSubscription?: Subscription;
   protected readonly isSubmitting = signal(false);
@@ -55,10 +55,14 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
       .pipe(
         finalize(() => {
           this.isSubmitting.set(false);
-          this.modalRef.close();
+          this.closeModal();
         }),
       )
       .subscribe();
+  }
+
+  protected closeModal() {
+    this.modalService.dismissAll();
   }
 
   protected getControl<

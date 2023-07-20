@@ -6,7 +6,7 @@
       class="btn-close"
       data-bs-dismiss="modal"
       aria-label="Close"
-      (click)="modalRef.dismiss('Cross click')"
+      (click)="closeModal()"
     ></button>
   </div>
   <div class="modal-body">
@@ -95,7 +95,7 @@
       type="button"
       class="btn btn-outline-dark"
       data-bs-dismiss="modal"
-      (click)="modalRef.dismiss('Cross click')"
+      (click)="closeModal()"
     >
       Cerrar
     </button>

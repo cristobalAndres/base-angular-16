@@ -49,7 +49,6 @@ export class ClientsTableComponent {
     });
 
     if (modalRef.componentInstance instanceof UpdateDataKYCModalFormComponent) {
-      modalRef.componentInstance.modalRef = modalRef;
       modalRef.componentInstance.title = this.title;
       modalRef.componentInstance.clientId = clientId;
     }
