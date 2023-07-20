@@ -25,7 +25,7 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
 
   @Input({ required: true }) title!: string;
   @Input({ required: true }) clientId!: string;
-  @Input({ required: true }) activateModal!: NgbModalRef;
+  @Input({ required: true }) modalRef!: NgbModalRef;
 
   private updateKycInformationUserSubscription?: Subscription;
   protected readonly isSubmitting = signal(false);
@@ -55,7 +55,7 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
       .pipe(
         finalize(() => {
           this.isSubmitting.set(false);
-          this.activateModal.close();
+          this.modalRef.close();
         }),
       )
       .subscribe();
