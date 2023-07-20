@@ -1,6 +1,12 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { Component, Input, OnDestroy, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Input, OnDestroy, inject, signal } from '@angular/core';
+import {
+  FormControl,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { SharedModule } from '@app/shared';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize } from 'rxjs';
 import { KycService, UpdateKycUserInformationDto } from '../../data-access';
@@ -8,39 +14,84 @@ import { KycService, UpdateKycUserInformationDto } from '../../data-access';
 @Component({
   selector: 'app-update-data-kyc-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SharedModule],
   templateUrl: './update-data-kyc-modal-form.html',
   styleUrls: ['./update-data-kyc-modal-form.scss'],
   providers: [KycService],
 })
 export class UpdateDataKYCModalFormComponent implements OnDestroy {
   private readonly kycService = inject(KycService);
-  private updateKycInformationUserSubscription?: Subscription;
+  private readonly formBuilder = inject(NonNullableFormBuilder);
 
   @Input({ required: true }) title!: string;
   @Input({ required: true }) clientId!: string;
   @Input({ required: true }) activateModal!: NgbModalRef;
 
-  firstName = '';
-  lastName = '';
-  date = new Date();
-  gender = '';
+  private updateKycInformationUserSubscription?: Subscription;
+  protected readonly isSubmitting = signal(false);
 
-  saveChanges() {
-    const updateDto: UpdateKycUserInformationDto = {
-      name: this.firstName,
-      lastName: this.lastName,
-      birthDate: formatDate(this.date, 'YYYYMMdd', 'en-US').toString(),
-      gender: this.gender,
-    };
+  protected readonly updateKycUserInformationForm = this.formBuilder.group({
+    name: ['', Validators.required],
+    lastName: ['', Validators.required],
+    birthDate: new FormControl<Date | null>(null, Validators.required),
+    gender: ['', Validators.required],
+  } satisfies Record<keyof UpdateKycUserInformationDto, unknown>);
+
+  ngOnDestroy() {
+    this.updateKycInformationUserSubscription?.unsubscribe();
+  }
+
+  protected saveChanges() {
+    if (this.updateKycUserInformationForm.invalid) {
+      this.updateKycUserInformationForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmitting.set(true);
+    const updateDto = this.mapUpdateKycUserInformationDto();
 
     this.updateKycInformationUserSubscription = this.kycService
       .updateKycInformationUser(updateDto, this.clientId)
-      .pipe(finalize(() => this.activateModal.close()))
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.set(false);
+          this.activateModal.close();
+        }),
+      )
       .subscribe();
   }
 
-  ngOnDestroy(): void {
-    this.updateKycInformationUserSubscription?.unsubscribe();
+  protected getControl<TControlName extends keyof UpdateKycUserInformationDto>(
+    controlName: TControlName,
+  ) {
+    return this.updateKycUserInformationForm.controls[controlName];
+  }
+
+  protected isInvalidControl(controlName: keyof UpdateKycUserInformationDto) {
+    const control = this.getControl(controlName);
+
+    return control.invalid && (control.touched || control.dirty);
+  }
+
+  protected hasError(
+    controlName: keyof UpdateKycUserInformationDto,
+    errorName: string,
+  ) {
+    return (
+      this.isInvalidControl(controlName) &&
+      this.getControl(controlName).hasError(errorName)
+    );
+  }
+
+  private mapUpdateKycUserInformationDto(): UpdateKycUserInformationDto {
+    const birthDate = this.getControl('birthDate').value;
+    if (!birthDate) throw new Error('Birth date is required');
+
+    return {
+      name: this.getControl('name').value,
+      gender: this.getControl('gender').value,
+      lastName: this.getControl('lastName').value,
+      birthDate: formatDate(birthDate, 'YYYYMMdd', 'en-US'),
+    };
   }
 }
