@@ -37,6 +37,7 @@ module.exports = {
         '@typescript-eslint/no-floating-promises': 'error',
         '@typescript-eslint/no-misused-promises': 'error',
         'no-console': 'error',
+        '@typescript-eslint/unbound-method': ['error', { ignoreStatic: true }],
       },
       overrides: [
         {
