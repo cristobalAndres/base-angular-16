@@ -44,18 +44,14 @@ export class ClientsTableComponent {
     this.actions.success = 'Enviar';
     this.actions.cancel = 'Cerrar';
 
-    const modalRef = this.modalService.open(UpdateDataKYCModalFormComponent);
-    if (this.isUpdateData(modalRef.componentInstance)) {
-      modalRef.componentInstance.activateModal = modalRef;
+    const modalRef = this.modalService.open(UpdateDataKYCModalFormComponent, {
+      centered: true,
+    });
+
+    if (modalRef.componentInstance instanceof UpdateDataKYCModalFormComponent) {
       modalRef.componentInstance.title = this.title;
       modalRef.componentInstance.clientId = clientId;
     }
-  }
-
-  isUpdateData(
-    componentInstance: unknown,
-  ): componentInstance is UpdateDataKYCModalFormComponent {
-    return componentInstance instanceof UpdateDataKYCModalFormComponent;
   }
 
   // TODO: este modal espera desarrollo de funcionalida
