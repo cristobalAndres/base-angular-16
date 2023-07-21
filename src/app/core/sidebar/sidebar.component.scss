@@ -9,42 +9,22 @@
   flex-direction: column;
   height: 100vh;
   position: absolute;
-  z-index: 1000;
+  z-index: 9999999999;
 
   ul {
+    overflow: hidden;
     padding: 0;
     margin: 0;
     list-style: none;
     flex-grow: 1;
-    overflow-y: auto;
-  }
-
-  .nav-link {
-    display: flex;
-    align-items: center;
-    color: #fffbfb;
-    text-decoration: none;
-    transition: padding 0.3s ease;
-  }
-
-  .nav-link:hover {
-    background-color: #234567;
-  }
-
-  .menu-text {
-    display: none;
-    margin-left: 12px;
+    // overflow-y: auto;
   }
 
   &:hover {
-    width: 200px;
+    width: 250px;
+  }
 
-    .nav-link {
-      padding-left: 20px;
-    }
-
-    .menu-text {
-      display: inline-block;
-    }
+  .monitor {
+    margin-bottom: 96px;
   }
 }
