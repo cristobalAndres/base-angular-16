@@ -1,9 +1,7 @@
-@import '../../../styles.scss';
-
 .sidebar {
   padding-top: 16px;
   width: 50px;
-  background-color: $primary-color !important;
+  background-color: var(--primary-color) !important;
   transition: width 0.3s ease;
   display: flex;
   flex-direction: column;
