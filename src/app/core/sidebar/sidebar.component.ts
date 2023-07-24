@@ -11,6 +11,7 @@ import { MenuItemDto } from './dtos';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   private servicesMonitor = inject(ServicesMonitorService);
+  private refreshInMinutes = 1000 * 60 * 5; // 5 min
 
   menus: MenuItemDto[] = [
     { name: 'Home', link: '/home', icon: 'house' },
@@ -28,7 +29,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.isMouseHover = isHover;
   }
 
-  private requestInterval$ = interval(10000).subscribe(() => {
+  private requestInterval$ = interval(this.refreshInMinutes).subscribe(() => {
     void this.loadMonitorData();
   });
 
