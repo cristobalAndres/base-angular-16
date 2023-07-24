@@ -1,6 +1,6 @@
 <div class="table-responsive">
-  <table class="table table-hover table-striped">
-    <thead class="table-light text-uppercase">
+  <table class="table">
+    <thead class="">
       <tr class="d-flex">
         <th class="col-1" scope="col">Fecha</th>
         <th class="col-2" scope="col">Estado</th>
@@ -14,7 +14,7 @@
         <th class="col-1" scope="col">Tipo</th>
         <th class="col-1" scope="col">Subtipo</th>
         <th class="col-1" scope="col">Devolución</th>
-        <th class="col-1" scope="col"></th>
+        <th class="col-1" scope="col">Herramientas</th>
       </tr>
     </thead>
     <tbody>
@@ -40,7 +40,7 @@
         <td class="col-1">{{ transaction.type | transactionType }}</td>
         <td class="col-1">{{ transaction.sub_type }}</td>
         <td class="col-1">{{ transaction.reference_id ? 'SÍ' : 'NO' }}</td>
-        <td class="col-1" scope="col">
+        <td class="col-1">
           <app-icon-button
             icon="bi bi-eye"
             (clickEmiter)="onClickViewInfo(transaction.transaction_id)"

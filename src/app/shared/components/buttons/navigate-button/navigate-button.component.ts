@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   template: `<button
     [title]="message ?? ''"
     [ngClass]="{ 'bi-arrow-left': !icon }"
-    [className]="'btn btn-outline-primary rounded-5 bi navigate-button ' + icon"
+    [className]="'btn rounded-5 bi navigate-button ' + icon"
     (click)="navigate()"
   >
     {{ message }}
@@ -23,6 +23,12 @@ import { Router } from '@angular/router';
     `
       .navigate-button {
         padding: 0.5rem 1.25rem;
+        color: rgb(18, 52, 86);
+        border: solid 2px;
+      }
+      .navigate-button:hover {
+        background-color: rgb(18, 52, 86);
+        color: white;
       }
     `,
   ],

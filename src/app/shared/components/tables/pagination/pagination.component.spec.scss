@@ -1,0 +1,14 @@
+@import '../../../../../styles.scss';
+p {
+  margin: 0;
+  padding: 0;
+}
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+  color: $primary-color;
+}
+
+ngb-pagination ::ng-deep ul > li.active > a {
+  background-color: $primary-color !important;
+  border-color: $primary-color !important;
+}
