@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { NgHttpCachingHeaders } from '../../../../shared/enums';
 import {
   CardsResponse,
   ClientDto,
@@ -43,7 +44,11 @@ export class ClientsService {
   }
 
   getClientDetail(clientId: string) {
-    return this.httpClient.get<ClientDto>(`client/${clientId}`);
+    return this.httpClient.get<ClientDto>(`client/${clientId}`, {
+      headers: {
+        [NgHttpCachingHeaders.DISALLOW_CACHE]: '1',
+      },
+    });
   }
 
   clientSignOut(clientId: string) {
@@ -51,6 +56,10 @@ export class ClientsService {
   }
 
   getCards(clientId: string) {
-    return this.httpClient.get<CardsResponse>(`/card/${clientId}`, {});
+    return this.httpClient.get<CardsResponse>(`/card/${clientId}`, {
+      headers: {
+        [NgHttpCachingHeaders.DISALLOW_CACHE]: '1',
+      },
+    });
   }
 }

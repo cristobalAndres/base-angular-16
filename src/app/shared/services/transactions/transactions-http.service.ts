@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { NgHttpCachingHeaders } from '../../../shared/enums';
 import {
   GetTransactionsCommonParamsDto,
   TransactionsResponseDto,
@@ -40,6 +41,9 @@ export class TransactionsHttpService {
 
     return this.httpClient.get<TransactionsResponseDto>('transaction', {
       params: new HttpParams({ fromObject: httpParams }),
+      headers: {
+        [NgHttpCachingHeaders.DISALLOW_CACHE]: '1',
+      },
     });
   }
 }
