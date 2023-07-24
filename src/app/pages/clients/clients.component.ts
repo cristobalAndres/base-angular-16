@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import { SelectionDto } from '@app/shared/components/forms';
-import { formatRut, getDate, getTime } from '@app/shared/helpers';
 import { ClientsComponentService } from './data-access';
-import { CLientsFilters, ClientListDto, ClientParameter } from './shared';
+import { CLientsFilters, ClientParameter } from './shared';
 
 @Component({
   selector: 'app-clients',
@@ -10,27 +10,19 @@ import { CLientsFilters, ClientListDto, ClientParameter } from './shared';
   styleUrls: ['./clients.component.scss'],
 })
 export class ClientsComponent implements OnInit, OnDestroy {
+  private readonly datePipe = inject(DatePipe);
   private readonly clientsComponentService = inject(ClientsComponentService);
 
-  protected readonly clients =
-    this.clientsComponentService.clients.asReadonly();
+  protected readonly clients = this.clientsComponentService.clients;
 
-  protected readonly isLoading =
-    this.clientsComponentService.isLoading.asReadonly();
+  protected readonly isLoading = this.clientsComponentService.isLoading;
 
-  protected readonly pagination =
-    this.clientsComponentService.pagination.asReadonly();
+  protected readonly pagination = this.clientsComponentService.pagination;
 
-  protected clientsList: ClientListDto[] = [];
-
-  constructor() {
-    effect(() => {
-      this.loadClientsList();
-    });
-  }
+  protected clientsList = computed(() => this.loadClientsList());
 
   async ngOnInit() {
-    this.clientsComponentService.currentPage.set(1);
+    this.clientsComponentService.changeCurrentPage(1);
     await this.clientsComponentService.loadClients();
   }
 
@@ -39,7 +31,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
   }
 
   protected async onCurrentPageChange(currentPage: number) {
-    this.clientsComponentService.currentPage.set(currentPage);
+    this.clientsComponentService.changeCurrentPage(currentPage);
     await this.clientsComponentService.loadClients();
   }
 
@@ -51,23 +43,23 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   async onSearchButtonClick(clientsFilters: CLientsFilters) {
     this.clientsComponentService.cleanLocalData();
-    this.clientsComponentService.search.set(clientsFilters.searchText);
-    this.clientsComponentService.searchBy.set(clientsFilters.searchBy);
+    this.clientsComponentService.changeFilter(
+      clientsFilters.searchText,
+      clientsFilters.searchBy ?? ClientParameter.EMAIL,
+    );
     await this.clientsComponentService.loadClients();
   }
 
   private loadClientsList() {
-    this.clientsList = this.clients().map((client) => {
+    return this.clients().map((client) => {
       return {
         id: client.id ?? '',
         email: client.email ?? '',
-        rut: formatRut(client.rut) ?? '',
+        rut: client.rut ?? '',
         phone_number: client.phone_number ?? '',
         name: client.name ?? '',
         last_name: client.last_name ?? '',
-        created_at: client.created_at
-          ? `${getDate(client.created_at)} ${getTime(client.created_at)}`
-          : '',
+        created_at: client.created_at ?? '',
       };
     });
   }

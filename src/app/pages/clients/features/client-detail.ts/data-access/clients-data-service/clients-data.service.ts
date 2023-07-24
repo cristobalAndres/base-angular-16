@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  WritableSignal,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { ClientsService } from '@app/pages/clients/data-access';
 import { ClientDto } from '@app/pages/clients/shared';
 import { lastValueFrom } from 'rxjs';
@@ -15,7 +9,7 @@ export class ClientsDataService {
 
   private isLoadingSig = signal(false);
   private hasErrorSig = signal(false);
-  readonly clientSig: WritableSignal<ClientDto> = signal({});
+  readonly clientSig = signal<ClientDto>({});
 
   readonly client = computed(() => this.clientSig());
   readonly isLoading = computed(() => this.isLoadingSig());

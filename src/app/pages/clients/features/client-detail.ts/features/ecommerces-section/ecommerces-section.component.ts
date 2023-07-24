@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { EcommerceDto } from '@app/pages/clients/shared';
@@ -7,7 +7,6 @@ import { ClientDeatilEcommercesTableComponent } from '@app/pages/clients/ui';
 import { SpinnerComponent } from '@app/shared/components/loaders/spinner';
 import { PaginationComponent } from '@app/shared/components/tables';
 import { BadgeColors } from '@app/shared/enums';
-import { getDate, getTime } from '@app/shared/helpers';
 import { EcommercesDataService } from '../../data-access';
 import { ClientsDataService } from '../../data-access/clients-data-service';
 
@@ -24,6 +23,7 @@ import { ClientsDataService } from '../../data-access/clients-data-service';
   styleUrls: ['./ecommerces-section.component.scss'],
 })
 export class EcommercesSectionComponent {
+  private readonly datePipe = inject(DatePipe);
   private clientDataService = inject(ClientsDataService);
   private ecommerceDataService = inject(EcommercesDataService);
 
@@ -61,9 +61,7 @@ export class EcommercesSectionComponent {
           id: ecommerce.id ?? '',
           channel: ecommerce.channel ?? '',
           email: ecommerce.email ?? '',
-          timestamp: ecommerce.timestamp
-            ? `${getDate(ecommerce.timestamp)} ${getTime(ecommerce.timestamp)}`
-            : '',
+          timestamp: ecommerce.timestamp ?? '',
           statusValue: this.getStatusAndColorOfEcommerce(ecommerce).status,
           statusColor: this.getStatusAndColorOfEcommerce(ecommerce).color,
         };

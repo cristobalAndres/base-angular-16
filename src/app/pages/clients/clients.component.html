@@ -37,7 +37,7 @@
       <div class="col">
         <app-clients-table
           *ngIf="!isLoading()"
-          [clients]="clientsList"
+          [clients]="clientsList()"
         ></app-clients-table>
         <app-spinner *ngIf="isLoading()"></app-spinner>
       </div>

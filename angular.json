@@ -122,13 +122,16 @@
               "namedChunks": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "local"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
               "browserTarget": "cw-cl-users-web-manager:build:production"
+            },
+            "qa": {
+              "browserTarget": "cw-cl-users-web-manager:build:qa"
             },
             "develop": {
               "browserTarget": "cw-cl-users-web-manager:build:develop"

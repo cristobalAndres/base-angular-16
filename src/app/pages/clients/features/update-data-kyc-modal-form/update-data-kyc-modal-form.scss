@@ -1,14 +1,4 @@
-input {
-  margin-bottom: 1rem;
-}
-.label-input-radio {
-  margin-right: 15px;
-}
-.input-radio {
-  margin-right: 4px;
-}
-
-.gender-section {
-  display: block;
-  margin-bottom: 5px;
+.form-label.required:after {
+  content: '*';
+  color: lightcoral;
 }

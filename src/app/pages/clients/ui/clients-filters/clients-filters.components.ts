@@ -18,6 +18,7 @@ import {
   distinctUntilChanged,
   filter,
   fromEvent,
+  map,
   tap,
 } from 'rxjs';
 import { CLientsFilters, ClientParameter } from '../../shared';
@@ -77,12 +78,9 @@ export class ClientsFiltersComponent implements AfterViewInit, OnDestroy {
         filter(Boolean),
         debounceTime(500),
         distinctUntilChanged(),
-        tap(() => {
-          this.searchText = this.input.nativeElement?.value;
-          this.searchEvent.emit({
-            searchBy: this.searchBy,
-            searchText: this.searchText,
-          });
+        map((event) => event.target as HTMLInputElement),
+        tap(({ value }) => {
+          this.searchEvent.emit({ searchBy: this.searchBy, searchText: value });
         }),
       )
       .subscribe();

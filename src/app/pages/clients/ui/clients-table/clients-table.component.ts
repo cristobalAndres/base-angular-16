@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IconButtonComponent } from '@app/shared/components/buttons';
 import { ActionsModalComponent } from '@app/shared/components/modals/actions-modal';
+import { RutPipe } from '@app/shared/pipes';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateDataKYCModalFormComponent } from '../../features/update-data-kyc-modal-form';
 import { ClientListDto } from '../../shared/dtos';
@@ -15,6 +16,7 @@ import { ClientListDto } from '../../shared/dtos';
     IconButtonComponent,
     ActionsModalComponent,
     UpdateDataKYCModalFormComponent,
+    RutPipe,
   ],
   selector: 'app-clients-table',
   templateUrl: './clients-table.component.html',
@@ -42,18 +44,14 @@ export class ClientsTableComponent {
     this.actions.success = 'Enviar';
     this.actions.cancel = 'Cerrar';
 
-    const modalRef = this.modalService.open(UpdateDataKYCModalFormComponent);
-    if (this.isUpdateData(modalRef.componentInstance)) {
-      modalRef.componentInstance.activateModal = modalRef;
+    const modalRef = this.modalService.open(UpdateDataKYCModalFormComponent, {
+      centered: true,
+    });
+
+    if (modalRef.componentInstance instanceof UpdateDataKYCModalFormComponent) {
       modalRef.componentInstance.title = this.title;
       modalRef.componentInstance.clientId = clientId;
     }
-  }
-
-  isUpdateData(
-    componentInstance: unknown,
-  ): componentInstance is UpdateDataKYCModalFormComponent {
-    return componentInstance instanceof UpdateDataKYCModalFormComponent;
   }
 
   // TODO: este modal espera desarrollo de funcionalida

@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { ClientDto, ClientParameter, Pagination } from '../../shared';
 import { ClientsService } from '../clients-service';
@@ -6,58 +6,73 @@ import { ClientsService } from '../clients-service';
 @Injectable()
 export class ClientsComponentService {
   private readonly clientsService = inject(ClientsService);
-  readonly isLoading = signal(false);
-  readonly currentPage = signal(1);
+  private isLoadingSig = signal(false);
+  private currentPageSig = signal(1);
 
-  readonly clients: WritableSignal<ClientDto[]> = signal([]);
-  readonly pagination: WritableSignal<Pagination> = signal({
+  private clientsSig = signal<ClientDto[]>([]);
+  private paginationSig = signal<Pagination>({
     current_page: 1,
     per_page: 0,
     total_items: 0,
     total_pages: 0,
   });
 
-  readonly searchBy: WritableSignal<ClientParameter | undefined> =
-    signal(undefined);
-  readonly search: WritableSignal<string | undefined> = signal(undefined);
+  private searchBySig = signal<ClientParameter | undefined>(undefined);
+  private searchSig = signal<string | undefined>(undefined);
+
+  readonly isLoading = computed(() => this.isLoadingSig());
+  readonly currentPage = computed(() => this.currentPageSig());
+  readonly clients = computed(() => this.clientsSig());
+  readonly pagination = computed(() => this.paginationSig());
+  readonly searchBy = computed(() => this.searchBySig());
+  readonly searchS = computed(() => this.searchSig());
 
   async loadClients() {
-    this.isLoading.set(true);
+    this.isLoadingSig.set(true);
 
     try {
       const response = await lastValueFrom(
         this.clientsService.getClients({
-          currentPage: this.currentPage(),
-          searchParam: this.searchBy(),
-          search: this.search(),
+          currentPage: this.currentPageSig(),
+          searchParam: this.searchBySig(),
+          search: this.searchSig(),
           perPage: 10,
         }),
       );
 
-      this.clients.set(response.data);
-      this.pagination.set(response.pagination);
+      this.clientsSig.set(response.data);
+      this.paginationSig.set(response.pagination);
 
-      this.isLoading.set(false);
+      this.isLoadingSig.set(false);
     } catch (error) {
       //TODO: Agregar error en vista y aquí
 
-      this.isLoading.set(false);
+      this.isLoadingSig.set(false);
     }
   }
 
-  cleanLocalData() {
-    this.isLoading.set(false);
-    this.currentPage.set(1);
+  changeCurrentPage(currentPage: number) {
+    this.currentPageSig.set(currentPage);
+  }
 
-    this.clients.set([]);
-    this.pagination.set({
+  changeFilter(searchText: string, searchBy: ClientParameter) {
+    this.searchSig.set(searchText);
+    this.searchBySig.set(searchBy);
+  }
+
+  cleanLocalData() {
+    this.isLoadingSig.set(false);
+    this.currentPageSig.set(1);
+
+    this.clientsSig.set([]);
+    this.paginationSig.set({
       current_page: 1,
       per_page: 0,
       total_items: 0,
       total_pages: 0,
     });
 
-    this.searchBy.set(undefined);
-    this.search.set(undefined);
+    this.searchBySig.set(undefined);
+    this.searchSig.set(undefined);
   }
 }
