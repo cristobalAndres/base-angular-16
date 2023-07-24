@@ -23,11 +23,11 @@ import { Router } from '@angular/router';
     `
       .navigate-button {
         padding: 0.5rem 1.25rem;
-        color: rgb(18, 52, 86);
+        color: var(--primary-color);
         border: solid 2px;
       }
       .navigate-button:hover {
-        background-color: rgb(18, 52, 86);
+        background-color: var(--primary-color);
         color: white;
       }
     `,

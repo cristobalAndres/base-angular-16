@@ -32,7 +32,7 @@ import {
         border-width: 2px;
         width: 60px;
         line-height: 2px;
-        border: solid 2px rgb(18, 52, 86);
+        border: solid 2px var(--primary-color);
       }
       .icon-button:hover {
         background-color: rgb(18, 52, 86);
