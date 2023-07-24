@@ -28,7 +28,7 @@ export class MonitorItemComponent {
       case MetricsName.ERROR_PTS_PURCHASE_AUTHORIZE:
         return 'PTS pagos';
       case MetricsName.ERROR_PTS_CARD:
-        return 'PTS tarjerta';
+        return 'PTS tarjeta';
       case MetricsName.ERROR_PTS_USER_VALIDATE:
         return 'Validación usuarios';
       default:

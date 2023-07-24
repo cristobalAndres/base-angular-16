@@ -1,5 +1,7 @@
+import { MetricsName } from '@app/core/sidebar/enums';
+
 export type MetricDto = Readonly<{
-  metric: string;
+  metric: MetricsName;
   timestamp: string;
   value: number;
 }>;
