@@ -40,15 +40,14 @@ export class ClientsService {
 
     return this.httpClient.get<ClientsResponseDto>('client', {
       params: new HttpParams({ fromObject: httpParams }),
+      headers: {
+        [NgHttpCachingHeaders.ALLOW_CACHE]: '1',
+      },
     });
   }
 
   getClientDetail(clientId: string) {
-    return this.httpClient.get<ClientDto>(`client/${clientId}`, {
-      headers: {
-        [NgHttpCachingHeaders.DISALLOW_CACHE]: '1',
-      },
-    });
+    return this.httpClient.get<ClientDto>(`client/${clientId}`);
   }
 
   clientSignOut(clientId: string) {
@@ -56,10 +55,6 @@ export class ClientsService {
   }
 
   getCards(clientId: string) {
-    return this.httpClient.get<CardsResponse>(`/card/${clientId}`, {
-      headers: {
-        [NgHttpCachingHeaders.DISALLOW_CACHE]: '1',
-      },
-    });
+    return this.httpClient.get<CardsResponse>(`/card/${clientId}`, {});
   }
 }
