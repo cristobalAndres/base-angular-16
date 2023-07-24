@@ -1,10 +1,16 @@
-<nav class="sidebar">
-    <ul class="nav flex-column">
-      <li class="nav-item" *ngFor="let menu of menus">
-        <a class="nav-link" routerLink="{{menu.link}}">
-          <i class="bi bi-{{menu.icon}}"></i>
-          <span class="menu-text">{{menu.name}}</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+<nav
+  class="sidebar justify-content-between"
+  (mouseenter)="setMouseHover(true)"
+  (mouseleave)="setMouseHover(false)"
+>
+  <ul class="nav flex-column">
+    <li class="nav-item" *ngFor="let menu of menus">
+      <app-menu-item [menu]="menu" [isActive]="isMouseHover" />
+    </li>
+  </ul>
+  <ul class="monitor nav flex-column justify-content-end">
+    <li class="nav-item" *ngFor="let metric of monitorResponse.metrics">
+      <app-monitor-item [metric]="metric" [isActive]="isMouseHover" />
+    </li>
+  </ul>
+</nav>
