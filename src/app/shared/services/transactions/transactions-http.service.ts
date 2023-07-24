@@ -4,8 +4,8 @@ import {
   HttpParamsOptions,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { NgHttpCachingHeaders } from 'ng-http-caching';
 import { Observable } from 'rxjs';
-import { NgHttpCachingHeaders } from '../../../shared/enums';
 import {
   GetTransactionsCommonParamsDto,
   TransactionsResponseDto,
