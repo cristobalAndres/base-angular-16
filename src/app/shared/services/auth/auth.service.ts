@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 import { Injectable } from '@angular/core';
+import { Role } from '@app/shared/enums';
 import { Auth } from '@aws-amplify/auth';
 
 interface UserAttributes {
@@ -14,22 +14,20 @@ interface AuthUser {
 })
 export class AuthService {
   user = {
-    roles: 'ADMIN,EXECUTIVE',
+    roles: Role,
   };
 
   private readonly ROLES_ATTRIBUTE = 'custom:roles';
 
-  private async getUser(): Promise<AuthUser> {
+  private getUser(): Promise<AuthUser> {
     return Auth.currentAuthenticatedUser() as Promise<AuthUser>;
   }
 
-  async hasRole(role: string[]) {
+  async hasRole(roles: Role[]) {
     const user = await this.getUser();
-    if (!user.attributes[this.ROLES_ATTRIBUTE]) {
-      return true;
-    }
-    return role.some((r: string) =>
-      user.attributes[this.ROLES_ATTRIBUTE].split(',').includes(r),
-    );
+    const userRolesAttribute = user.attributes[this.ROLES_ATTRIBUTE];
+    if (!userRolesAttribute) return true;
+    const userRoles = new Set(userRolesAttribute.split(','));
+    return roles.some((role) => userRoles.has(role));
   }
 }

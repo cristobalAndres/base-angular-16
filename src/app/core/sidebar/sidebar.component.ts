@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { Roles } from '@app/shared/enums';
+import { Role } from '@app/shared/enums';
 import { VisibleItemsPipe } from '@app/shared/pipes';
 import { AuthService, ServicesMonitorService } from '@app/shared/services';
 import { MonitorResponseDto } from '@app/shared/services/services-monitor/dtos';
-import { interval, lastValueFrom } from 'rxjs';
+import { from, interval, lastValueFrom, take } from 'rxjs';
 import { MenuItemDto } from './dtos';
 
 @Component({
@@ -25,13 +24,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
       name: 'Clientes',
       link: '/clients',
       icon: 'file-person',
-      permissions: [Roles.ADMIN],
+      permissions: [Role.ADMIN],
     },
     {
       name: 'Transacciones',
       link: '/transactions',
       icon: 'cash-stack',
-      permissions: [Roles.ADMIN],
+      permissions: [Role.ADMIN],
     },
   ];
 
@@ -51,7 +50,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     void this.loadMonitorData();
-    void this.updateVisibleMenus();
+    from(this.updateVisibleMenus()).pipe(take(1)).subscribe();
   }
 
   async loadMonitorData() {

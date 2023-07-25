@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Role } from '@app/shared/enums';
 import { AuthService } from '@app/shared/services';
 
 interface VisibleItem {
-  permissions?: string[];
+  permissions?: Role[];
 }
 
 @Pipe({

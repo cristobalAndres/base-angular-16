@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CanMatch, Route } from '@angular/router';
+import { Role } from '@app/shared/enums';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../shared/services/auth/auth.service';
 
 interface RouteData {
-  roles: string[];
+  roles: Role[];
 }
 
 @Injectable({

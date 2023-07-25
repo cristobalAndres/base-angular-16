@@ -4,6 +4,7 @@ import { LoginComponent } from './core/authentication/login/login.component';
 import { AuthGuard, RoleGuard } from './core/guards';
 import { MainLayoutComponent } from './core/main-layout/main-layout.component';
 import { HomeComponent } from './pages/home/home.component';
+import { Role } from './shared/enums';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,14 +23,14 @@ const routes: Routes = [
         canMatch: [AuthGuard.canLoad, RoleGuard],
         loadChildren: () =>
           import('./pages/clients').then((m) => m.ClientsModule),
-        data: { roles: ['ADMIN'] },
+        data: { roles: [Role.ADMIN] },
       },
       {
         path: 'transactions',
         canMatch: [AuthGuard.canLoad, RoleGuard],
         loadChildren: () =>
           import('./pages/transactions').then((m) => m.TransactionsModule),
-        data: { roles: ['EXECUTIVE'] },
+        data: { roles: [Role.ADMIN] },
       },
     ],
   },
