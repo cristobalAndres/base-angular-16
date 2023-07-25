@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
   imports: [CommonModule],
   template: `<button
     [title]="message ?? ''"
-    [ngClass]="{ 'bi-arrow-left': !icon }"
-    [className]="'btn rounded-5 bi navigate-button ' + icon"
+    [ngClass]="[icon || 'bi-arrow-left']"
+    class="btn rounded-5 bi navigate-button"
     (click)="navigate()"
   >
     {{ message }}

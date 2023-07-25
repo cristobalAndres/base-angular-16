@@ -13,7 +13,7 @@ import {
   imports: [CommonModule],
   template: `<button
       *ngIf="!isLoading && icon"
-      [className]="'btn rounded-5 bi icon-button '"
+      class="'btn rounded-5 bi icon-button '"
       (click)="onClick()"
     >
       <i *ngIf="icon" [ngClass]="['bi', icon]"></i>
