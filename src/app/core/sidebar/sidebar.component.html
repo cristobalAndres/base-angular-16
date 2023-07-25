@@ -4,7 +4,7 @@
   (mouseleave)="setMouseHover(false)"
 >
   <ul class="nav flex-column">
-    <li class="nav-item" *ngFor="let menu of visibleMenus">
+    <li class="nav-item" *ngFor="let menu of menus | visibleItems | async">
       <app-menu-item [menu]="menu" [isActive]="isMouseHover" />
     </li>
   </ul>

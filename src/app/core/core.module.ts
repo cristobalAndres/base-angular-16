@@ -22,7 +22,7 @@ import { MonitorItemComponent } from './sidebar/ui/monitor-item/monitor-item.com
     MenuItemComponent,
     MonitorItemComponent,
   ],
-  providers: [ServicesMonitorService, VisibleItemsPipe],
+  providers: [ServicesMonitorService],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -32,6 +32,7 @@ import { MonitorItemComponent } from './sidebar/ui/monitor-item/monitor-item.com
     NgbDropdownModule,
     DefaultBadgeComponent,
     NgbTooltip,
+    VisibleItemsPipe,
   ],
 })
 export class CoreModule {}

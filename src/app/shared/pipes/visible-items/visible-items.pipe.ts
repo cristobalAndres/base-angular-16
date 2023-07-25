@@ -8,6 +8,7 @@ interface VisibleItem {
 
 @Pipe({
   name: 'visibleItems',
+  standalone: true,
 })
 export class VisibleItemsPipe implements PipeTransform {
   constructor(private authService: AuthService) {}

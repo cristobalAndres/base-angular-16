@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Role } from '@app/shared/enums';
-import { VisibleItemsPipe } from '@app/shared/pipes';
-import { AuthService, ServicesMonitorService } from '@app/shared/services';
+import { ServicesMonitorService } from '@app/shared/services';
 import { MonitorResponseDto } from '@app/shared/services/services-monitor/dtos';
-import { from, interval, lastValueFrom, take } from 'rxjs';
+import { interval, lastValueFrom } from 'rxjs';
 import { MenuItemDto } from './dtos';
 
 @Component({
@@ -13,10 +12,7 @@ import { MenuItemDto } from './dtos';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   private servicesMonitor = inject(ServicesMonitorService);
-  private authService = inject(AuthService);
-  private visibleItemsPipe = inject(VisibleItemsPipe);
   private refreshInMinutes = 1000 * 60 * 5; // 5 min
-  public visibleMenus: MenuItemDto[] = [];
 
   menus: MenuItemDto[] = [
     { name: 'Home', link: '/home', icon: 'house' },
@@ -50,7 +46,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     void this.loadMonitorData();
-    from(this.updateVisibleMenus()).pipe(take(1)).subscribe();
   }
 
   async loadMonitorData() {
@@ -68,9 +63,5 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.requestInterval$.unsubscribe();
-  }
-
-  async updateVisibleMenus(): Promise<void> {
-    this.visibleMenus = await this.visibleItemsPipe.transform(this.menus);
   }
 }

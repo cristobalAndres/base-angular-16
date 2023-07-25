@@ -1,8 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Role } from '@app/shared/enums';
-import { VisibleItemsPipe } from '@app/shared/pipes';
-import { from, take } from 'rxjs';
 
 interface Card {
   icon: string;
@@ -17,10 +15,7 @@ interface Card {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  private visibleItemsPipe = inject(VisibleItemsPipe);
-  public visibleCards: Card[] = [];
-
+export class HomeComponent {
   cards: Card[] = [
     {
       icon: 'file-person',
@@ -39,14 +34,6 @@ export class HomeComponent implements OnInit {
   ];
 
   constructor(private router: Router) {}
-
-  ngOnInit(): void {
-    from(this.updateVisibleCards()).pipe(take(1)).subscribe();
-  }
-
-  async updateVisibleCards(): Promise<void> {
-    this.visibleCards = await this.visibleItemsPipe.transform(this.cards);
-  }
 
   async redirectCard(route: string) {
     await this.router.navigate([route]);
