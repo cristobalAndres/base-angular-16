@@ -7,7 +7,10 @@
 }
 
 .nav-link:hover {
+  color: white;
   background-color: #234567;
+  border-radius: 0px 16px 16px 0px;
+  margin-right: 8px;
 }
 
 .menu-text {
@@ -17,4 +20,11 @@
 
 .menu-active {
   display: inline-block;
+}
+
+.route-active {
+  background-color: white !important;
+  color: var(--primary-color) !important;
+  border-radius: 0px 16px 16px 0px;
+  margin-right: 8px;
 }
