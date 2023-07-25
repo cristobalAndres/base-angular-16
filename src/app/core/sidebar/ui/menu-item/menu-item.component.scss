@@ -26,7 +26,7 @@
 
 .route-active {
   background-color: white !important;
-  color: $primary-color !important;
+  color: var(--primary-color) !important;
   border-radius: 0px 16px 16px 0px;
   margin-right: 8px;
 }
