@@ -9,5 +9,5 @@ ngb-pagination ::ng-deep ul > li:not(.active) > a {
 
 ngb-pagination ::ng-deep ul > li.active > a {
   background-color: var(--primary-color) !important;
-  border-color: $var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
