@@ -35,7 +35,7 @@ import {
         border: solid 2px var(--primary-color);
       }
       .icon-button:hover {
-        background-color: rgb(18, 52, 86);
+        background-color: var(--primary-color);
         color: white;
       }
     `,

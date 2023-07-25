@@ -42,7 +42,7 @@ import { TransactionDto } from '@app/shared/services/transactions';
             th {
               color: white !important;
               font-size: 12px;
-              background-color: rgb(18, 52, 86) !important;
+              background-color: var(--primary-color) !important;
             }
           }
         }
