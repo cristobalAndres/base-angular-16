@@ -13,7 +13,7 @@ import {
   imports: [CommonModule],
   template: `<button
       *ngIf="!isLoading && icon"
-      [className]="'btn btn-outline-primary rounded-5 bi icon-button '"
+      class="btn rounded-5 bi icon-button"
       (click)="onClick()"
     >
       <i *ngIf="icon" [ngClass]="['bi', icon]"></i>
@@ -29,7 +29,14 @@ import {
   styles: [
     `
       .icon-button {
-        width: 45px;
+        border-width: 2px;
+        width: 60px;
+        line-height: 2px;
+        border: solid 2px var(--primary-color);
+      }
+      .icon-button:hover {
+        background-color: var(--primary-color);
+        color: white;
       }
     `,
   ],

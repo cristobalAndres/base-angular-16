@@ -2,12 +2,11 @@ name: CI Pipeline qa
 on:
   workflow_dispatch:
   push:
-    branches: ["master"]
+    branches: ['master']
   pull_request:
     branches: [master]
 
 jobs:
-
   get-vault-aws-credentials:
     name: Get AWS credentials from Vault
     uses: Cencosud-Cencopay/workflows/.github/workflows/aws-credentials.yml@master
@@ -43,8 +42,8 @@ jobs:
     needs: build-and-push
     uses: Cencosud-Cencopay/workflows/.github/workflows/kustomize.yml@master
     with:
-      project_name: "cw-cl-backoffice-web-manager"
-      ecr_repository: "cw-cl-backoffice-web-manager"
+      project_name: 'cw-cl-backoffice-web-manager'
+      ecr_repository: 'cw-cl-backoffice-web-manager'
       image_tag: ${{ github.sha }}-prod
       deploy_enviroment: ${{ github.ref == 'refs/heads/develop' && 'develop' || github.ref == 'refs/heads/qa' && 'qa' || github.ref == 'refs/heads/master' && 'production' }}
     secrets: inherit

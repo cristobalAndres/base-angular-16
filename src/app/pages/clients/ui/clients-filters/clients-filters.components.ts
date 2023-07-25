@@ -39,8 +39,8 @@ import { CLientsFilters, ClientParameter } from '../../shared';
             />
             <input
               type="text"
-              class="form-control input-text mx-3"
-              placeholder="buscar..."
+              class="form-control input-text"
+              placeholder="Buscar"
               aria-label="searchText"
               #searchText
             />
@@ -49,6 +49,13 @@ import { CLientsFilters, ClientParameter } from '../../shared';
       </div>
     </div>
   </div>`,
+  styles: [
+    `
+      input.input-text {
+        margin-left: 8px;
+      }
+    `,
+  ],
 })
 export class ClientsFiltersComponent implements AfterViewInit, OnDestroy {
   protected searchText = '';

@@ -33,14 +33,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
       </div>
     </div>
   `,
-  styles: [
-    `
-      p {
-        margin: 0;
-        padding: 0;
-      }
-    `,
-  ],
+  styleUrls: ['./pagination.component.spec.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationComponent {

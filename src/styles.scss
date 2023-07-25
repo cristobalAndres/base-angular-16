@@ -1,10 +1,11 @@
+@use 'styles/table.scss';
 @import '~@aws-amplify/ui-angular/theme.css';
 @import '~bootstrap/dist/css/bootstrap.css';
 
-$primary-color: #123456;
+$primary-color: rgb(18, 52, 86);
 
 :root {
-  --primary-color: #123456;
+  --primary-color: rgb(18, 52, 86);
 }
 
 html,

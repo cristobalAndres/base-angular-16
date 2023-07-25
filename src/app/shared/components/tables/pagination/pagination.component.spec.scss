@@ -1,0 +1,13 @@
+p {
+  margin: 0;
+  padding: 0;
+}
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+  color: var(--primary-color);
+}
+
+ngb-pagination ::ng-deep ul > li.active > a {
+  background-color: var(--primary-color) !important;
+  border-color: $var(--primary-color) !important;
+}
