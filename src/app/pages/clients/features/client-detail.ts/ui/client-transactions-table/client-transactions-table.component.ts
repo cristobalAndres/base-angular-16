@@ -25,28 +25,6 @@ import { TransactionDto } from '@app/shared/services/transactions';
       .currency::before {
         content: '$ ';
       }
-      .table-responsive {
-        table {
-          tbody {
-            th {
-              font-weight: 400;
-              color: rgb(126, 134, 140);
-            }
-            tr {
-              padding-top: 15px;
-            }
-          }
-        }
-        thead {
-          tr {
-            th {
-              color: white !important;
-              font-size: 12px;
-              background-color: var(--primary-color) !important;
-            }
-          }
-        }
-      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
