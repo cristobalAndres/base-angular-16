@@ -3,6 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DefaultBadgeComponent } from '@app/shared/components/badges/default/default-badge.component';
+import { VisibleItemsPipe } from '@app/shared/pipes';
 import { ServicesMonitorService } from '@app/shared/services';
 import { NgbDropdownModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { NgHttpCachingModule } from 'ng-http-caching';
@@ -21,7 +22,7 @@ import { MonitorItemComponent } from './sidebar/ui/monitor-item/monitor-item.com
     MenuItemComponent,
     MonitorItemComponent,
   ],
-  providers: [ServicesMonitorService],
+  providers: [ServicesMonitorService, VisibleItemsPipe],
   imports: [
     CommonModule,
     HttpClientModule,

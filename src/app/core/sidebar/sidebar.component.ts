@@ -1,5 +1,8 @@
+/* eslint-disable no-console */
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { ServicesMonitorService } from '@app/shared/services';
+import { Roles } from '@app/shared/enums';
+import { VisibleItemsPipe } from '@app/shared/pipes';
+import { AuthService, ServicesMonitorService } from '@app/shared/services';
 import { MonitorResponseDto } from '@app/shared/services/services-monitor/dtos';
 import { interval, lastValueFrom } from 'rxjs';
 import { MenuItemDto } from './dtos';
@@ -11,12 +14,25 @@ import { MenuItemDto } from './dtos';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   private servicesMonitor = inject(ServicesMonitorService);
+  private authService = inject(AuthService);
+  private visibleItemsPipe = inject(VisibleItemsPipe);
   private refreshInMinutes = 1000 * 60 * 5; // 5 min
+  public visibleMenus: MenuItemDto[] = [];
 
   menus: MenuItemDto[] = [
     { name: 'Home', link: '/home', icon: 'house' },
-    { name: 'Clientes', link: '/clients', icon: 'file-person' },
-    { name: 'Transacciones', link: '/transactions', icon: 'cash-stack' },
+    {
+      name: 'Clientes',
+      link: '/clients',
+      icon: 'file-person',
+      permissions: [Roles.ADMIN],
+    },
+    {
+      name: 'Transacciones',
+      link: '/transactions',
+      icon: 'cash-stack',
+      permissions: [Roles.ADMIN],
+    },
   ];
 
   protected monitorResponse: MonitorResponseDto = { metrics: [] };
@@ -35,6 +51,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     void this.loadMonitorData();
+    void this.updateVisibleMenus();
   }
 
   async loadMonitorData() {
@@ -52,5 +69,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.requestInterval$.unsubscribe();
+  }
+
+  async updateVisibleMenus(): Promise<void> {
+    this.visibleMenus = await this.visibleItemsPipe.transform(this.menus);
   }
 }
