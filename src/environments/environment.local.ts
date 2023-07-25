@@ -5,4 +5,7 @@ export const environment: Environment = {
   apiUrl: 'http://localhost:3002/api/v1',
   apiKYC:
     'https://cw-cl-user-data-develop.cencosud.net/user-data/user/KYC/enable',
+  region: 'us-east-1',
+  userPoolId: 'us-east-1_LHLYOUM85',
+  userPoolWebClientId: '2lg5uhqnkvsnm2k5o4ll0sejlt',
 };
