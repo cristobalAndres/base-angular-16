@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Role } from '@app/shared/enums';
+import { EventType, NavigationEnd, Router } from '@angular/router';
 import { ServicesMonitorService } from '@app/shared/services';
 import { MonitorResponseDto } from '@app/shared/services/services-monitor/dtos';
-import { interval, lastValueFrom } from 'rxjs';
+import { Subscription, filter, interval, lastValueFrom } from 'rxjs';
 import { MenuItemDto } from './dtos';
 
 @Component({
@@ -14,21 +15,42 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private servicesMonitor = inject(ServicesMonitorService);
   private refreshInMinutes = 1000 * 60 * 5; // 5 min
 
+  private requestInterval = interval(this.refreshInMinutes).subscribe(() => {
+    void this.loadMonitorData();
+  });
+
+  private router = inject(Router);
+  private routerSub!: Subscription;
+
   menus: MenuItemDto[] = [
-    { name: 'Home', link: '/home', icon: 'house' },
+    { name: 'Home', link: '/home', icon: 'house', isActiveRoute: false },
     {
       name: 'Clientes',
       link: '/clients',
       icon: 'file-person',
       permissions: [Role.ADMIN],
+      isActiveRoute: false,
     },
     {
       name: 'Transacciones',
       link: '/transactions',
       icon: 'cash-stack',
       permissions: [Role.ADMIN],
+      isActiveRoute: false,
     },
   ];
+
+  constructor() {
+    this.routerSub = this.router.events
+      .pipe(filter((event) => event.type === EventType.NavigationEnd))
+      .subscribe((value) => {
+        const url = (value as NavigationEnd).urlAfterRedirects;
+        this.menus = this.menus.map((menuItem) => ({
+          ...menuItem,
+          isActiveRoute: url.includes(menuItem.link),
+        }));
+      });
+  }
 
   protected monitorResponse: MonitorResponseDto = { metrics: [] };
   protected isMonitorLoading = true;
@@ -39,10 +61,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
   setMouseHover(isHover: boolean) {
     this.isMouseHover = isHover;
   }
-
-  private requestInterval$ = interval(this.refreshInMinutes).subscribe(() => {
-    void this.loadMonitorData();
-  });
 
   ngOnInit(): void {
     void this.loadMonitorData();
@@ -62,6 +80,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.requestInterval$.unsubscribe();
+    this.requestInterval.unsubscribe();
+    this.routerSub.unsubscribe();
   }
 }

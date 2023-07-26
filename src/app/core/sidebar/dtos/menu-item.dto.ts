@@ -5,4 +5,5 @@ export type MenuItemDto = Readonly<{
   link: string;
   icon: string;
   permissions?: Role[];
+  isActiveRoute: boolean;
 }>;

@@ -18,7 +18,7 @@
     </div>
     <div class="col-md-4">
       <app-pagination
-        *ngIf="pagination$ | async as pagination"
+        *ngIf="paginationSig() as pagination"
         itemName="Transacciones"
         [page]="(currentPage$ | async)!"
         (pageChange)="onCurrentPageChange($event)"
@@ -30,31 +30,19 @@
   </div>
   <div class="card-body">
     <div class="row">
-      <div class="col">
-        <p
-          *ngIf="
-            (isLoading$ | async) === false &&
-            (transactions$ | async) &&
-            (transactions$ | async)?.length === 0
-          "
-        >
+      <div class="col" *ngIf="!isLoading()">
+        <p *ngIf="transactionsSig() && transactionsSig()?.length === 0">
           No hay transacciones
         </p>
-        <div
-          *ngIf="
-            (isLoading$ | async) === false &&
-            (transactions$ | async) &&
-            (transactions$ | async)?.length !== 0
-          "
-        >
+        <div *ngIf="transactionsSig() && transactionsSig()?.length !== 0">
           <app-client-transactions-table
-            *ngIf="transactions$ | async as transactions"
+            *ngIf="transactionsSig() as transactions"
             [transactions]="transactions"
             (viewTransactionDetailEmitter)="onDetailButtonClick($event)"
           />
         </div>
-        <app-spinner *ngIf="isLoading$ | async"></app-spinner>
       </div>
+      <app-spinner *ngIf="isLoading()"></app-spinner>
     </div>
   </div>
 </div>

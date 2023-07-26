@@ -15,7 +15,7 @@ export class PaymentMethodsDataService {
   private paymentsMethodsResponseSig = signal<CardsResponse | undefined>(
     undefined,
   );
-  private isAllPaymentMethodsSelectedSig = signal(true);
+  private isAllPaymentMethodsSelectedSig = signal(false);
   private paymenthsMethodsListSig = signal<PaymentsMethodsListDto[]>([]);
 
   private readonly selectedPaymentMethodIdsSig = signal<
