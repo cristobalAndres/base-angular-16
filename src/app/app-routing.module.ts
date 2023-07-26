@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './core/authentication/login/login.component';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuard, RoleGuard } from './core/guards';
 import { MainLayoutComponent } from './core/main-layout/main-layout.component';
 import { HomeComponent } from './pages/home/home.component';
+import { Role } from './shared/enums';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,15 +20,17 @@ const routes: Routes = [
       },
       {
         path: 'clients',
-        canMatch: [AuthGuard.canLoad],
+        canMatch: [AuthGuard.canLoad, RoleGuard],
         loadChildren: () =>
           import('./pages/clients').then((m) => m.ClientsModule),
+        data: { roles: [Role.ADMIN] },
       },
       {
         path: 'transactions',
-        canMatch: [AuthGuard.canLoad],
+        canMatch: [AuthGuard.canLoad, RoleGuard],
         loadChildren: () =>
           import('./pages/transactions').then((m) => m.TransactionsModule),
+        data: { roles: [Role.ADMIN] },
       },
     ],
   },

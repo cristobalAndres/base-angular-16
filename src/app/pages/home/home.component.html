@@ -1,19 +1,23 @@
 <div class="container">
   <div class="row">
-    <div class="col-6 mt-4" *ngFor="let card of cards">
-      <div class="card card-hover" (click)="redirectCard(card.route)">
+    <div class="col-6 mt-4" *ngFor="let card of cards | visibleItems | async">
+      <button
+        class="card card-hover"
+        (click)="redirectCard(card.route)"
+        tabindex="0"
+      >
         <div class="card-body">
           <div class="row">
             <div class="col-12">
-              <i class="bi bi-{{card.icon}} icon-card"></i>
+              <i class="bi bi-{{ card.icon }} icon-card"></i>
             </div>
             <div class="col-12">
-              <h3 class="card-title">{{card.title}}</h3>
-              <p class="card-text">{{card.description}}</p>
+              <h3 class="card-title">{{ card.title }}</h3>
+              <p class="card-text">{{ card.description }}</p>
             </div>
           </div>
         </div>
-      </div>
-    </div> 
+      </button>
+    </div>
   </div>
 </div>

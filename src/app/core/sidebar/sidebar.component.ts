@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Role } from '@app/shared/enums';
 import { EventType, NavigationEnd, Router } from '@angular/router';
 import { ServicesMonitorService } from '@app/shared/services';
 import { MonitorResponseDto } from '@app/shared/services/services-monitor/dtos';
@@ -27,12 +28,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
       name: 'Clientes',
       link: '/clients',
       icon: 'file-person',
+      permissions: [Role.ADMIN],
       isActiveRoute: false,
     },
     {
       name: 'Transacciones',
       link: '/transactions',
       icon: 'cash-stack',
+      permissions: [Role.ADMIN],
       isActiveRoute: false,
     },
   ];
