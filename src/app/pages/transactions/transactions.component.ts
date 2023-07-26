@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
+  catchError,
   combineLatest,
   debounceTime,
   distinctUntilChanged,
   finalize,
   map,
+  of,
+  shareReplay,
   switchMap,
   tap,
 } from 'rxjs';
@@ -26,7 +30,9 @@ export class TransactionsComponent {
   protected readonly currentPage$ = this.currentPageSubject.asObservable();
 
   private readonly isLoadingSubject = new BehaviorSubject(false);
-  protected readonly isLoading$ = this.isLoadingSubject.asObservable();
+  protected readonly isLoadingSig = toSignal(
+    this.isLoadingSubject.asObservable(),
+  );
 
   private readonly transactionsApi$ = combineLatest([
     this.transactionsFilters.transactionsFilters$,
@@ -44,6 +50,15 @@ export class TransactionsComponent {
         })
         .pipe(finalize(() => this.isLoadingSubject.next(false))),
     ),
+    catchError(() =>
+      of({
+        transactions: [],
+        current_page: 0,
+        total_pages: 0,
+        total_items: 0,
+      }),
+    ),
+    shareReplay(1),
   );
 
   protected readonly transactions$ = this.transactionsApi$.pipe(

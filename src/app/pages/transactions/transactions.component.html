@@ -30,13 +30,13 @@
       </div>
       <hr />
       <div class="row">
-        <div class="col">
-          <!-- TODO: Add loading indicator using the isLoading$ property -->
+        <div class="col" *ngIf="!isLoadingSig()">
           <app-transactions-table
             *ngIf="transactions$ | async as transactions"
             [transactions]="transactions"
           />
         </div>
+        <app-spinner *ngIf="isLoadingSig()"></app-spinner>
       </div>
     </div>
   </div>
