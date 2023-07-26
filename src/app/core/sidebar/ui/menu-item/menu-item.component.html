@@ -1,0 +1,8 @@
+<a
+  [class.route-active]="menu.isActiveRoute"
+  class="nav-link"
+  routerLink="{{ menu.link }}"
+>
+  <i class="bi bi-{{ menu.icon }}"></i>
+  <span class="menu-text" [class.menu-active]="isActive"> {{ menu.name }}</span>
+</a>

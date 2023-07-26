@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { PaymentsMethodsType } from '@app/pages/clients/shared';
 import { TransactionModalDataDto } from '@app/pages/clients/shared/dtos/transaction-modal-data.dto';
 import { TransactionsTableComponent } from '@app/pages/transactions/ui';
@@ -15,6 +15,7 @@ import {
   distinctUntilChanged,
   finalize,
   map,
+  shareReplay,
   switchMap,
   tap,
 } from 'rxjs';
@@ -63,7 +64,7 @@ export class TransactionSectionComponent {
   protected readonly currentPage$ = this.currentPageSubject.asObservable();
 
   private readonly isLoadingSubject = new BehaviorSubject(false);
-  protected readonly isLoading$ = this.isLoadingSubject.asObservable();
+  protected readonly isLoading = toSignal(this.isLoadingSubject);
 
   private readonly transactionsApi$ = combineLatest([
     this.transactionsFilters.transactionsFilters$,
@@ -92,7 +93,32 @@ export class TransactionSectionComponent {
         })
         .pipe(finalize(() => this.isLoadingSubject.next(false))),
     ),
+    shareReplay(1),
   );
+
+  protected readonly transactionsSig = toSignal(
+    this.transactionsApi$.pipe(map(({ transactions }) => transactions)),
+  );
+
+  protected readonly pagination$ = this.transactionsApi$.pipe(
+    map(({ total_items, total_pages, current_page }) => ({
+      totalItems: total_items,
+      totalPages: total_pages,
+      currentPage: current_page,
+      itemsPerPage:
+        TransactionSectionComponent.ITEMS_PER_PAGE > total_items
+          ? total_items
+          : TransactionSectionComponent.ITEMS_PER_PAGE,
+    })),
+  );
+
+  protected readonly paginationSig = toSignal(
+    this.pagination$.pipe(map((pagination) => pagination)),
+  );
+
+  protected onCurrentPageChange(currentPage: number) {
+    this.currentPageSubject.next(currentPage);
+  }
 
   getElementsIdByType(selected: Set<string>, type: PaymentsMethodsType) {
     const ids = this.paymentsMethodsDataService
@@ -109,26 +135,6 @@ export class TransactionSectionComponent {
     }
 
     return ids.length === 1 ? ids.at(0) : ids.join(',');
-  }
-
-  protected readonly transactions$ = this.transactionsApi$.pipe(
-    map(({ transactions }) => transactions),
-  );
-
-  protected readonly pagination$ = this.transactionsApi$.pipe(
-    map(({ total_items, total_pages, current_page }) => ({
-      totalItems: total_items,
-      totalPages: total_pages,
-      currentPage: current_page,
-      itemsPerPage:
-        TransactionSectionComponent.ITEMS_PER_PAGE > total_items
-          ? total_items
-          : TransactionSectionComponent.ITEMS_PER_PAGE,
-    })),
-  );
-
-  protected onCurrentPageChange(currentPage: number) {
-    this.currentPageSubject.next(currentPage);
   }
 
   protected onDetailButtonClick(transactionId: string) {
