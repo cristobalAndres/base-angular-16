@@ -1,0 +1,11 @@
+<div class="card text-center">
+  <div class="card-body">
+    <i class="bi bi-cloud-slash icon"></i>
+    <h5 class="card-title">{{ title }}</h5>
+    <p class="card-text">{{ message }}</p>
+    <app-icon-button
+      [icon]="'bi-arrow-clockwise'"
+      (clickEmiter)="onRetryButtonClick()"
+    />
+  </div>
+</div>
