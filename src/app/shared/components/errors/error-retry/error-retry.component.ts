@@ -13,7 +13,6 @@ export class ErrorRetryComponent {
   @Input() title = '¡Upsi, dupsi!';
   @Input() message =
     'No se ha podido obtener la información, por favor, inténtelo otra vez.';
-  @Input() buttonText = 'volver a intentar';
 
   @Output() emitRetryButton = new EventEmitter<void>();
 
