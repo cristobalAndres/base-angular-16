@@ -33,5 +33,12 @@
         />
       </div>
     </div>
+    <div class="col-md-auto">
+      <app-icon-button
+        [ngbTooltip]="'Limpiar filtros'"
+        [icon]="'bi-eraser'"
+        (clickEmiter)="filtersReset()"
+      />
+    </div>
   </div>
 </div>

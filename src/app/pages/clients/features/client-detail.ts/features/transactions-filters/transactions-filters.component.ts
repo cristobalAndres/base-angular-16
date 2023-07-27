@@ -1,19 +1,38 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared';
-import { SelectionDto } from '@app/shared/components/forms';
+import { IconButtonComponent } from '@app/shared/components/buttons';
+import {
+  RangeDatepickerComponent,
+  SelectComponent,
+  SelectionDto,
+} from '@app/shared/components/forms';
 import { TransactionStatusPipe, TransactionTypePipe } from '@app/shared/pipes';
 import {
   TransactionStatus,
   TransactionType,
 } from '@app/shared/services/transactions';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { TransactionsFiltersService } from '../../data-access/transactions-filter-service';
 
 @Component({
   selector: 'app-transactions-filters',
   standalone: true,
-  imports: [CommonModule, SharedModule, FormsModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    FormsModule,
+    NgbTooltip,
+    IconButtonComponent,
+  ],
   templateUrl: './transactions-filters.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -21,6 +40,12 @@ export class TransactionsFiltersComponent {
   private readonly transactionsFiltersService = inject(
     TransactionsFiltersService,
   );
+
+  @ViewChild(RangeDatepickerComponent)
+  rangeDatePickerComponent!: RangeDatepickerComponent;
+
+  @ViewChildren(SelectComponent)
+  selectComponents!: QueryList<SelectComponent>;
 
   protected amount = '';
 
@@ -66,6 +91,15 @@ export class TransactionsFiltersComponent {
     }
     this.transactionsFiltersService.updateTransactionsFilters({
       amount: +this.amount,
+    });
+  }
+
+  protected filtersReset() {
+    this.amount = '';
+    this.onAmountChange();
+    this.rangeDatePickerComponent.reset();
+    this.selectComponents.toArray().forEach((selectComponent) => {
+      selectComponent.reset();
     });
   }
 }
