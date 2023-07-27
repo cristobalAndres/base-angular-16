@@ -16,6 +16,7 @@ export class ClientsDataService {
   readonly hasError = computed(() => this.hasErrorSig());
 
   async loadClient(clientId: string) {
+    this.hasErrorSig.set(false);
     this.isLoadingSig.set(true);
     try {
       const result = await lastValueFrom(
@@ -23,7 +24,6 @@ export class ClientsDataService {
       );
 
       this.clientSig.set(result);
-      this.hasErrorSig.set(false);
     } catch (error) {
       this.hasErrorSig.set(true);
     } finally {
