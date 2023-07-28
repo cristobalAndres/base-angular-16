@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
@@ -34,6 +39,8 @@ export class TransactionsComponent {
     this.isLoadingSubject.asObservable(),
   );
 
+  protected hasError = signal(false);
+
   private readonly transactionsApi$ = combineLatest([
     this.transactionsFilters.transactionsFilters$,
     this.currentPageSubject,
@@ -50,15 +57,17 @@ export class TransactionsComponent {
         })
         .pipe(finalize(() => this.isLoadingSubject.next(false))),
     ),
-    catchError(() =>
-      of({
+    shareReplay(1),
+    catchError(() => {
+      this.hasError.set(true);
+
+      return of({
         transactions: [],
         current_page: 0,
         total_pages: 0,
         total_items: 0,
-      }),
-    ),
-    shareReplay(1),
+      });
+    }),
   );
 
   protected readonly transactions$ = this.transactionsApi$.pipe(
@@ -79,5 +88,9 @@ export class TransactionsComponent {
 
   protected onCurrentPageChange(currentPage: number) {
     this.currentPageSubject.next(currentPage);
+  }
+
+  protected retryButtonClick() {
+    this.hasError.set(false);
   }
 }

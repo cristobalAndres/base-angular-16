@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import { SelectionDto } from '@app/shared/components/forms';
 import { ClientsComponentService } from './data-access';
@@ -10,14 +9,12 @@ import { CLientsFilters, ClientParameter } from './shared';
   styleUrls: ['./clients.component.scss'],
 })
 export class ClientsComponent implements OnInit, OnDestroy {
-  private readonly datePipe = inject(DatePipe);
   private readonly clientsComponentService = inject(ClientsComponentService);
 
   protected readonly clients = this.clientsComponentService.clients;
-
   protected readonly isLoading = this.clientsComponentService.isLoading;
-
   protected readonly pagination = this.clientsComponentService.pagination;
+  protected readonly hasError = this.clientsComponentService.hasError;
 
   protected clientsList = computed(() => this.loadClientsList());
 
@@ -62,5 +59,9 @@ export class ClientsComponent implements OnInit, OnDestroy {
         created_at: client.created_at ?? '',
       };
     });
+  }
+
+  protected async retryButtonClick() {
+    await this.clientsComponentService.loadClients();
   }
 }
