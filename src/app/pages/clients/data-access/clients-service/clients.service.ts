@@ -63,7 +63,6 @@ export class ClientsService {
   getAccountDetails(clientId: string) {
     return this.httpClient.get<AccountDetailsResponseDto>(
       `${environment.paymentDataBack}/account/${clientId}`,
-      {},
     );
   }
 }

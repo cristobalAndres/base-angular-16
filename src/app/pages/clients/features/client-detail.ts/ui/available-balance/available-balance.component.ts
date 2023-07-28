@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import {
   AccountDetailDTO,
   AccountDetailModalDataDto,
@@ -7,6 +7,7 @@ import {
 } from '@app/pages/clients/shared';
 import { DefaultBadgeComponent } from '@app/shared/components/badges/default/default-badge.component';
 import { IconButtonComponent } from '@app/shared/components/buttons';
+import { ErrorRetryComponent } from '@app/shared/components/errors';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AccountDetailModalComponent } from '../account-detail-modal';
 
@@ -18,6 +19,7 @@ import { AccountDetailModalComponent } from '../account-detail-modal';
     DefaultBadgeComponent,
     AccountDetailModalComponent,
     IconButtonComponent,
+    ErrorRetryComponent,
   ],
   templateUrl: './available-balance.component.html',
   styleUrls: ['./available-balance.component.scss'],
@@ -25,19 +27,17 @@ import { AccountDetailModalComponent } from '../account-detail-modal';
 export class AvailableBalanceComponent {
   @Input({ required: true }) accountDetail!: AccountDetailsResponseDto;
   @Input() isLoading = false;
+  @Input() hasAccount = false;
+
+  @Output() retryShowAvailableBalance = new EventEmitter<void>();
 
   private modalService = inject(NgbModal);
-
   showAccountDetail() {
     const modalRef = this.modalService.open(AccountDetailModalComponent, {
       size: 'lg',
       centered: true,
     });
-    if (
-      this.updateInstanceOfAccountDetailModalCompponent(
-        modalRef.componentInstance,
-      )
-    ) {
+    if (modalRef.componentInstance instanceof AccountDetailModalComponent) {
       modalRef.componentInstance.activateModal = modalRef;
       modalRef.componentInstance.accountData = this.accountDetail.accounts
         .map((account) => this.mapDataFromAccountDetail(account))
@@ -45,10 +45,8 @@ export class AvailableBalanceComponent {
     }
   }
 
-  private updateInstanceOfAccountDetailModalCompponent(
-    componentIntance: unknown,
-  ): componentIntance is AccountDetailModalComponent {
-    return componentIntance instanceof AccountDetailModalComponent;
+  outputOnRetryButtonClick() {
+    this.retryShowAvailableBalance.emit();
   }
 
   private mapDataFromAccountDetail(

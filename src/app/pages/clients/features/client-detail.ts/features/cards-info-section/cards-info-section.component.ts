@@ -44,6 +44,8 @@ export class CardsInfoSectionComponent implements OnInit {
 
   protected clientName = '';
   private id = '';
+  protected hasAccount = false;
+  protected loadingAccountDetails = true;
 
   protected basicInfoCardData: { title: string; data: CardInfoDataDto[] } = {
     title: this.clientName,
@@ -181,11 +183,19 @@ export class CardsInfoSectionComponent implements OnInit {
     ];
   }
 
-  private async getAccountDetails() {
+  protected async getAccountDetails() {
     if (this.id) {
-      this.accountDetail = await lastValueFrom(
-        this.clientsServce.getAccountDetails(this.id),
-      );
+      try {
+        this.loadingAccountDetails = true;
+        this.accountDetail = await lastValueFrom(
+          this.clientsServce.getAccountDetails(this.id),
+        );
+        this.loadingAccountDetails = false;
+        this.hasAccount = true;
+      } catch (err) {
+        this.hasAccount = false;
+        this.loadingAccountDetails = false;
+      }
     }
   }
 }

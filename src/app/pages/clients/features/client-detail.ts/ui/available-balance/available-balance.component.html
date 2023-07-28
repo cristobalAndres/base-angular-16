@@ -1,33 +1,55 @@
 <div class="card shadow h-100">
   <div class="card-body">
     <h5 class="card-title text-primary" *ngIf="!isLoading">Saldo disponible</h5>
-    <hr />
-    <div class="available-balance">
-      <p class="balance" *ngIf="accountDetail.accounts.length">
-        {{ accountDetail.accounts[0].availableBalance | number : '1.0-2' }}
+    <h5 class="card-title text-primary" *ngIf="isLoading">
+      <p class="placeholder-glow">
+        <span class="placeholder col-6"></span>
       </p>
-      <div class="status">
-        <label class="label-status" for="statusValue">Status cuenta: </label>
-        <text
-          *ngIf="accountDetail.accounts.length"
-          id="statusValue"
-          [ngClass]="
-            accountDetail.accounts[0].enabledAccount === true
-              ? ['vaule-status', 'bg-green']
-              : ['vaule-status', 'bg-red']
-          "
-          >{{ accountDetail.accounts[0].enabledAccount }}</text
-        >
+    </h5>
+    <hr />
+    <ng-container *ngIf="!isLoading">
+      <div class="available-balance" *ngIf="hasAccount">
+        <p class="balance">
+          {{ accountDetail.accounts[0].availableBalance | number : '1.0-2' }}
+        </p>
+        <div class="status">
+          <label class="label-status" for="statusValue">Status cuenta: </label>
+          <text
+            id="statusValue"
+            [ngClass]="
+              accountDetail.accounts[0].enabledAccount === true
+                ? ['vaule-status', 'bg-green']
+                : ['vaule-status', 'bg-red']
+            "
+            >{{ accountDetail.accounts[0].enabledAccount }}</text
+          >
+        </div>
+
+        <hr />
+        <div class="action">
+          <app-icon-button
+            icon="bi bi-eye"
+            (clickEmiter)="showAccountDetail()"
+            tooltip="Ver detalle"
+          />
+        </div>
       </div>
 
-      <hr />
-      <div class="action">
-        <app-icon-button
-          icon="bi bi-eye"
-          (clickEmiter)="showAccountDetail()"
-          tooltip="Ver detalle"
-        />
-      </div>
-    </div>
+      <app-error-retry
+        (emitRetryButton)="outputOnRetryButtonClick()"
+        *ngIf="!hasAccount"
+      ></app-error-retry>
+    </ng-container>
+    <ng-container *ngIf="isLoading">
+      <p class="placeholder-glow">
+        <span class="placeholder col-6"></span>
+      </p>
+      <p class="placeholder-glow">
+        <span class="placeholder col-6"></span>
+      </p>
+      <p class="placeholder-glow">
+        <span class="placeholder col-6"></span>
+      </p>
+    </ng-container>
   </div>
 </div>
