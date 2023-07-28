@@ -7,4 +7,5 @@ export const environment: Environment = {
   region: 'api-region',
   userPoolId: 'api-user-pool-id',
   userPoolWebClientId: 'api-user-pool-web-client-id',
+  paymentDataBack: 'api-payment-data-back',
 };

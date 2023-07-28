@@ -1,6 +1,11 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
-import { UserStatusType } from '@app/pages/clients/shared';
+import { Component, OnInit, effect, inject } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { ClientsService } from '@app/pages/clients/data-access';
+import {
+  AccountDetailsResponseDto,
+  UserStatusType,
+} from '@app/pages/clients/shared';
 import { CardInfoDataDto } from '@app/pages/clients/shared/dtos/card-info-data.dto';
 import {
   CardInfoComponent,
@@ -8,27 +13,42 @@ import {
 } from '@app/pages/clients/ui';
 import { BadgeColors } from '@app/shared/enums';
 import { RutPipe } from '@app/shared/pipes';
+import { Subscription, lastValueFrom } from 'rxjs';
 import { ClientsDataService } from '../../data-access/clients-data-service';
+import { AvailableBalanceComponent } from '../../ui/available-balance';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CardInfoComponent, CardPhotoInfoComponent],
+  imports: [
+    CommonModule,
+    CardInfoComponent,
+    CardPhotoInfoComponent,
+    AvailableBalanceComponent,
+  ],
   selector: 'app-cards-info-section',
   templateUrl: './cards-info-section.component.html',
   styleUrls: ['./cards-info-section.component.scss'],
+  providers: [ClientsService],
 })
-export class CardsInfoSectionComponent {
+export class CardsInfoSectionComponent implements OnInit {
   private readonly datePipe = inject(DatePipe);
   private readonly rutPipe = inject(RutPipe);
   private clientDataService = inject(ClientsDataService);
+  private route = inject(ActivatedRoute);
+  private clientsServce = inject(ClientsService);
+
+  private routeParamsSub: Subscription | undefined;
 
   protected readonly clientSig = this.clientDataService.client;
   protected readonly isClientLoadingSig = this.clientDataService.isLoading;
 
   protected clientName = '';
+  private id = '';
+  protected hasAccount = false;
+  protected loadingAccountDetails = true;
 
   protected basicInfoCardData: { title: string; data: CardInfoDataDto[] } = {
-    title: 'Información Básica',
+    title: this.clientName,
     data: [],
   };
 
@@ -37,12 +57,27 @@ export class CardsInfoSectionComponent {
     data: [],
   };
 
+  protected accountDetail: AccountDetailsResponseDto = {
+    idEcommerce: '',
+    idWallet: '',
+    timestamp: '',
+    accounts: [],
+  };
+
   constructor() {
     // only change if ClientSig change
     effect(() => {
+      this.loadClientName();
       this.loadBasicInfoCardData();
       this.loadStatusCardData();
-      this.loadClientName();
+      void this.getAccountDetails();
+    });
+  }
+
+  ngOnInit() {
+    this.routeParamsSub = this.route.params.subscribe((params: Params) => {
+      const { id } = params;
+      this.id = id as string;
     });
   }
 
@@ -51,6 +86,7 @@ export class CardsInfoSectionComponent {
   }
 
   private loadBasicInfoCardData() {
+    this.basicInfoCardData.title = this.clientName;
     this.basicInfoCardData.data = [
       {
         title: 'Id',
@@ -145,5 +181,21 @@ export class CardsInfoSectionComponent {
             : BadgeColors.SECONDARY,
       },
     ];
+  }
+
+  protected async getAccountDetails() {
+    if (this.id) {
+      try {
+        this.loadingAccountDetails = true;
+        this.accountDetail = await lastValueFrom(
+          this.clientsServce.getAccountDetails(this.id),
+        );
+        this.loadingAccountDetails = false;
+        this.hasAccount = true;
+      } catch (err) {
+        this.hasAccount = false;
+        this.loadingAccountDetails = false;
+      }
+    }
   }
 }

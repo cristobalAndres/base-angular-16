@@ -1,3 +1,6 @@
+export * from './account-detail-modal-data.dto';
+export * from './account-detail.dto';
+export * from './account-details-response.dto';
 export * from './account.dto';
 export * from './cards-response.dto';
 export * from './cards.dto';
