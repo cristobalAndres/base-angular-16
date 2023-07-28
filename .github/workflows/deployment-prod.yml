@@ -35,7 +35,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}-prod
         run: |
           env
-          docker build --build-arg ANGULAR_PUBLIC_ENV=${GITHUB_REF#refs/heads/} -t $ECR_REGISTRY/$ECR_REPOSITORY:prod -t $ECR_REGISTRY/$ECR_REPOSITORY
+          docker build --build-arg ANGULAR_PUBLIC_ENV=${GITHUB_REF#refs/heads/} -t $ECR_REGISTRY/$ECR_REPOSITORY:prod -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}-prod .
           docker image push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
   kustomize:
     name: Deploy kustomize
