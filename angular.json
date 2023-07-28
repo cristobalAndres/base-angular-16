@@ -58,7 +58,7 @@
             ]
           },
           "configurations": {
-            "production": {
+            "master": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -127,8 +127,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "browserTarget": "cw-cl-users-web-manager:build:production"
+            "master": {
+              "browserTarget": "cw-cl-users-web-manager:build:master"
             },
             "qa": {
               "browserTarget": "cw-cl-users-web-manager:build:qa"
