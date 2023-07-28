@@ -1,12 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'styles/table.scss';
 @import '~@aws-amplify/ui-angular/theme.css';
-
-/* Importing Bootstrap SCSS file. */
-// @import 'bootstrap/scss/bootstrap';
 @import '~bootstrap/dist/css/bootstrap.css';
-// @import '~@ng-bootstrap/ng-bootstrap/index';
 
-$primary-color: #123456;
+$primary-color: rgb(18, 52, 86);
+
+:root {
+  --primary-color: rgb(18, 52, 86);
+}
 
 html,
 body,

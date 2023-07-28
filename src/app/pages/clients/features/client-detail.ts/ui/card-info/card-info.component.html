@@ -1,0 +1,41 @@
+<div class="card shadow h-100">
+  <div class="card-body">
+    <h5 class="card-title text-primary" *ngIf="!isLoading">
+      {{ title || ' ' }}
+    </h5>
+    <h5 class="card-title text-primary" *ngIf="isLoading">
+      <p class="placeholder-glow">
+        <span class="placeholder col-6"></span>
+      </p>
+    </h5>
+    <hr />
+    <table class="table table-borderless">
+      <tbody *ngIf="!isLoading">
+        <tr *ngFor="let info of data">
+          <th scope="row">{{ info.title }}</th>
+          <td *ngIf="!info.isBadge">{{ info.value }}</td>
+          <td *ngIf="info.isBadge">
+            <app-default-badge
+              [text]="info.value"
+              [color]="info.color!"
+            ></app-default-badge>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="isLoading">
+        <tr *ngFor="let dummy of [].constructor(elementCount)">
+          <th scope="row">
+            <p class="placeholder-glow">
+              <span class="placeholder col-6"></span>
+            </p>
+          </th>
+          <td>
+            <p class="placeholder-glow">
+              <span class="placeholder col-6"></span>
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-md-12 col-lg-4 mb-4">
+    <app-available-balance
+      [isLoading]="loadingAccountDetails"
+      [accountDetail]="accountDetail"
+      [hasAccount]="hasAccount"
+      (retryShowAvailableBalance)="getAccountDetails()"
+    >
+    </app-available-balance>
+  </div>
+  <div class="col-md-12 col-lg-4 mb-4">
+    <app-card-info
+      [clientName]="clientName"
+      [isLoading]="isClientLoadingSig()"
+      [title]="basicInfoCardData.title"
+      [data]="basicInfoCardData.data"
+      [elementCount]="4"
+    ></app-card-info>
+  </div>
+  <div class="col-md-12 col-lg-4 mb-4">
+    <app-card-info
+      [isLoading]="isClientLoadingSig()"
+      [title]="statusCardData.title"
+      [data]="statusCardData.data"
+      [elementCount]="4"
+      [clientName]="clientName"
+    ></app-card-info>
+  </div>
+</div>

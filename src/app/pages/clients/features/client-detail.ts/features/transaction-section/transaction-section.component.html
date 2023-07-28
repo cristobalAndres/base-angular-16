@@ -1,0 +1,48 @@
+<div class="card shadow border-light row px-3 py-4 mb-4">
+  <div class="row align-items-baseline">
+    <div class="col-md-12">
+      <h3 *ngIf="!isPaymentMethodsLoading()">Transacciones</h3>
+    </div>
+  </div>
+  <div
+    class="row"
+    *ngIf="
+      !isPaymentMethodsLoading() &&
+      paymentsMethodsResponse() &&
+      (paymentsMethodsResponse()?.accounts?.length !== 0 ||
+        paymentsMethodsResponse()?.cards?.length !== 0)
+    "
+  >
+    <div class="col-md-8">
+      <app-transactions-filters />
+    </div>
+    <div class="col-md-4">
+      <app-pagination
+        *ngIf="paginationSig() as pagination"
+        itemName="Transacciones"
+        [page]="(currentPage$ | async)!"
+        (pageChange)="onCurrentPageChange($event)"
+        [totalPages]="pagination.totalPages"
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+      />
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col" *ngIf="!isLoading()">
+        <p *ngIf="transactionsSig() && transactionsSig()?.length === 0">
+          No hay transacciones
+        </p>
+        <div *ngIf="transactionsSig() && transactionsSig()?.length !== 0">
+          <app-client-transactions-table
+            *ngIf="transactionsSig() as transactions"
+            [transactions]="transactions"
+            (viewTransactionDetailEmitter)="onDetailButtonClick($event)"
+          />
+        </div>
+      </div>
+      <app-spinner *ngIf="isLoading()"></app-spinner>
+    </div>
+  </div>
+</div>

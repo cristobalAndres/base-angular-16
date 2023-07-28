@@ -1,21 +1,28 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
 import { Auth } from 'aws-amplify';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthGuard implements CanActivate {
-  constructor(private router: Router) {}
+const canLoadGuard: CanMatchFn = () => {
+  const router = inject(Router);
+  return checkAuthenticatedUser(router);
+};
 
-  async canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Promise<boolean | UrlTree> {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        return true;
-      } catch (e) {
-        return this.router.parseUrl('/login');
-      }
+const canActivateGuard: CanActivateFn = () => {
+  const router = inject(Router);
+  return checkAuthenticatedUser(router);
+};
+
+export const AuthGuard = {
+  canLoad: canLoadGuard,
+  canActivate: canActivateGuard,
+};
+
+async function checkAuthenticatedUser(router: Router) {
+  try {
+    await Auth.currentAuthenticatedUser();
+  } catch (e) {
+    return router.parseUrl('/login');
   }
+
+  return true;
 }

@@ -1,0 +1,52 @@
+<div class="table-responsive">
+  <table class="table default">
+    <thead class="">
+      <tr class="d-flex">
+        <th class="col-1" scope="col">Fecha</th>
+        <th class="col-2" scope="col">Estado</th>
+        <th class="col-1" scope="col">Monto</th>
+        <th class="col-1" scope="col">Descuento</th>
+        <th class="col-1" scope="col">Total</th>
+        <th class="col-1" scope="col">Metodo</th>
+        <th class="col-1" scope="col">Local</th>
+        <th class="col-1" scope="col">Caja</th>
+        <th class="col-1" scope="col">Online</th>
+        <th class="col-1" scope="col">Tipo</th>
+        <th class="col-1" scope="col">Subtipo</th>
+        <th class="col-1" scope="col">Devolución</th>
+        <th class="col-1" scope="col">Herramientas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let transaction of transactions; trackBy: trackByTransactionId"
+        class="d-flex"
+      >
+        <td class="col-1">{{ transaction.date | date : 'medium' }}</td>
+        <td class="col-2">{{ transaction.status | transactionStatus }}</td>
+        <td class="currency col-1">
+          {{ transaction.amount | number : '1.0-2' }}
+        </td>
+        <td class="currency col-1">
+          {{ transaction.saving | number : '1.0-2' }}
+        </td>
+        <td class="currency col-1">
+          {{ transaction.total | number : '1.0-2' }}
+        </td>
+        <td class="col-1">{{ transaction.payment_method }}</td>
+        <td class="col-1">{{ transaction.store_name }}</td>
+        <td class="col-1">{{ transaction.pos_id }}</td>
+        <td class="col-1">{{ transaction.is_external ? 'SÍ' : 'NO' }}</td>
+        <td class="col-1">{{ transaction.type | transactionType }}</td>
+        <td class="col-1">{{ transaction.sub_type }}</td>
+        <td class="col-1">{{ transaction.reference_id ? 'SÍ' : 'NO' }}</td>
+        <td class="col-1">
+          <app-icon-button
+            icon="bi bi-eye"
+            (clickEmiter)="onClickViewInfo(transaction.transaction_id)"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

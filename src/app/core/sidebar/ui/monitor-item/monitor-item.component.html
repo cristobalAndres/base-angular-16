@@ -1,0 +1,13 @@
+<span
+  class="nav-link"
+  placement="top"
+  [ngbTooltip]="'Errores: ' + metric.value"
+>
+  <app-default-badge
+    [text]="isActive ? metric.value.toString() : getValueText(metric.value)"
+    [color]="getColorByValue(metric.value)"
+  />
+  <span class="menu-text" [class.selected-sidebar]="isActive">{{
+    getToolTipContent(metric.metric)
+  }}</span>
+</span>

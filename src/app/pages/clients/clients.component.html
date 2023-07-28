@@ -1,0 +1,47 @@
+<div class="row pb-4">
+  <app-navigate-button to="/" message="Volver" />
+</div>
+<div class="card shadow border-light row" *ngIf="!hasError()">
+  <div class="card-body">
+    <div class="mb-2">
+      <h5 class="card-title">Administra clientes</h5>
+      <p class="card-subtitle text-body-secondary">
+        Administra los clientes y su acceso a los servicios de CencoPayments.
+        Puedes bloquear o desbloquear clientes, restablecer sus contraseñas y
+        más.
+      </p>
+    </div>
+    <div class="container-fluid">
+      <div class="row justify-content-between align-items-center g-4">
+        <div class="col-12 col-xl-8">
+          <app-clients-filters
+            [isLoading]="isLoading()"
+            [statusOptions]="statusOptions"
+            (searchEvent)="onSearchButtonClick($event)"
+          />
+        </div>
+        <div class="col-12 col-xl-4">
+          <app-pagination
+            itemName="clientes"
+            [page]="pagination().current_page"
+            (pageChange)="onCurrentPageChange($event)"
+            [totalPages]="pagination().total_pages"
+            [totalItems]="pagination().total_items"
+            [itemsPerPage]="pagination().per_page"
+          />
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col">
+        <app-clients-table
+          *ngIf="!isLoading()"
+          [clients]="clientsList()"
+        ></app-clients-table>
+        <app-spinner *ngIf="isLoading()"></app-spinner>
+      </div>
+    </div>
+  </div>
+</div>
+<app-error-retry *ngIf="hasError()" (emitRetryButton)="retryButtonClick()" />

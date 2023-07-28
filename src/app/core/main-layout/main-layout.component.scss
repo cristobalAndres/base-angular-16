@@ -1,8 +1,18 @@
-.container-fluid {
-  padding-right: 0;
-  padding-left: 0;
+.body {
+  display: flex;
 }
 
-.row {
-  max-width: 100%;
+.aside {
+  margin-top: 79px;
+  position: fixed;
+  z-index: 9999999999;
+}
+.content {
+  margin-top: 80px;
+  width: calc(100% - 52px);
+  height: 100%;
+  position: relative;
+  left: 52px;
+  z-index: 1;
+  transition: width 0.3s;
 }
