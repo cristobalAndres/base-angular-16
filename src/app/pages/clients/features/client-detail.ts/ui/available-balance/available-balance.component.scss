@@ -1,0 +1,36 @@
+.card-title {
+  color: var(--primary-color) !important;
+  text-align: center;
+}
+.available-balance {
+  p.balance::before {
+    content: '$ ';
+  }
+  p.balance {
+    font-weight: 600;
+    font-size: 36px;
+    margin: 36px 0;
+    text-align: center;
+  }
+  .status {
+    text-align: center;
+  }
+  .action {
+    text-align: center;
+  }
+  .bg-green {
+    background-color: green;
+  }
+  .bg-red {
+    background-color: red;
+  }
+  .label-status {
+    color: black;
+  }
+  text {
+    padding: 5px;
+    border-radius: 8px;
+    margin-left: 3px;
+    color: white;
+  }
+}

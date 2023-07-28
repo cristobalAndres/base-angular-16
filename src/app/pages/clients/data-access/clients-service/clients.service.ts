@@ -4,8 +4,10 @@ import {
   HttpParamsOptions,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { environment } from '@environment';
 import { Observable } from 'rxjs';
 import {
+  AccountDetailsResponseDto,
   CardsResponse,
   ClientDto,
   ClientParameter,
@@ -52,5 +54,12 @@ export class ClientsService {
 
   getCards(clientId: string) {
     return this.httpClient.get<CardsResponse>(`/card/${clientId}`, {});
+  }
+
+  getAccountDetails(clientId: string) {
+    return this.httpClient.get<AccountDetailsResponseDto>(
+      `${environment.paymentDataBack}/account/${clientId}`,
+      {},
+    );
   }
 }

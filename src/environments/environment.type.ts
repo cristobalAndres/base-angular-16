@@ -5,4 +5,5 @@ export type Environment = Readonly<{
   region: string;
   userPoolId: string;
   userPoolWebClientId: string;
+  paymentDataBack: string;
 }>;
