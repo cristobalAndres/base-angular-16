@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">Detalle transacción</h4>
+  <h4 class="modal-title" id="modal-basic-title">Detalle de la cuenta</h4>
   <button
     type="button"
     class="btn btn-primary"
@@ -13,7 +13,7 @@
   <div class="table-responsive">
     <table class="table table-striped">
       <tbody>
-        <tr *ngFor="let data of transactionData">
+        <tr *ngFor="let data of accountData">
           <th scope="row" colspan="6">{{ data.title }}</th>
           <td colspan="6">{{ data.value }}</td>
         </tr>

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
+import { ErrorRetryComponent } from '@app/shared/components/errors';
 import { TransactionsFiltersService, TransactionsService } from './data-access';
 import { TransactionsFiltersComponent } from './features';
 import { TransactionsRoutingModule } from './transactions-routing.module';
@@ -16,6 +17,7 @@ import { TransactionsTableComponent } from './ui';
     TransactionsRoutingModule,
     TransactionsFiltersComponent,
     TransactionsTableComponent,
+    ErrorRetryComponent,
   ],
 })
 export class TransactionsModule {}

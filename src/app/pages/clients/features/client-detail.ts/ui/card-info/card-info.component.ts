@@ -13,6 +13,7 @@ import { CardInfoDataDto } from '../../../../shared/dtos/card-info-data.dto';
 export class CardInfoComponent {
   @Input({ required: true }) title!: string;
   @Input({ required: true }) data!: CardInfoDataDto[];
+  @Input({ required: true }) clientName!: string;
 
   @Input() isLoading = false;
   @Input() elementCount = 3;

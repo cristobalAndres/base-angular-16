@@ -7,6 +7,7 @@ import { ClientsService } from '../clients-service';
 export class ClientsComponentService {
   private readonly clientsService = inject(ClientsService);
   private isLoadingSig = signal(false);
+  private hasErrorSig = signal(false);
   private currentPageSig = signal(1);
 
   private clientsSig = signal<ClientDto[]>([]);
@@ -26,8 +27,10 @@ export class ClientsComponentService {
   readonly pagination = computed(() => this.paginationSig());
   readonly searchBy = computed(() => this.searchBySig());
   readonly searchS = computed(() => this.searchSig());
+  readonly hasError = computed(() => this.hasErrorSig());
 
   async loadClients() {
+    this.hasErrorSig.set(false);
     this.isLoadingSig.set(true);
 
     try {
@@ -42,11 +45,9 @@ export class ClientsComponentService {
 
       this.clientsSig.set(response.data);
       this.paginationSig.set(response.pagination);
-
-      this.isLoadingSig.set(false);
     } catch (error) {
-      //TODO: Agregar error en vista y aquí
-
+      this.hasErrorSig.set(true);
+    } finally {
       this.isLoadingSig.set(false);
     }
   }

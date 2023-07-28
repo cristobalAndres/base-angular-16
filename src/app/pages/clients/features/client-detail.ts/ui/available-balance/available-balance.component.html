@@ -1,0 +1,55 @@
+<div class="card shadow h-100">
+  <div class="card-body">
+    <h5 class="card-title text-primary" *ngIf="!isLoading">Saldo disponible</h5>
+    <h5 class="card-title text-primary" *ngIf="isLoading">
+      <p class="placeholder-glow">
+        <span class="placeholder col-6"></span>
+      </p>
+    </h5>
+    <hr />
+    <ng-container *ngIf="!isLoading">
+      <app-error-retry
+        (emitRetryButton)="outputOnRetryButtonClick()"
+        *ngIf="!hasAccount"
+      ></app-error-retry>
+      <div class="available-balance" *ngIf="hasAccount">
+        <p class="balance">
+          {{ accountDetail.accounts[0].availableBalance | number : '1.0-2' }}
+        </p>
+        <div class="status">
+          <label class="label-status" for="statusValue">Status cuenta: </label>
+          <text
+            id="statusValue"
+            [ngClass]="
+              accountDetail.accounts[0].enabledAccount === true
+                ? ['vaule-status', 'bg-green']
+                : ['vaule-status', 'bg-red']
+            "
+            >{{ accountDetail.accounts[0].enabledAccount }}</text
+          >
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isLoading">
+      <div class="available-balance">
+        <p class="balance-placeholder placeholder-glow">
+          <span class="placeholder col-6"></span>
+        </p>
+        <div class="status">
+          <p class="placeholder-glow label-status">
+            <span class="placeholder col-6"></span>
+          </p>
+        </div>
+      </div>
+    </ng-container>
+    <div class="action" *ngIf="hasAccount || isLoading">
+      <hr />
+      <app-icon-button
+        icon="bi bi-eye"
+        (clickEmiter)="showAccountDetail()"
+        tooltip="Ver detalle"
+        [isLoading]="isLoading"
+      />
+    </div>
+  </div>
+</div>

@@ -8,4 +8,6 @@ export const environment: Environment = {
   region: 'us-east-1',
   userPoolId: 'us-east-1_p7wcOS7Rp',
   userPoolWebClientId: '7j5vavnab6892dae61h2opgo5h',
+  paymentDataBack:
+    'https://cw-cl-payment-data-prod.cencosud.net/api-payment-data',
 };
