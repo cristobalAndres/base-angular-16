@@ -2,6 +2,9 @@
   color: var(--primary-color) !important;
   text-align: center;
 }
+.action {
+  text-align: center;
+}
 .available-balance {
   p.balance::before {
     content: '$ ';

@@ -8,6 +8,10 @@
     </h5>
     <hr />
     <ng-container *ngIf="!isLoading">
+      <app-error-retry
+        (emitRetryButton)="outputOnRetryButtonClick()"
+        *ngIf="!hasAccount"
+      ></app-error-retry>
       <div class="available-balance" *ngIf="hasAccount">
         <p class="balance">
           {{ accountDetail.accounts[0].availableBalance | number : '1.0-2' }}
@@ -24,32 +28,32 @@
             >{{ accountDetail.accounts[0].enabledAccount }}</text
           >
         </div>
-
-        <hr />
-        <div class="action">
-          <app-icon-button
-            icon="bi bi-eye"
-            (clickEmiter)="showAccountDetail()"
-            tooltip="Ver detalle"
-          />
-        </div>
       </div>
-
-      <app-error-retry
-        (emitRetryButton)="outputOnRetryButtonClick()"
-        *ngIf="!hasAccount"
-      ></app-error-retry>
     </ng-container>
     <ng-container *ngIf="isLoading">
-      <p class="placeholder-glow">
-        <span class="placeholder col-6"></span>
-      </p>
-      <p class="placeholder-glow">
-        <span class="placeholder col-6"></span>
-      </p>
-      <p class="placeholder-glow">
-        <span class="placeholder col-6"></span>
-      </p>
+      <div class="placeholders">
+        <p class="placeholder-glow">
+          <span class="placeholder col-6"></span>
+        </p>
+        <p class="placeholder-glow">
+          <span class="placeholder col-6"></span>
+        </p>
+        <p class="placeholder-glow">
+          <span class="placeholder col-6"></span>
+        </p>
+        <p class="placeholder-glow">
+          <span class="placeholder col-6"></span>
+        </p>
+      </div>
     </ng-container>
+    <div class="action">
+      <hr />
+      <app-icon-button
+        icon="bi bi-eye"
+        (clickEmiter)="showAccountDetail()"
+        tooltip="Ver detalle"
+        [isLoading]="isLoading"
+      />
+    </div>
   </div>
 </div>
