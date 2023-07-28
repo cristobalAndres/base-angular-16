@@ -1,7 +1,7 @@
 <div class="row pb-4">
   <app-navigate-button to="/" message="Volver" />
 </div>
-<div class="card shadow border-light row">
+<div class="card shadow border-light row" *ngIf="!hasError()">
   <div class="card-body">
     <div class="mb-2">
       <h5 class="card-title">Administra clientes</h5>
@@ -44,3 +44,4 @@
     </div>
   </div>
 </div>
+<app-error-retry *ngIf="hasError()" (emitRetryButton)="retryButtonClick()" />

@@ -11,7 +11,9 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared';
-import { SelectionDto } from '@app/shared/components/forms';
+import { IconButtonComponent } from '@app/shared/components/buttons';
+import { SelectComponent, SelectionDto } from '@app/shared/components/forms';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   Subscription,
   debounceTime,
@@ -26,26 +28,38 @@ import { CLientsFilters, ClientParameter } from '../../shared';
 @Component({
   selector: 'app-clients-filters',
   standalone: true,
-  imports: [CommonModule, SharedModule, FormsModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    FormsModule,
+    IconButtonComponent,
+    NgbTooltip,
+  ],
   template: `<div class="container">
     <div class="row g-4">
       <div class="col-md-auto">
-        <div class="input-row">
-          <div class="d-flex">
-            <app-select
-              [withPlaceholder]="false"
-              [options]="statusOptions"
-              (optionChange)="onStatusChange($event)"
-            />
-            <input
-              type="text"
-              class="form-control input-text"
-              placeholder="Buscar"
-              aria-label="searchText"
-              #searchText
-            />
-          </div>
-        </div>
+        <app-select
+          [withPlaceholder]="false"
+          [options]="statusOptions"
+          (optionChange)="onStatusChange($event)"
+        />
+      </div>
+      <div class="col-md-auto">
+        <input
+          type="text"
+          class="form-control input-text"
+          placeholder="Buscar"
+          aria-label="searchText"
+          #searchText
+        />
+      </div>
+
+      <div class="col-md-auto">
+        <app-icon-button
+          [ngbTooltip]="'Limpiar filtros'"
+          [icon]="'bi-eraser'"
+          (clickEmiter)="filtersReset()"
+        />
       </div>
     </div>
   </div>`,
@@ -72,6 +86,9 @@ export class ClientsFiltersComponent implements AfterViewInit, OnDestroy {
   @ViewChild('searchText')
   input!: ElementRef<HTMLInputElement>;
 
+  @ViewChild(SelectComponent)
+  selectComponent!: SelectComponent;
+
   ngAfterViewInit() {
     this.inputEvent$ = fromEvent(this.input.nativeElement, 'keyup')
       .pipe(
@@ -92,5 +109,11 @@ export class ClientsFiltersComponent implements AfterViewInit, OnDestroy {
 
   protected onStatusChange(status: ClientParameter | undefined) {
     this.searchBy = status;
+  }
+
+  filtersReset() {
+    this.selectComponent.reset();
+    this.input.nativeElement.value = '';
+    this.searchEvent.emit({ searchBy: this.searchBy, searchText: '' });
   }
 }

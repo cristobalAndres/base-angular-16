@@ -15,7 +15,7 @@ export class PaymentMethodsDataService {
   private paymentsMethodsResponseSig = signal<CardsResponse | undefined>(
     undefined,
   );
-  private isAllPaymentMethodsSelectedSig = signal(true);
+  private isAllPaymentMethodsSelectedSig = signal(false);
   private paymenthsMethodsListSig = signal<PaymentsMethodsListDto[]>([]);
 
   private readonly selectedPaymentMethodIdsSig = signal<
@@ -38,6 +38,7 @@ export class PaymentMethodsDataService {
   );
 
   async loadPaymentsMethodsOfClient(clientId: string) {
+    this.hasErrorSig.set(false);
     this.isLoadingSig.set(true);
     try {
       const result = await lastValueFrom(
@@ -45,7 +46,6 @@ export class PaymentMethodsDataService {
       );
       this.paymentsMethodsResponseSig.set(result);
       this.loadPaymentsMethodsList();
-      this.hasErrorSig.set(false);
     } catch (error) {
       this.hasErrorSig.set(true);
     } finally {

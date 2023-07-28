@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
+import { NgHttpCachingHeaders } from 'ng-http-caching';
 import { Observable } from 'rxjs';
 import {
   AccountDetailsResponseDto,
@@ -41,6 +42,9 @@ export class ClientsService {
 
     return this.httpClient.get<ClientsResponseDto>('client', {
       params: new HttpParams({ fromObject: httpParams }),
+      headers: {
+        [NgHttpCachingHeaders.ALLOW_CACHE]: '1',
+      },
     });
   }
 

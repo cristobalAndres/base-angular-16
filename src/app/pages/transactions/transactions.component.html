@@ -2,7 +2,7 @@
   <div class="row">
     <app-navigate-button to="/" message="Volver" />
   </div>
-  <div class="card shadow border-light row px-3 py-4">
+  <div class="card shadow border-light row px-3 py-4" *ngIf="!hasError()">
     <div class="card-body">
       <div class="mb-2">
         <h5 class="card-title">Transacciones</h5>
@@ -30,14 +30,15 @@
       </div>
       <hr />
       <div class="row">
-        <div class="col">
-          <!-- TODO: Add loading indicator using the isLoading$ property -->
+        <div class="col" *ngIf="!isLoadingSig()">
           <app-transactions-table
             *ngIf="transactions$ | async as transactions"
             [transactions]="transactions"
           />
         </div>
+        <app-spinner *ngIf="isLoadingSig()"></app-spinner>
       </div>
     </div>
   </div>
+  <app-error-retry *ngIf="hasError()" (emitRetryButton)="retryButtonClick()" />
 </div>

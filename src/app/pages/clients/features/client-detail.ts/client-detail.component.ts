@@ -20,13 +20,27 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
 
   private routeParamsSub: Subscription | undefined;
 
+  private id = '';
+
   protected readonly client = this.clientDataService.client;
+  protected readonly hasClientError = this.clientDataService.hasError;
+
+  protected readonly hasPaymentMethodsError =
+    this.paymentsMethodsDataService.hasError;
 
   ngOnInit() {
     this.routeParamsSub = this.route.params.subscribe((params: Params) => {
       const { id } = params;
-      void this.loadData(id as string);
+      this.id = id as string;
+      void this.loadData(this.id);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.clientDataService.cleanData();
+    this.ecommerceDataService.cleanData();
+    this.paymentsMethodsDataService.cleanData();
+    this.routeParamsSub?.unsubscribe();
   }
 
   async loadData(clientId: string): Promise<void> {
@@ -36,10 +50,11 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  ngOnDestroy(): void {
-    this.clientDataService.cleanData();
-    this.ecommerceDataService.cleanData();
-    this.paymentsMethodsDataService.cleanData();
-    this.routeParamsSub?.unsubscribe();
+  async retryClientButton() {
+    await this.clientDataService.loadClient(this.id);
+  }
+
+  async retryPaymentMethodsButton() {
+    await this.paymentsMethodsDataService.loadPaymentsMethodsOfClient(this.id);
   }
 }

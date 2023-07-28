@@ -95,4 +95,9 @@ export class RangeDatepickerComponent {
       ? NgbDate.from(parsed)
       : currentValue;
   }
+
+  reset() {
+    this.startDate.set(this.calendar.getPrev(this.calendar.getToday(), 'm', 1));
+    this.endDate.set(this.calendar.getToday());
+  }
 }
