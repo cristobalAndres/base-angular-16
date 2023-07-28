@@ -9,7 +9,8 @@
   p.balance::before {
     content: '$ ';
   }
-  p.balance {
+  p.balance,
+  p.balance-placeholder {
     font-weight: 600;
     font-size: 36px;
     margin: 36px 0;
