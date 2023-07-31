@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { Component, Input, OnDestroy, inject, signal } from '@angular/core';
+import { Component, Input, inject, signal } from '@angular/core';
 import {
   FormControl,
   NonNullableFormBuilder,
@@ -10,7 +10,7 @@ import { SharedModule } from '@app/shared';
 import { ToastService } from '@app/shared/services';
 import { ToastsColors } from '@app/shared/services/toasts';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { catchError, finalize, tap, throwError } from 'rxjs';
 import { KycService, UpdateKycUserInformationDto } from '../../data-access';
 
 @Component({
@@ -21,19 +21,16 @@ import { KycService, UpdateKycUserInformationDto } from '../../data-access';
   styleUrls: ['./update-data-kyc-modal-form.scss'],
   providers: [KycService],
 })
-export class UpdateDataKYCModalFormComponent implements OnDestroy {
+export class UpdateDataKYCModalFormComponent {
   private readonly kycService = inject(KycService);
   private readonly modalService = inject(NgbModal);
   private readonly formBuilder = inject(NonNullableFormBuilder);
-
   private readonly toastService = inject(ToastService);
 
   @Input({ required: true }) title!: string;
   @Input({ required: true }) clientId!: string;
 
-  private updateKycInformationUserSubscription?: Subscription;
   protected readonly isSubmitting = signal(false);
-
   protected readonly updateKycUserInformationForm = this.formBuilder.group({
     name: ['', Validators.required],
     lastName: ['', Validators.required],
@@ -41,37 +38,36 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
     gender: ['', Validators.required],
   });
 
-  ngOnDestroy() {
-    this.updateKycInformationUserSubscription?.unsubscribe();
-  }
-
   protected saveChanges() {
     if (this.updateKycUserInformationForm.invalid) {
       this.updateKycUserInformationForm.markAllAsTouched();
       return;
     }
+
     this.isSubmitting.set(true);
     const updateDto = this.mapUpdateKycUserInformationDto();
 
-    this.updateKycInformationUserSubscription = this.kycService
+    this.kycService
       .updateKycInformationUser(updateDto, this.clientId)
-      .subscribe({
-        next: () => {
-          this.isSubmitting.set(false);
-          this.closeModal();
-          this.toastService.show(
-            'Se ha actualizado la información correctamente',
-            ToastsColors.SUCCESS,
-          );
-        },
-        error: () => {
-          this.isSubmitting.set(false);
+      .pipe(
+        finalize(() => this.isSubmitting.set(false)),
+        catchError((error: unknown) => {
           this.toastService.show(
             'No se ha podido actualizar la información',
             ToastsColors.DANGER,
           );
-        },
-      });
+
+          return throwError(() => error);
+        }),
+        tap(() =>
+          this.toastService.show(
+            'Se ha actualizado la información correctamente',
+            ToastsColors.SUCCESS,
+          ),
+        ),
+        tap(() => this.closeModal()),
+      )
+      .subscribe();
   }
 
   protected closeModal() {
