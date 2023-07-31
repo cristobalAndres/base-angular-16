@@ -61,6 +61,7 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
           this.closeModal();
           this.toastService.show(
             'Se ha actualizado la información correctamente',
+            ToastsColors.SUCCESS,
           );
         },
         error: () => {
