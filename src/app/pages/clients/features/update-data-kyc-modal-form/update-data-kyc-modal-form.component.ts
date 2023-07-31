@@ -7,8 +7,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { SharedModule } from '@app/shared';
+import { ToastsColors } from '@app/shared/services/toasts/enums';
+import { ToastService } from '@app/shared/services/toasts/toast-service.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, finalize } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { KycService, UpdateKycUserInformationDto } from '../../data-access';
 
 @Component({
@@ -23,6 +25,8 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
   private readonly kycService = inject(KycService);
   private readonly modalService = inject(NgbModal);
   private readonly formBuilder = inject(NonNullableFormBuilder);
+
+  private readonly toastService = inject(ToastService);
 
   @Input({ required: true }) title!: string;
   @Input({ required: true }) clientId!: string;
@@ -46,19 +50,27 @@ export class UpdateDataKYCModalFormComponent implements OnDestroy {
       this.updateKycUserInformationForm.markAllAsTouched();
       return;
     }
-
     this.isSubmitting.set(true);
     const updateDto = this.mapUpdateKycUserInformationDto();
 
     this.updateKycInformationUserSubscription = this.kycService
       .updateKycInformationUser(updateDto, this.clientId)
-      .pipe(
-        finalize(() => {
+      .subscribe({
+        next: () => {
           this.isSubmitting.set(false);
           this.closeModal();
-        }),
-      )
-      .subscribe();
+          this.toastService.show(
+            'Se ha actualizado la información correctamente',
+          );
+        },
+        error: () => {
+          this.isSubmitting.set(false);
+          this.toastService.show(
+            'No se ha podido actualizar la información',
+            ToastsColors.DANGER,
+          );
+        },
+      });
   }
 
   protected closeModal() {
