@@ -52,18 +52,18 @@ export class UpdateDataKYCModalFormComponent {
       .pipe(
         finalize(() => this.isSubmitting.set(false)),
         catchError((error: unknown) => {
-          this.toastService.show(
-            'No se ha podido actualizar la información',
-            ToastsColors.DANGER,
-          );
+          this.toastService.show({
+            body: 'No se ha podido actualizar la información',
+            color: ToastsColors.DANGER,
+          });
 
           return throwError(() => error);
         }),
         tap(() =>
-          this.toastService.show(
-            'Se ha actualizado la información correctamente',
-            ToastsColors.SUCCESS,
-          ),
+          this.toastService.show({
+            body: 'Se ha actualizado la información correctamente',
+            color: ToastsColors.SUCCESS,
+          }),
         ),
         tap(() => this.closeModal()),
       )
