@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { ToastService } from '@app/shared/services/toasts/toast-service.service';
+import { ToastService } from '@app/shared/services';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

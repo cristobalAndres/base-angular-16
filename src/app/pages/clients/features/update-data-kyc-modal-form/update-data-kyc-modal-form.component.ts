@@ -7,8 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { SharedModule } from '@app/shared';
-import { ToastsColors } from '@app/shared/services/toasts/enums';
-import { ToastService } from '@app/shared/services/toasts/toast-service.service';
+import { ToastService } from '@app/shared/services';
+import { ToastsColors } from '@app/shared/services/toasts';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { KycService, UpdateKycUserInformationDto } from '../../data-access';
