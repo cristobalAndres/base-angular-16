@@ -1,22 +1,27 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { of } from 'rxjs';
 import { ToastsColors } from './enums';
 import { ToastInfo } from './interfaces';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ToastService {
-  toasts: ToastInfo[] = [];
+  private readonly toastsSig = signal<readonly ToastInfo[]>([]);
+  readonly toasts = this.toastsSig.asReadonly();
 
   show(body: string, color: ToastsColors = ToastsColors.PRIMARY, delay = 5000) {
-    this.toasts.push({ body, color, delay });
+    const toast: ToastInfo = { body, color, delay };
+    this.toastsSig.update((toasts) => [...toasts, toast]);
+
+    return of(toast);
   }
 
   remove(toast: ToastInfo) {
-    this.toasts = this.toasts.filter((t) => t !== toast);
+    this.toastsSig.update((toasts) =>
+      toasts.filter((_toast) => _toast !== toast),
+    );
   }
 
   clear() {
-    this.toasts.splice(0, this.toasts.length);
+    this.toastsSig.set([]);
   }
 }

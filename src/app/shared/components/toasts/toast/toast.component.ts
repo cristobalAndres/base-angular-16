@@ -12,6 +12,4 @@ import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ToastComponent {
   protected readonly toastService = inject(ToastService);
-
-  protected toasts = this.toastService.toasts;
 }
