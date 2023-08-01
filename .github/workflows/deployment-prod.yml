@@ -2,9 +2,11 @@ name: CI Pipeline qa
 on:
   workflow_dispatch:
   push:
-    branches: ['master']
-  pull_request:
-    branches: [master]
+    paths-ignore:
+      - 'README.md'
+      - '.github/**'
+    branches: ["master"]
+
 
 jobs:
   get-vault-aws-credentials:
