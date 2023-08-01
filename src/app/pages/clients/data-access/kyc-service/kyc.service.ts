@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
+import { throwError } from 'rxjs';
 import { UpdateKycUserInformationDto } from './dtos';
 
 @Injectable()
@@ -13,7 +14,9 @@ export class KycService {
     clientId: string,
   ) {
     if (!clientData || !clientId)
-      throw new Error('clientId and clientData are required');
+      return throwError(
+        () => new Error('clientId and clientData are required'),
+      );
 
     const body = {
       ...clientData,

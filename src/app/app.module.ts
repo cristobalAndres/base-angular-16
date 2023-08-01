@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { LoginModule } from './core/authentication/login/login.module';
 import { CoreModule } from './core/core.module';
 import { HomeModule } from './pages/home/home.module';
+import { ToastComponent } from './shared/components/toasts/toast/toast.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,6 +18,7 @@ import { HomeModule } from './pages/home/home.module';
     HomeModule,
     NgbModule,
     CoreModule,
+    ToastComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],
