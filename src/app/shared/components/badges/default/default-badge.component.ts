@@ -7,7 +7,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
   selector: 'app-default-badge',
   standalone: true,
   imports: [CommonModule, NgbPaginationModule],
-  template: ` <span [ngClass]="['badge', color]">{{ text }}</span> `,
+  template: ` <span [innerHTML]="text" [ngClass]="['badge', color]"></span> `,
 })
 export class DefaultBadgeComponent {
   @Input() color: BadgeColors = BadgeColors.SUCCESS;

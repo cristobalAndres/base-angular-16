@@ -13,8 +13,14 @@ export class MonitorItemComponent {
   @Input({ required: true }) isActive!: boolean;
 
   getValueText(value: number) {
-    if (value < 10) return `${value}`;
-    return '9+';
+    if (value < 10) return `&nbsp${value}&nbsp;`;
+    if (value < 100) return `${value}`;
+    return '99+';
+  }
+
+  getFullValueText(value: number) {
+    if (value < 10) return `&nbsp${value}&nbsp;`;
+    return `${value}`;
   }
 
   getColorByValue(value: number) {
