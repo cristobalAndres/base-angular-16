@@ -35,11 +35,9 @@ export class EcommercesDataService {
       .pipe(takeUntilDestroyed())
       .subscribe((client) => {
         if (client?.id) {
-          if (client?.dynamo?.id?.s) {
-            void this.loadEcommerces(client?.dynamo?.id?.s);
-          } else {
-            this.isLoadingSig.set(false);
-          }
+          void this.loadEcommerces(client?.id);
+        } else {
+          this.isLoadingSig.set(false);
         }
       });
   }
