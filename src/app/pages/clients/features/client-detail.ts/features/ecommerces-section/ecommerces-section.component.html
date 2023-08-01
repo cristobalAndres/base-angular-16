@@ -12,7 +12,7 @@
     <div class="col-md-4">
       <app-pagination
         *ngIf="ecommercesResponseSig().total_items !== 0"
-        itemName="Transacciones"
+        itemName="Comercios"
         (pageChange)="onEcommerceCurrentPageChange($event)"
         [page]="ecommercesResponseSig().current_page!"
         [totalPages]="ecommercesResponseSig().total_pages!"

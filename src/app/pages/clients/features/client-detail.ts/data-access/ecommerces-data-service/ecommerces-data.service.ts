@@ -43,7 +43,9 @@ export class EcommercesDataService {
 
   changePage(currentPage: number) {
     this.currentPageSig.set(currentPage);
-    void this.loadEcommerces(this.clientSig()?.dynamo!.id?.s);
+    if (this.clientSig()?.id) {
+      void this.loadEcommerces(this.clientSig()?.id ?? '');
+    }
   }
 
   async loadEcommerces(clientId: string) {
