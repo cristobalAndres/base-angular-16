@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { EcommerceResponseDto } from '@app/pages/clients/shared';
-import { lastValueFrom } from 'rxjs';
+import { finalize, lastValueFrom } from 'rxjs';
 import { ClientsDataService } from '../clients-data-service';
 import { EcommercesService } from '../ecommerces-service';
 
@@ -33,11 +33,10 @@ export class EcommercesDataService {
   constructor() {
     toObservable(this.clientSig)
       .pipe(takeUntilDestroyed())
+      .pipe(finalize(() => this.isLoadingSig.set(false)))
       .subscribe((client) => {
         if (client?.id) {
           void this.loadEcommerces(client?.id);
-        } else {
-          this.isLoadingSig.set(false);
         }
       });
   }
