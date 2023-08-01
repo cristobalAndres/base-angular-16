@@ -1,10 +1,13 @@
 <span
   class="nav-link"
+  [class.fix-margin]="metric.value >= 100"
   placement="top"
   [ngbTooltip]="'Errores: ' + metric.value"
 >
   <app-default-badge
-    [text]="isActive ? metric.value.toString() : getValueText(metric.value)"
+    [text]="
+      isActive ? getFullValueText(metric.value) : getValueText(metric.value)
+    "
     [color]="getColorByValue(metric.value)"
   />
   <span class="menu-text" [class.selected-sidebar]="isActive">{{
