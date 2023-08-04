@@ -11,8 +11,8 @@
           *ngIf="
             !isLoading() &&
               paymentsMethodsResponse() &&
-              (paymentsMethodsResponse()?.accounts?.length === 0 ||
-                paymentsMethodsResponse()?.cards?.length === 0);
+              paymentsMethodsResponse()?.accounts?.length === 0 &&
+              paymentsMethodsResponse()?.cards?.length === 0;
             else elseShowPaymentsMethods
           "
         >
