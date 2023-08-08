@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DefaultBadgeComponent } from '@app/shared/components/badges/default/default-badge.component';
 import { CardInfoDataDto } from '../../../../shared/dtos/card-info-data.dto';
 
@@ -17,4 +17,9 @@ export class CardInfoComponent {
 
   @Input() isLoading = false;
   @Input() elementCount = 3;
+  @Input() hasTools = false;
+  @Input() blockUnblockClientButtonText = '';
+  @Input() isBlockUnblockClientLoading = false;
+
+  @Output() blockUnblockClientEmmiter = new EventEmitter<void>();
 }

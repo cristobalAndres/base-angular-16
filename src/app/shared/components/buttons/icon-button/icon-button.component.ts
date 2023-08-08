@@ -18,9 +18,8 @@ import {
     >
       <i *ngIf="icon" [ngClass]="['bi', icon]"></i>
     </button>
-    <p class="placeholder-glow">
+    <p class="placeholder-glow" *ngIf="isLoading">
       <span
-        *ngIf="isLoading"
         href="#"
         tabindex="-1"
         class="btn btn-primary rounded-5 bi icon-button disabled placeholder icon-button"
