@@ -65,4 +65,12 @@ export class ClientsService {
       `${environment.paymentDataBack}/account/${clientId}`,
     );
   }
+
+  blockClient(clientId: string) {
+    return this.httpClient.post<ClientDto>(`/client/${clientId}/block`, {});
+  }
+
+  unBlockClient(clientId: string) {
+    return this.httpClient.post<ClientDto>(`/client/${clientId}/unblock`, {});
+  }
 }
