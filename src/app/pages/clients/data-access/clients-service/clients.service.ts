@@ -48,8 +48,8 @@ export class ClientsService {
     });
   }
 
-  getClientDetail(clientId: string) {
-    return this.httpClient.get<ClientDto>(`client/${clientId}`);
+  getClientDetail(customerId: string) {
+    return this.httpClient.get<ClientDto>(`customers/${customerId}`);
   }
 
   clientSignOut(clientId: string) {
