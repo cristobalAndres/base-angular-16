@@ -1,8 +1,4 @@
-import {
-  HttpClient,
-  HttpParams,
-  HttpParamsOptions,
-} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
 import { NgHttpCachingHeaders } from 'ng-http-caching';
@@ -25,27 +21,30 @@ export class ClientsService {
   ): Observable<ClientsResponseDto> {
     const {
       currentPage = 1,
-      search = '',
-      searchParam = ClientParameter.EMAIL,
       perPage = 10,
+      searchParam = ClientParameter.EMAIL,
+      search,
     } = getClientsParams;
 
-    const httpParams = Object.entries({
-      currentPage,
-      search,
-      searchParam,
-      perPage,
-    }).reduce((params, [key, value]) => {
-      if (value !== undefined) params[key] ??= value;
-      return params;
-    }, {} as NonNullable<HttpParamsOptions['fromObject']>);
+    const filter = search ? this.createFilters(search, searchParam) : {};
 
-    return this.httpClient.get<ClientsResponseDto>('client', {
-      params: new HttpParams({ fromObject: httpParams }),
-      headers: {
-        [NgHttpCachingHeaders.ALLOW_CACHE]: '1',
-      },
+    const httpParams = new HttpParams({
+      fromObject: { ...filter, currentPage, perPage },
     });
+
+    return this.httpClient.get<ClientsResponseDto>('customers', {
+      params: httpParams,
+      headers: { [NgHttpCachingHeaders.ALLOW_CACHE]: '1' },
+    });
+  }
+
+  private createFilters(search: string, searchParam: ClientParameter) {
+    switch (searchParam) {
+      case ClientParameter.EMAIL:
+        return { 'filter.email': `$sw:${search}` } as const;
+      case ClientParameter.PHONE:
+        return { 'filter.phoneNumber': `$ilike:${search}` } as const;
+    }
   }
 
   getClientDetail(customerId: string) {
