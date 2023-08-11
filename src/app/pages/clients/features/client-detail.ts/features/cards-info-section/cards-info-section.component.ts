@@ -146,35 +146,31 @@ export class CardsInfoSectionComponent implements OnInit {
       },
       {
         title: 'Validación de identidad',
-        value:
-          this.clientSig().dynamo.kyc_valid === undefined
-            ? this.clientSig().dynamo.kyc_valid
-              ? 'success'
-              : 'error'
-            : '-',
+        value: this.clientSig().dynamo?.kyc_valid
+          ? this.clientSig().dynamo.kyc_valid
+            ? 'success'
+            : 'error'
+          : '-',
         isBadge: true,
-        color:
-          this.clientSig().dynamo.kyc_valid === undefined
-            ? this.clientSig().dynamo.kyc_valid
-              ? BadgeColors.SUCCESS
-              : BadgeColors.DANGER
-            : BadgeColors.SECONDARY,
+        color: this.clientSig().dynamo?.kyc_valid
+          ? this.clientSig().dynamo.kyc_valid
+            ? BadgeColors.SUCCESS
+            : BadgeColors.DANGER
+          : BadgeColors.SECONDARY,
       },
       {
         title: 'Wallet',
-        value:
-          this.clientSig().dynamo.wallet_active === undefined
-            ? this.clientSig().dynamo.wallet_active
-              ? 'Active'
-              : 'Blocked'
-            : '-',
+        value: this.clientSig().dynamo?.wallet_active
+          ? this.clientSig().dynamo.wallet_active
+            ? 'Active'
+            : 'Blocked'
+          : '-',
         isBadge: true,
-        color:
-          this.clientSig().dynamo.wallet_active === undefined
-            ? this.clientSig().dynamo.wallet_active
-              ? BadgeColors.SUCCESS
-              : BadgeColors.DANGER
-            : BadgeColors.SECONDARY,
+        color: this.clientSig().dynamo?.wallet_active
+          ? this.clientSig().dynamo.wallet_active
+            ? BadgeColors.SUCCESS
+            : BadgeColors.DANGER
+          : BadgeColors.SECONDARY,
       },
     ];
   }
