@@ -146,39 +146,31 @@ export class CardsInfoSectionComponent implements OnInit {
       },
       {
         title: 'Validación de identidad',
-        value:
-          this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
-            ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
-              ? 'success'
-              : 'error'
-            : '-', //client.dynamo && client.dynamo.kyc_valid
+        value: this.clientSig().dynamo?.kyc_valid
+          ? this.clientSig().dynamo.kyc_valid
+            ? 'success'
+            : 'error'
+          : '-',
         isBadge: true,
-        color:
-          this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
-            ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
-              ? BadgeColors.SUCCESS
-              : BadgeColors.DANGER
-            : BadgeColors.SECONDARY,
+        color: this.clientSig().dynamo?.kyc_valid
+          ? this.clientSig().dynamo.kyc_valid
+            ? BadgeColors.SUCCESS
+            : BadgeColors.DANGER
+          : BadgeColors.SECONDARY,
       },
       {
         title: 'Wallet',
-        value:
-          this.clientSig() &&
-          this.clientSig().dynamo &&
-          this.clientSig().dynamo?.wallet_active
-            ? this.clientSig()!.dynamo!.wallet_active.b_o_o_l
-              ? 'Active'
-              : 'Blocked'
-            : '-',
+        value: this.clientSig().dynamo?.wallet_active
+          ? this.clientSig().dynamo.wallet_active
+            ? 'Active'
+            : 'Blocked'
+          : '-',
         isBadge: true,
-        color:
-          this.clientSig() &&
-          this.clientSig().dynamo &&
-          this.clientSig().dynamo!.wallet_active
-            ? this.clientSig().dynamo!.wallet_active.b_o_o_l
-              ? BadgeColors.SUCCESS
-              : BadgeColors.DANGER
-            : BadgeColors.SECONDARY,
+        color: this.clientSig().dynamo?.wallet_active
+          ? this.clientSig().dynamo.wallet_active
+            ? BadgeColors.SUCCESS
+            : BadgeColors.DANGER
+          : BadgeColors.SECONDARY,
       },
     ];
   }

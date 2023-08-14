@@ -9,7 +9,9 @@ export class ClientsDataService {
 
   private isLoadingSig = signal(false);
   private hasErrorSig = signal(false);
-  readonly clientSig = signal<ClientDto>({});
+
+  // TODO: Remove `as ClientDto` by avoiding imperative handling of the state
+  private readonly clientSig = signal<ClientDto>({} as ClientDto);
 
   readonly client = computed(() => this.clientSig());
   readonly isLoading = computed(() => this.isLoadingSig());
@@ -34,6 +36,8 @@ export class ClientsDataService {
   cleanData() {
     this.isLoadingSig.set(false);
     this.hasErrorSig.set(false);
-    this.clientSig.set({});
+
+    // TODO: Remove this assignation in order to avoid imperative handling of the state
+    this.clientSig.set({} as ClientDto);
   }
 }

@@ -69,7 +69,7 @@ export class TransactionSectionComponent {
   private readonly transactionsApi$ = combineLatest([
     this.transactionsFilters.transactionsFilters$,
     this.currentPageSubject,
-    toObservable(this.clientDataService.clientSig),
+    toObservable(this.clientDataService.client),
     toObservable(this.paymentsMethodsDataService.selectedPaymentMethodIds),
   ]).pipe(
     debounceTime(300),
