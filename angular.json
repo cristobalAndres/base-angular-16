@@ -58,11 +58,11 @@
             ]
           },
           "configurations": {
-            "production": {
+            "master": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.master.ts"
                 }
               ],
               "budgets": [
@@ -127,8 +127,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "browserTarget": "cw-cl-users-web-manager:build:production"
+            "master": {
+              "browserTarget": "cw-cl-users-web-manager:build:master"
             },
             "qa": {
               "browserTarget": "cw-cl-users-web-manager:build:qa"

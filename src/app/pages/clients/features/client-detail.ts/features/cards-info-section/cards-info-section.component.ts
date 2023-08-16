@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit, effect, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ClientsService } from '@app/pages/clients/data-access';
 import {
@@ -13,6 +13,8 @@ import {
 } from '@app/pages/clients/ui';
 import { BadgeColors } from '@app/shared/enums';
 import { RutPipe } from '@app/shared/pipes';
+import { ConfirmModalService } from '@app/shared/services/modals/confirm-modal/confirm-modal.service';
+import { ConfirmModalResponse } from '@app/shared/services/modals/confirm-modal/enums/confirm-moda-respnse.enum';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { ClientsDataService } from '../../data-access/clients-data-service';
 import { AvailableBalanceComponent } from '../../ui/available-balance';
@@ -30,17 +32,22 @@ import { AvailableBalanceComponent } from '../../ui/available-balance';
   styleUrls: ['./cards-info-section.component.scss'],
   providers: [ClientsService],
 })
-export class CardsInfoSectionComponent implements OnInit {
+export class CardsInfoSectionComponent implements OnInit, OnDestroy {
   private readonly datePipe = inject(DatePipe);
   private readonly rutPipe = inject(RutPipe);
-  private clientDataService = inject(ClientsDataService);
   private route = inject(ActivatedRoute);
+
+  private readonly confirmModalService = inject(ConfirmModalService);
   private clientsServce = inject(ClientsService);
+  private clientDataService = inject(ClientsDataService);
 
   private routeParamsSub: Subscription | undefined;
 
   protected readonly clientSig = this.clientDataService.client;
   protected readonly isClientLoadingSig = this.clientDataService.isLoading;
+
+  protected readonly isClientLoadingChangeStatus =
+    this.clientDataService.isLoadingChangeStatus;
 
   protected clientName = '';
   private id = '';
@@ -81,8 +88,27 @@ export class CardsInfoSectionComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.routeParamsSub?.unsubscribe();
+  }
+
   signoutClick() {
     //TODO: implementar
+  }
+
+  async onBlockUnblockClient() {
+    const eventType = !this.clientSig().blocked ? 'Bloquear' : 'Desbloquear';
+
+    const response = await this.confirmModalService.open({
+      title: `${eventType} cliente`,
+      message: `¿Está seguro que desea cambiar el estado del cliente?`,
+      primaryButtonText: 'Aceptar',
+      secondaryButtonText: 'Cancelar',
+    });
+
+    if (response === ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
+      this.clientDataService.changeStatusClient();
+    }
   }
 
   private loadBasicInfoCardData() {
@@ -146,39 +172,31 @@ export class CardsInfoSectionComponent implements OnInit {
       },
       {
         title: 'Validación de identidad',
-        value:
-          this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
-            ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
-              ? 'success'
-              : 'error'
-            : '-', //client.dynamo && client.dynamo.kyc_valid
+        value: this.clientSig().dynamo?.kyc_valid
+          ? this.clientSig().dynamo.kyc_valid
+            ? 'success'
+            : 'error'
+          : '-',
         isBadge: true,
-        color:
-          this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
-            ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
-              ? BadgeColors.SUCCESS
-              : BadgeColors.DANGER
-            : BadgeColors.SECONDARY,
+        color: this.clientSig().dynamo?.kyc_valid
+          ? this.clientSig().dynamo.kyc_valid
+            ? BadgeColors.SUCCESS
+            : BadgeColors.DANGER
+          : BadgeColors.SECONDARY,
       },
       {
         title: 'Wallet',
-        value:
-          this.clientSig() &&
-          this.clientSig().dynamo &&
-          this.clientSig().dynamo?.wallet_active
-            ? this.clientSig()!.dynamo!.wallet_active.b_o_o_l
-              ? 'Active'
-              : 'Blocked'
-            : '-',
+        value: this.clientSig().dynamo?.wallet_active
+          ? this.clientSig().dynamo.wallet_active
+            ? 'Active'
+            : 'Blocked'
+          : '-',
         isBadge: true,
-        color:
-          this.clientSig() &&
-          this.clientSig().dynamo &&
-          this.clientSig().dynamo!.wallet_active
-            ? this.clientSig().dynamo!.wallet_active.b_o_o_l
-              ? BadgeColors.SUCCESS
-              : BadgeColors.DANGER
-            : BadgeColors.SECONDARY,
+        color: this.clientSig().dynamo?.wallet_active
+          ? this.clientSig().dynamo.wallet_active
+            ? BadgeColors.SUCCESS
+            : BadgeColors.DANGER
+          : BadgeColors.SECONDARY,
       },
     ];
   }
