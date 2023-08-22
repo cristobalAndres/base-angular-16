@@ -31,6 +31,7 @@ export class AvailableBalanceComponent {
   @Input() isLoading = true;
 
   @Output() retryShowAvailableBalance = new EventEmitter<void>();
+  @Output() updateAccountBalance = new EventEmitter<void>();
 
   showAccountDetail() {
     const modalRef = this.modalService.open(AccountDetailModalComponent, {
@@ -47,8 +48,12 @@ export class AvailableBalanceComponent {
     }
   }
 
-  outputOnRetryButtonClick() {
+  protected outputOnRetryButtonClick() {
     this.retryShowAvailableBalance.emit();
+  }
+
+  protected onUpdateAccountBalance() {
+    this.updateAccountBalance.emit();
   }
 
   private mapDataFromAccountDetail(

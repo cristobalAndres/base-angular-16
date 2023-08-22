@@ -9,6 +9,7 @@ import {
   catchError,
   filter,
   map,
+  merge,
   of,
   switchMap,
   tap,
@@ -28,6 +29,9 @@ export class ClientsService {
   private readonly activatedRoute = inject(ActivatedRoute);
 
   private readonly accountDetailsReloader$ = new BehaviorSubject(undefined);
+  private readonly accountDetailsUpdateBalanceParam$ = new BehaviorSubject(
+    false,
+  );
 
   getClients(
     getClientsParams: GetClientsParams = {},
@@ -72,10 +76,11 @@ export class ClientsService {
     return this.httpClient.get<CardsResponse>(`/card/${clientId}`, {});
   }
 
-  private getAccountDetails(clientId: string) {
+  private getAccountDetails(clientId: string, updateBalance = false) {
     return this.httpClient
       .get<AccountDetailsResponseDto>(
         `${environment.paymentDataBack}/account/${clientId}`,
+        { params: { updateBalance } },
       )
       .pipe(catchError(() => of(void 0)));
   }
@@ -87,14 +92,21 @@ export class ClientsService {
     }),
     filter(Boolean),
     switchMap((id) =>
-      this.accountDetailsReloader$.pipe(
-        switchMap(() => this.getAccountDetails(id)),
+      merge(
+        this.accountDetailsReloader$,
+        this.accountDetailsUpdateBalanceParam$,
+      ).pipe(
+        switchMap((updateBalance) => this.getAccountDetails(id, updateBalance)),
       ),
     ),
   );
 
   reloadAccountDetails() {
     this.accountDetailsReloader$.next(undefined);
+  }
+
+  updateBalance() {
+    this.accountDetailsUpdateBalanceParam$.next(true);
   }
 
   blockClient(clientId: string) {

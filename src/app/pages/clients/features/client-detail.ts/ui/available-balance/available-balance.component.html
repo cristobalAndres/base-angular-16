@@ -22,14 +22,20 @@
             >{{ account.enabledAccount }}</text
           >
         </div>
-        <div class="action">
-          <hr />
-          <app-icon-button
-            icon="bi bi-eye"
-            (clickEmiter)="showAccountDetail()"
-            tooltip="Ver detalle"
-            [isLoading]="isLoading"
-          />
+        <hr />
+        <div class="footer">
+          <div class="actions">
+            <app-icon-button
+              icon="bi bi-eye"
+              tooltip="Ver detalle"
+              (clickEmiter)="showAccountDetail()"
+            />
+            <app-icon-button
+              icon="bi bi-arrow-clockwise"
+              tooltip="Recargar información"
+              (clickEmiter)="onUpdateAccountBalance()"
+            />
+          </div>
         </div>
       </div>
     </ng-container>
@@ -56,9 +62,12 @@
         <span class="placeholder col-6"></span>
       </p>
     </div>
-    <div class="action">
-      <hr />
-      <app-icon-button icon="bi bi-eye" [isLoading]="true" />
+    <hr />
+    <div class="footer">
+      <div class="actions">
+        <app-icon-button icon="" [isLoading]="true" />
+        <app-icon-button icon="" [isLoading]="true" />
+      </div>
     </div>
   </div>
 </ng-template>

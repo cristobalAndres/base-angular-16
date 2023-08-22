@@ -75,6 +75,10 @@ export class CardsInfoSectionComponent {
     this.clientsServce.reloadAccountDetails();
   }
 
+  protected updateAccountBalance() {
+    this.clientsServce.updateBalance();
+  }
+
   signoutClick() {
     //TODO: implementar
   }
