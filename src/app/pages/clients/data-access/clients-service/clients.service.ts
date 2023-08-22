@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ToastService } from '@app/shared/services';
+import { ToastsColors } from '@app/shared/services/toasts';
 import { environment } from '@environment';
 import { NgHttpCachingHeaders } from 'ng-http-caching';
 import {
@@ -27,6 +29,7 @@ import {
 export class ClientsService {
   private readonly httpClient = inject(HttpClient);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly toastService = inject(ToastService);
 
   private readonly accountDetailsReloader$ = new BehaviorSubject(undefined);
   private readonly accountDetailsUpdateBalanceParam$ = new BehaviorSubject(
@@ -96,7 +99,23 @@ export class ClientsService {
         this.accountDetailsReloader$,
         this.accountDetailsUpdateBalanceParam$,
       ).pipe(
-        switchMap((updateBalance) => this.getAccountDetails(id, updateBalance)),
+        switchMap((updateBalance) =>
+          this.getAccountDetails(id, updateBalance).pipe(
+            tap((balanceDto) => {
+              if (!updateBalance) return;
+
+              if (balanceDto)
+                this.toastService.show({
+                  body: 'El saldo se ha actualizado correctamente',
+                });
+              else
+                this.toastService.show({
+                  body: 'No se ha podido actualizar la información',
+                  color: ToastsColors.DANGER,
+                });
+            }),
+          ),
+        ),
       ),
     ),
   );
