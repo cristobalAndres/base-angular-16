@@ -1,8 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { environment } from '@environment';
 import { NgHttpCachingHeaders } from 'ng-http-caching';
-import { Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  filter,
+  map,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import {
   AccountDetailsResponseDto,
   CardsResponse,
@@ -15,6 +25,9 @@ import {
 @Injectable()
 export class ClientsService {
   private readonly httpClient = inject(HttpClient);
+  private readonly activatedRoute = inject(ActivatedRoute);
+
+  private readonly accountDetailsReloader$ = new BehaviorSubject(undefined);
 
   getClients(
     getClientsParams: GetClientsParams = {},
@@ -59,10 +72,29 @@ export class ClientsService {
     return this.httpClient.get<CardsResponse>(`/card/${clientId}`, {});
   }
 
-  getAccountDetails(clientId: string) {
-    return this.httpClient.get<AccountDetailsResponseDto>(
-      `${environment.paymentDataBack}/account/${clientId}`,
-    );
+  private getAccountDetails(clientId: string) {
+    return this.httpClient
+      .get<AccountDetailsResponseDto>(
+        `${environment.paymentDataBack}/account/${clientId}`,
+      )
+      .pipe(catchError(() => of(void 0)));
+  }
+
+  readonly accDetails$ = this.activatedRoute.paramMap.pipe(
+    map((params) => params?.get('id')),
+    tap((id) => {
+      if (!id) throw new Error('Client ID was not found in the route.');
+    }),
+    filter(Boolean),
+    switchMap((id) =>
+      this.accountDetailsReloader$.pipe(
+        switchMap(() => this.getAccountDetails(id)),
+      ),
+    ),
+  );
+
+  reloadAccountDetails() {
+    this.accountDetailsReloader$.next(undefined);
   }
 
   blockClient(clientId: string) {
