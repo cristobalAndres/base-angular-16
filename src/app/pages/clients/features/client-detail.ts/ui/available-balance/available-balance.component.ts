@@ -25,23 +25,25 @@ import { AccountDetailModalComponent } from '../account-detail-modal';
   styleUrls: ['./available-balance.component.scss'],
 })
 export class AvailableBalanceComponent {
-  @Input({ required: true }) accountDetail!: AccountDetailsResponseDto;
-  @Input() isLoading = false;
-  @Input() hasAccount = false;
+  private readonly modalService = inject(NgbModal);
+
+  @Input() accountDetail?: AccountDetailsResponseDto;
+  @Input() isLoading = true;
 
   @Output() retryShowAvailableBalance = new EventEmitter<void>();
 
-  private modalService = inject(NgbModal);
   showAccountDetail() {
     const modalRef = this.modalService.open(AccountDetailModalComponent, {
       size: 'lg',
       centered: true,
     });
+
     if (modalRef.componentInstance instanceof AccountDetailModalComponent) {
       modalRef.componentInstance.activateModal = modalRef;
-      modalRef.componentInstance.accountData = this.accountDetail.accounts
-        .map((account) => this.mapDataFromAccountDetail(account))
-        .at(0) as AccountDetailModalDataDto[];
+      modalRef.componentInstance.accountData =
+        this.accountDetail?.accounts
+          .map((account) => this.mapDataFromAccountDetail(account))
+          .at(0) ?? [];
     }
   }
 

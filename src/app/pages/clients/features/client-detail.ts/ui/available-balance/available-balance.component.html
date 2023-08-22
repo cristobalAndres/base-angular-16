@@ -10,9 +10,9 @@
     <ng-container *ngIf="!isLoading">
       <app-error-retry
         (emitRetryButton)="outputOnRetryButtonClick()"
-        *ngIf="!hasAccount"
+        *ngIf="!accountDetail"
       ></app-error-retry>
-      <div class="available-balance" *ngIf="hasAccount">
+      <div class="available-balance" *ngIf="!!accountDetail">
         <p class="balance">
           {{ accountDetail.accounts[0].availableBalance | number : '1.0-2' }}
         </p>
@@ -42,7 +42,7 @@
         </div>
       </div>
     </ng-container>
-    <div class="action" *ngIf="hasAccount || isLoading">
+    <div class="action" *ngIf="!!accountDetail || isLoading">
       <hr />
       <app-icon-button
         icon="bi bi-eye"
