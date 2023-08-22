@@ -56,9 +56,12 @@ export class CardsInfoSectionComponent {
   };
 
   protected readonly isLoadingAccountDetailsSig = signal(true);
+  protected readonly isUpdatingBalanceSig = signal(false);
+
   protected readonly accountDetailSig = toSignal(
     this.clientsServce.accDetails$.pipe(
       tap(() => this.isLoadingAccountDetailsSig.set(false)),
+      tap(() => this.isUpdatingBalanceSig.set(false)),
     ),
   );
 
@@ -76,6 +79,7 @@ export class CardsInfoSectionComponent {
   }
 
   protected updateAccountBalance() {
+    this.isUpdatingBalanceSig.set(true);
     this.clientsServce.updateBalance();
   }
 

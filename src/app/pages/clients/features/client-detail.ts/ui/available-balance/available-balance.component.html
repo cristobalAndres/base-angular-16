@@ -7,7 +7,10 @@
         class="available-balance"
         *ngIf="accountDetail?.accounts?.at(0) as account; else errorTemplate"
       >
-        <p class="balance">
+        <p
+          class="balance"
+          *ngIf="!isUpdatingBalance; else availableBalanceTotalTemplate"
+        >
           {{ account.availableBalance | number : '1.0-2' }}
         </p>
         <div class="status">
@@ -34,6 +37,7 @@
               icon="bi bi-arrow-clockwise"
               tooltip="Recargar información"
               (clickEmiter)="onUpdateAccountBalance()"
+              [isLoading]="isUpdatingBalance"
             />
           </div>
         </div>
@@ -54,9 +58,9 @@
   </h5>
   <hr />
   <div class="available-balance">
-    <p class="balance-placeholder placeholder-glow">
-      <span class="placeholder col-6"></span>
-    </p>
+    <ng-container
+      [ngTemplateOutlet]="availableBalanceTotalTemplate"
+    ></ng-container>
     <div class="status">
       <p class="placeholder-glow label-status">
         <span class="placeholder col-6"></span>
@@ -70,4 +74,10 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #availableBalanceTotalTemplate>
+  <p class="balance-placeholder placeholder-glow">
+    <span class="placeholder col-6"></span>
+  </p>
 </ng-template>

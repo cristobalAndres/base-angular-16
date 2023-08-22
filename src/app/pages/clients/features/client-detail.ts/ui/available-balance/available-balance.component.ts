@@ -29,6 +29,7 @@ export class AvailableBalanceComponent {
 
   @Input() accountDetail?: AccountDetailsResponseDto;
   @Input() isLoading = true;
+  @Input() isUpdatingBalance = false;
 
   @Output() retryShowAvailableBalance = new EventEmitter<void>();
   @Output() updateAccountBalance = new EventEmitter<void>();
