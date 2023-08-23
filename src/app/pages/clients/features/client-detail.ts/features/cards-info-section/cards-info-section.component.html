@@ -1,10 +1,11 @@
 <div class="row">
   <div class="col-md-12 col-lg-4 mb-4">
     <app-available-balance
-      [isLoading]="loadingAccountDetails"
-      [accountDetail]="accountDetail"
-      [hasAccount]="hasAccount"
-      (retryShowAvailableBalance)="getAccountDetails()"
+      [isLoading]="isLoadingAccountDetailsSig()"
+      [isUpdatingBalance]="isUpdatingBalanceSig()"
+      [accountDetail]="accountDetailSig()"
+      (retryShowAvailableBalance)="retryAccountDetails()"
+      (updateAccountBalance)="updateAccountBalance()"
     >
     </app-available-balance>
   </div>
