@@ -24,6 +24,12 @@
       [data]="statusCardData.data"
       [elementCount]="4"
       [clientName]="clientName"
+      [hasTools]="true"
+      [isBlockUnblockClientLoading]="isClientLoadingChangeStatus()"
+      [blockUnblockClientButtonText]="
+        clientSig().blocked ? 'Desbloquear' : 'Bloquear'
+      "
+      (blockUnblockClientEmmiter)="onBlockUnblockClient()"
     ></app-card-info>
   </div>
 </div>

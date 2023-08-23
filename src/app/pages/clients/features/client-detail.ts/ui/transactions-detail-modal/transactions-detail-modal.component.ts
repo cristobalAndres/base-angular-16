@@ -14,4 +14,5 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 export class TransactionsDetailModalComponent {
   @Input({ required: true }) transactionData: TransactionModalDataDto[] = [];
   @Input({ required: true }) activateModal!: NgbModalRef;
+  @Input({ required: false }) epayData?: TransactionModalDataDto[] = [];
 }
