@@ -20,7 +20,6 @@ import {
   AccountDetailsResponseDto,
   CardsResponse,
   ClientDto,
-  ClientParameter,
   ClientsResponseDto,
   GetClientsParams,
 } from '../../shared';
@@ -39,32 +38,18 @@ export class ClientsService {
   getClients(
     getClientsParams: GetClientsParams = {},
   ): Observable<ClientsResponseDto> {
-    const {
-      currentPage = 1,
-      perPage = 10,
-      searchParam = ClientParameter.EMAIL,
-      search,
-    } = getClientsParams;
+    const { currentPage = 1, perPage = 10, search } = getClientsParams;
 
-    const filter = search ? this.createFilters(search, searchParam) : {};
-
-    const httpParams = new HttpParams({
-      fromObject: { ...filter, currentPage, perPage },
-    });
+    const params = Object.entries({ search, currentPage, perPage }).reduce(
+      (httpParams, [key, value]) =>
+        value ? httpParams.set(key, value) : httpParams,
+      new HttpParams(),
+    );
 
     return this.httpClient.get<ClientsResponseDto>('customers', {
-      params: httpParams,
+      params,
       headers: { [NgHttpCachingHeaders.ALLOW_CACHE]: '1' },
     });
-  }
-
-  private createFilters(search: string, searchParam: ClientParameter) {
-    switch (searchParam) {
-      case ClientParameter.EMAIL:
-        return { 'filter.email': `$sw:${search}` } as const;
-      case ClientParameter.PHONE:
-        return { 'filter.phoneNumber': `$ilike:${search}` } as const;
-    }
   }
 
   getClientDetail(customerId: string) {
