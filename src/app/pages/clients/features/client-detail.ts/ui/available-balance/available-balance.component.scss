@@ -2,9 +2,7 @@
   color: var(--primary-color) !important;
   text-align: center;
 }
-.action {
-  text-align: center;
-}
+
 .available-balance {
   p.balance::before {
     content: '$ ';
@@ -17,9 +15,6 @@
     text-align: center;
   }
   .status {
-    text-align: center;
-  }
-  .action {
     text-align: center;
   }
   .bg-green {
@@ -36,5 +31,16 @@
     border-radius: 8px;
     margin-left: 3px;
     color: white;
+  }
+
+  .footer {
+    display: grid;
+    place-content: center;
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, 2fr);
+      gap: 1.5rem;
+    }
   }
 }

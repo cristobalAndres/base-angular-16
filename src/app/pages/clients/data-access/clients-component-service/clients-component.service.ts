@@ -1,31 +1,27 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { ClientDto, ClientParameter, Pagination } from '../../shared';
+import { ClientDto, Pagination } from '../../shared';
 import { ClientsService } from '../clients-service';
 
 @Injectable()
 export class ClientsComponentService {
   private readonly clientsService = inject(ClientsService);
-  private isLoadingSig = signal(false);
-  private hasErrorSig = signal(false);
-  private currentPageSig = signal(1);
-
-  private clientsSig = signal<ClientDto[]>([]);
-  private paginationSig = signal<Pagination>({
+  private readonly isLoadingSig = signal(false);
+  private readonly hasErrorSig = signal(false);
+  private readonly currentPageSig = signal(1);
+  private readonly clientsSig = signal<ClientDto[]>([]);
+  private readonly searchSig = signal<string | undefined>(undefined);
+  private readonly paginationSig = signal<Pagination>({
     current_page: 1,
     per_page: 0,
     total_items: 0,
     total_pages: 0,
   });
 
-  private searchBySig = signal<ClientParameter | undefined>(undefined);
-  private searchSig = signal<string | undefined>(undefined);
-
   readonly isLoading = computed(() => this.isLoadingSig());
   readonly currentPage = computed(() => this.currentPageSig());
   readonly clients = computed(() => this.clientsSig());
   readonly pagination = computed(() => this.paginationSig());
-  readonly searchBy = computed(() => this.searchBySig());
   readonly searchS = computed(() => this.searchSig());
   readonly hasError = computed(() => this.hasErrorSig());
 
@@ -37,7 +33,6 @@ export class ClientsComponentService {
       const response = await lastValueFrom(
         this.clientsService.getClients({
           currentPage: this.currentPageSig(),
-          searchParam: this.searchBySig(),
           search: this.searchSig(),
           perPage: 10,
         }),
@@ -56,9 +51,8 @@ export class ClientsComponentService {
     this.currentPageSig.set(currentPage);
   }
 
-  changeFilter(searchText: string, searchBy: ClientParameter) {
+  changeFilter(searchText: string) {
     this.searchSig.set(searchText);
-    this.searchBySig.set(searchBy);
   }
 
   cleanLocalData() {
@@ -73,7 +67,6 @@ export class ClientsComponentService {
       total_pages: 0,
     });
 
-    this.searchBySig.set(undefined);
     this.searchSig.set(undefined);
   }
 }

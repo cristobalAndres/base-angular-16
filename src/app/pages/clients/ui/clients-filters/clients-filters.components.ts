@@ -12,7 +12,6 @@ import {
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@app/shared';
 import { IconButtonComponent } from '@app/shared/components/buttons';
-import { SelectComponent, SelectionDto } from '@app/shared/components/forms';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   Subscription,
@@ -23,7 +22,7 @@ import {
   map,
   tap,
 } from 'rxjs';
-import { CLientsFilters, ClientParameter } from '../../shared';
+import { CLientsFilters } from '../../shared';
 
 @Component({
   selector: 'app-clients-filters',
@@ -37,13 +36,6 @@ import { CLientsFilters, ClientParameter } from '../../shared';
   ],
   template: `<div class="container">
     <div class="row g-4">
-      <div class="col-md-auto">
-        <app-select
-          [withPlaceholder]="false"
-          [options]="statusOptions"
-          (optionChange)="onStatusChange($event)"
-        />
-      </div>
       <div class="col-md-auto">
         <input
           type="text"
@@ -73,21 +65,15 @@ import { CLientsFilters, ClientParameter } from '../../shared';
 })
 export class ClientsFiltersComponent implements AfterViewInit, OnDestroy {
   protected searchText = '';
-  protected searchBy: ClientParameter | undefined = undefined;
 
   private inputEvent$!: Subscription;
 
   @Input({ required: true }) isLoading = false;
-  @Input({ required: true }) statusOptions: SelectionDto<ClientParameter>[] =
-    [];
 
   @Output() searchEvent = new EventEmitter<CLientsFilters>();
 
   @ViewChild('searchText')
   input!: ElementRef<HTMLInputElement>;
-
-  @ViewChild(SelectComponent)
-  selectComponent!: SelectComponent;
 
   ngAfterViewInit() {
     this.inputEvent$ = fromEvent(this.input.nativeElement, 'keyup')
@@ -96,9 +82,7 @@ export class ClientsFiltersComponent implements AfterViewInit, OnDestroy {
         debounceTime(500),
         distinctUntilChanged(),
         map((event) => event.target as HTMLInputElement),
-        tap(({ value }) => {
-          this.searchEvent.emit({ searchBy: this.searchBy, searchText: value });
-        }),
+        tap(({ value }) => this.searchEvent.emit({ searchText: value })),
       )
       .subscribe();
   }
@@ -107,13 +91,8 @@ export class ClientsFiltersComponent implements AfterViewInit, OnDestroy {
     this.inputEvent$.unsubscribe();
   }
 
-  protected onStatusChange(status: ClientParameter | undefined) {
-    this.searchBy = status;
-  }
-
   filtersReset() {
-    this.selectComponent.reset();
     this.input.nativeElement.value = '';
-    this.searchEvent.emit({ searchBy: this.searchBy, searchText: '' });
+    this.searchEvent.emit({ searchText: '' });
   }
 }

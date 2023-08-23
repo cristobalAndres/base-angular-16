@@ -1,55 +1,83 @@
 <div class="card shadow h-100">
   <div class="card-body">
-    <h5 class="card-title text-primary" *ngIf="!isLoading">Saldo disponible</h5>
-    <h5 class="card-title text-primary" *ngIf="isLoading">
-      <p class="placeholder-glow">
-        <span class="placeholder col-6"></span>
-      </p>
-    </h5>
-    <hr />
-    <ng-container *ngIf="!isLoading">
-      <app-error-retry
-        (emitRetryButton)="outputOnRetryButtonClick()"
-        *ngIf="!hasAccount"
-      ></app-error-retry>
-      <div class="available-balance" *ngIf="hasAccount">
-        <p class="balance">
-          {{ accountDetail.accounts[0].availableBalance | number : '1.0-2' }}
+    <ng-container *ngIf="!isLoading; else skeletonTemplate">
+      <h5 class="card-title text-primary">Saldo disponible</h5>
+      <hr />
+      <div
+        class="available-balance"
+        *ngIf="accountDetail?.accounts?.at(0) as account; else errorTemplate"
+      >
+        <p
+          class="balance"
+          *ngIf="!isUpdatingBalance; else availableBalanceTotalTemplate"
+        >
+          {{ account.availableBalance | number : '1.0-2' }}
         </p>
         <div class="status">
           <label class="label-status" for="statusValue">Status cuenta: </label>
           <text
             id="statusValue"
-            [ngClass]="
-              accountDetail.accounts[0].enabledAccount === true
-                ? ['vaule-status', 'bg-green']
-                : ['vaule-status', 'bg-red']
-            "
-            >{{ accountDetail.accounts[0].enabledAccount }}</text
+            [ngClass]="{
+              'vaule-status': true,
+              'bg-green': account.enabledAccount,
+              'bg-red': !account.enabledAccount
+            }"
+            >{{ account.enabledAccount }}</text
           >
         </div>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="isLoading">
-      <div class="available-balance">
-        <p class="balance-placeholder placeholder-glow">
-          <span class="placeholder col-6"></span>
-        </p>
-        <div class="status">
-          <p class="placeholder-glow label-status">
-            <span class="placeholder col-6"></span>
-          </p>
+        <hr />
+        <div class="footer">
+          <div class="actions">
+            <app-icon-button
+              icon="bi bi-eye"
+              tooltip="Ver detalle"
+              (clickEmiter)="showAccountDetail()"
+            />
+            <app-icon-button
+              icon="bi bi-arrow-clockwise"
+              tooltip="Recargar información"
+              (clickEmiter)="onUpdateAccountBalance()"
+              [isLoading]="isUpdatingBalance"
+            />
+          </div>
         </div>
       </div>
     </ng-container>
-    <div class="action" *ngIf="hasAccount || isLoading">
-      <hr />
-      <app-icon-button
-        icon="bi bi-eye"
-        (clickEmiter)="showAccountDetail()"
-        tooltip="Ver detalle"
-        [isLoading]="isLoading"
-      />
-    </div>
   </div>
 </div>
+
+<ng-template #errorTemplate>
+  <app-error-retry (emitRetryButton)="outputOnRetryButtonClick()" />
+</ng-template>
+
+<ng-template #skeletonTemplate>
+  <h5 class="card-title text-primary" *ngIf="isLoading">
+    <p class="placeholder-glow">
+      <span class="placeholder col-6"></span>
+    </p>
+  </h5>
+  <hr />
+  <div class="available-balance">
+    <ng-container
+      [ngTemplateOutlet]="availableBalanceTotalTemplate"
+    ></ng-container>
+    <div class="status">
+      <p class="placeholder-glow label-status">
+        <span class="placeholder col-6"></span>
+      </p>
+    </div>
+    <hr />
+    <div class="footer">
+      <div class="actions">
+        <app-icon-button icon="" [isLoading]="true" />
+        <app-icon-button icon="" [isLoading]="true" />
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #availableBalanceTotalTemplate>
+  <p class="balance-placeholder placeholder-glow">
+    <span class="placeholder col-6"></span>
+  </p>
+</ng-template>
