@@ -1,5 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { createHttpParams } from '@app/shared/utils';
 import { environment } from '@environment';
 import { NgHttpCachingHeaders } from 'ng-http-caching';
 import { Observable } from 'rxjs';
@@ -20,14 +21,12 @@ export class ClientsService {
   ): Observable<ClientsResponseDto> {
     const { currentPage = 1, perPage = 10, search } = getClientsParams;
 
-    const params = Object.entries({ search, currentPage, perPage }).reduce(
-      (httpParams, [key, value]) =>
-        value ? httpParams.set(key, value) : httpParams,
-      new HttpParams(),
-    );
-
     return this.httpClient.get<ClientsResponseDto>('customers', {
-      params,
+      params: createHttpParams({
+        search: search?.trim(),
+        currentPage,
+        perPage,
+      }),
       headers: { [NgHttpCachingHeaders.ALLOW_CACHE]: '1' },
     });
   }
