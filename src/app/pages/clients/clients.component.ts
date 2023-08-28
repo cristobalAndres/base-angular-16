@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, computed, inject } from '@angular/core';
-import { SelectionDto } from '@app/shared/components/forms';
 import { ClientsComponentService } from './data-access';
-import { CLientsFilters, ClientParameter } from './shared';
+import { CLientsFilters } from './shared';
 
 @Component({
   selector: 'app-clients',
@@ -32,18 +31,9 @@ export class ClientsComponent implements OnInit, OnDestroy {
     await this.clientsComponentService.loadClients();
   }
 
-  protected readonly statusOptions: SelectionDto<ClientParameter>[] =
-    Object.values(ClientParameter).map((clientParameter) => ({
-      value: clientParameter,
-      label: clientParameter,
-    }));
-
   async onSearchButtonClick(clientsFilters: CLientsFilters) {
     this.clientsComponentService.cleanLocalData();
-    this.clientsComponentService.changeFilter(
-      clientsFilters.searchText,
-      clientsFilters.searchBy ?? ClientParameter.EMAIL,
-    );
+    this.clientsComponentService.changeFilter(clientsFilters.searchText);
     await this.clientsComponentService.loadClients();
   }
 

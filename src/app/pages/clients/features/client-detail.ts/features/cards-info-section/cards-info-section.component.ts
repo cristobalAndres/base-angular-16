@@ -1,11 +1,8 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ClientsService } from '@app/pages/clients/data-access';
-import {
-  AccountDetailsResponseDto,
-  UserStatusType,
-} from '@app/pages/clients/shared';
+import { UserStatusType } from '@app/pages/clients/shared';
 import { CardInfoDataDto } from '@app/pages/clients/shared/dtos/card-info-data.dto';
 import {
   CardInfoComponent,
@@ -15,7 +12,7 @@ import { BadgeColors } from '@app/shared/enums';
 import { RutPipe } from '@app/shared/pipes';
 import { ConfirmModalService } from '@app/shared/services/modals/confirm-modal/confirm-modal.service';
 import { ConfirmModalResponse } from '@app/shared/services/modals/confirm-modal/enums/confirm-moda-respnse.enum';
-import { Subscription, lastValueFrom } from 'rxjs';
+import { tap } from 'rxjs';
 import { ClientsDataService } from '../../data-access/clients-data-service';
 import { AvailableBalanceComponent } from '../../ui/available-balance';
 
@@ -32,16 +29,12 @@ import { AvailableBalanceComponent } from '../../ui/available-balance';
   styleUrls: ['./cards-info-section.component.scss'],
   providers: [ClientsService],
 })
-export class CardsInfoSectionComponent implements OnInit, OnDestroy {
+export class CardsInfoSectionComponent {
   private readonly datePipe = inject(DatePipe);
   private readonly rutPipe = inject(RutPipe);
-  private route = inject(ActivatedRoute);
-
   private readonly confirmModalService = inject(ConfirmModalService);
-  private clientsServce = inject(ClientsService);
-  private clientDataService = inject(ClientsDataService);
-
-  private routeParamsSub: Subscription | undefined;
+  private readonly clientsServce = inject(ClientsService);
+  private readonly clientDataService = inject(ClientsDataService);
 
   protected readonly clientSig = this.clientDataService.client;
   protected readonly isClientLoadingSig = this.clientDataService.isLoading;
@@ -50,8 +43,6 @@ export class CardsInfoSectionComponent implements OnInit, OnDestroy {
     this.clientDataService.isLoadingChangeStatus;
 
   protected clientName = '';
-  private id = '';
-  protected hasAccount = false;
   protected loadingAccountDetails = true;
 
   protected basicInfoCardData: { title: string; data: CardInfoDataDto[] } = {
@@ -64,12 +55,15 @@ export class CardsInfoSectionComponent implements OnInit, OnDestroy {
     data: [],
   };
 
-  protected accountDetail: AccountDetailsResponseDto = {
-    idEcommerce: '',
-    idWallet: '',
-    timestamp: '',
-    accounts: [],
-  };
+  protected readonly isLoadingAccountDetailsSig = signal(true);
+  protected readonly isUpdatingBalanceSig = signal(false);
+
+  protected readonly accountDetailSig = toSignal(
+    this.clientsServce.accDetails$.pipe(
+      tap(() => this.isLoadingAccountDetailsSig.set(false)),
+      tap(() => this.isUpdatingBalanceSig.set(false)),
+    ),
+  );
 
   constructor() {
     // only change if ClientSig change
@@ -77,19 +71,16 @@ export class CardsInfoSectionComponent implements OnInit, OnDestroy {
       this.loadClientName();
       this.loadBasicInfoCardData();
       this.loadStatusCardData();
-      void this.getAccountDetails();
     });
   }
 
-  ngOnInit() {
-    this.routeParamsSub = this.route.params.subscribe((params: Params) => {
-      const { id } = params;
-      this.id = id as string;
-    });
+  protected retryAccountDetails() {
+    this.clientsServce.reloadAccountDetails();
   }
 
-  ngOnDestroy() {
-    this.routeParamsSub?.unsubscribe();
+  protected updateAccountBalance() {
+    this.isUpdatingBalanceSig.set(true);
+    this.clientsServce.updateBalance();
   }
 
   signoutClick() {
@@ -199,21 +190,5 @@ export class CardsInfoSectionComponent implements OnInit, OnDestroy {
           : BadgeColors.SECONDARY,
       },
     ];
-  }
-
-  protected async getAccountDetails() {
-    if (this.id) {
-      try {
-        this.loadingAccountDetails = true;
-        this.accountDetail = await lastValueFrom(
-          this.clientsServce.getAccountDetails(this.id),
-        );
-        this.loadingAccountDetails = false;
-        this.hasAccount = true;
-      } catch (err) {
-        this.hasAccount = false;
-        this.loadingAccountDetails = false;
-      }
-    }
   }
 }
