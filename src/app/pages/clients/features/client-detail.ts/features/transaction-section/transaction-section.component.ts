@@ -6,7 +6,7 @@ import { TransactionModalDataDto } from '@app/pages/clients/shared/dtos/transact
 import { TransactionsTableComponent } from '@app/pages/transactions/ui';
 import { SpinnerComponent } from '@app/shared/components/loaders/spinner';
 import { PaginationComponent } from '@app/shared/components/tables';
-import { TransactionDto } from '@app/shared/services/transactions';
+import { ServicesEpayService } from '@app/shared/services/epay';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
@@ -28,6 +28,8 @@ import { TransactionsFiltersService } from '../../data-access/transactions-filte
 import { ClientTransactionsTableComponent } from '../../ui/client-transactions-table';
 import { TransactionsDetailModalComponent } from '../../ui/transactions-detail-modal/transactions-detail-modal.component';
 import { TransactionsFiltersComponent } from '../transactions-filters';
+import { EpayTransactionMapper } from './mappers/epay-transaction-mapper';
+import { TransactionMapper } from './mappers/transaction-mappper';
 
 @Component({
   standalone: true,
@@ -60,8 +62,13 @@ export class TransactionSectionComponent {
   private readonly transactionsService = inject(TransactionsService);
   private readonly transactionsFilters = inject(TransactionsFiltersService);
 
+  private readonly servicesEpayService = inject(ServicesEpayService);
+
   private readonly currentPageSubject = new BehaviorSubject(1);
   protected readonly currentPage$ = this.currentPageSubject.asObservable();
+
+  protected readonly epayTransactionMapper = inject(EpayTransactionMapper);
+  protected readonly transactionMapper = inject(TransactionMapper);
 
   private readonly isLoadingSubject = new BehaviorSubject(false);
   protected readonly isLoading = toSignal(this.isLoadingSubject);
@@ -69,7 +76,7 @@ export class TransactionSectionComponent {
   private readonly transactionsApi$ = combineLatest([
     this.transactionsFilters.transactionsFilters$,
     this.currentPageSubject,
-    toObservable(this.clientDataService.clientSig),
+    toObservable(this.clientDataService.client),
     toObservable(this.paymentsMethodsDataService.selectedPaymentMethodIds),
   ]).pipe(
     debounceTime(300),
@@ -138,6 +145,15 @@ export class TransactionSectionComponent {
   }
 
   protected onDetailButtonClick(transactionId: string) {
+    const epayDataMapped: TransactionModalDataDto[] = [];
+    this.servicesEpayService
+      .getEpayTransactionDetails(transactionId)
+      .subscribe((result) => {
+        epayDataMapped.push(
+          ...this.epayTransactionMapper.mapDataFromEpayTransaction(result[0]),
+        );
+      });
+
     const transactionsSub = this.transactionsApi$.subscribe((response) => {
       const modalRef = this.modalService.open(
         TransactionsDetailModalComponent,
@@ -153,9 +169,12 @@ export class TransactionSectionComponent {
         )
       ) {
         modalRef.componentInstance.activateModal = modalRef;
+        modalRef.componentInstance.epayData = epayDataMapped;
         modalRef.componentInstance.transactionData = response.transactions
           .filter((transaction) => transaction.transaction_id === transactionId)
-          .map((transaction) => this.mapDataFromTransaction(transaction))
+          .map((transaction) =>
+            this.transactionMapper.mapDataFromTransaction(transaction),
+          )
           .at(0) as TransactionModalDataDto[];
       }
 
@@ -174,80 +193,5 @@ export class TransactionSectionComponent {
     componentIntance: unknown,
   ): componentIntance is TransactionsDetailModalComponent {
     return componentIntance instanceof TransactionsDetailModalComponent;
-  }
-
-  private mapDataFromTransaction(
-    transaction: TransactionDto,
-  ): TransactionModalDataDto[] {
-    return [
-      {
-        title: 'Transacción ID',
-        value: transaction.transaction_id,
-      },
-      {
-        title: 'Fecha',
-        value: this.datePipe.transform(transaction.date)?.toString(),
-      },
-      {
-        title: 'Número de operación',
-        value: transaction.authorization_code,
-      },
-      {
-        title: 'Estado',
-        value: transaction.status,
-      },
-      {
-        title: 'Monto',
-        value: `$ ${transaction.amount ?? ''}`,
-      },
-      {
-        title: 'Descuento',
-        value: `$ ${transaction.saving ?? ''}`,
-      },
-      {
-        title: 'Total',
-        value: `$ ${transaction.total ?? ''}`,
-      },
-      {
-        title: 'Comercio',
-        value: transaction.commerce_code,
-      },
-      {
-        title: 'Método de pago',
-        value: transaction.payment_method,
-      },
-      {
-        title: 'Referencia ID',
-        value: transaction.reference_id,
-      },
-      {
-        title: 'Nombre sucursal',
-        value: transaction.store_name,
-      },
-      {
-        title: 'Caja',
-        value: transaction.pos_id,
-      },
-      {
-        title: 'Devolución',
-        value: transaction.reference_id ? 'SÍ' : 'NO',
-      },
-      {
-        title: 'Número de confirmación',
-        value: transaction.confirmation_number,
-      },
-      {
-        title: 'Orden de pago',
-        value: transaction.buy_order,
-      },
-      {
-        title: 'Tipo',
-        value: transaction.type,
-      },
-      {
-        title: 'Sub Tipo',
-        value: transaction.sub_type,
-      },
-    ];
   }
 }

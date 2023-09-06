@@ -1,11 +1,8 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit, effect, inject } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ClientsService } from '@app/pages/clients/data-access';
-import {
-  AccountDetailsResponseDto,
-  UserStatusType,
-} from '@app/pages/clients/shared';
+import { UserStatusType } from '@app/pages/clients/shared';
 import { CardInfoDataDto } from '@app/pages/clients/shared/dtos/card-info-data.dto';
 import {
   CardInfoComponent,
@@ -13,7 +10,9 @@ import {
 } from '@app/pages/clients/ui';
 import { BadgeColors } from '@app/shared/enums';
 import { RutPipe } from '@app/shared/pipes';
-import { Subscription, lastValueFrom } from 'rxjs';
+import { ConfirmModalService } from '@app/shared/services/modals/confirm-modal/confirm-modal.service';
+import { ConfirmModalResponse } from '@app/shared/services/modals/confirm-modal/enums/confirm-moda-respnse.enum';
+import { tap } from 'rxjs';
 import { ClientsDataService } from '../../data-access/clients-data-service';
 import { AvailableBalanceComponent } from '../../ui/available-balance';
 
@@ -30,21 +29,20 @@ import { AvailableBalanceComponent } from '../../ui/available-balance';
   styleUrls: ['./cards-info-section.component.scss'],
   providers: [ClientsService],
 })
-export class CardsInfoSectionComponent implements OnInit {
+export class CardsInfoSectionComponent {
   private readonly datePipe = inject(DatePipe);
   private readonly rutPipe = inject(RutPipe);
-  private clientDataService = inject(ClientsDataService);
-  private route = inject(ActivatedRoute);
-  private clientsServce = inject(ClientsService);
-
-  private routeParamsSub: Subscription | undefined;
+  private readonly confirmModalService = inject(ConfirmModalService);
+  private readonly clientsServce = inject(ClientsService);
+  private readonly clientDataService = inject(ClientsDataService);
 
   protected readonly clientSig = this.clientDataService.client;
   protected readonly isClientLoadingSig = this.clientDataService.isLoading;
 
+  protected readonly isClientLoadingChangeStatus =
+    this.clientDataService.isLoadingChangeStatus;
+
   protected clientName = '';
-  private id = '';
-  protected hasAccount = false;
   protected loadingAccountDetails = true;
 
   protected basicInfoCardData: { title: string; data: CardInfoDataDto[] } = {
@@ -57,12 +55,15 @@ export class CardsInfoSectionComponent implements OnInit {
     data: [],
   };
 
-  protected accountDetail: AccountDetailsResponseDto = {
-    idEcommerce: '',
-    idWallet: '',
-    timestamp: '',
-    accounts: [],
-  };
+  protected readonly isLoadingAccountDetailsSig = signal(true);
+  protected readonly isUpdatingBalanceSig = signal(false);
+
+  protected readonly accountDetailSig = toSignal(
+    this.clientsServce.accDetails$.pipe(
+      tap(() => this.isLoadingAccountDetailsSig.set(false)),
+      tap(() => this.isUpdatingBalanceSig.set(false)),
+    ),
+  );
 
   constructor() {
     // only change if ClientSig change
@@ -70,19 +71,35 @@ export class CardsInfoSectionComponent implements OnInit {
       this.loadClientName();
       this.loadBasicInfoCardData();
       this.loadStatusCardData();
-      void this.getAccountDetails();
     });
   }
 
-  ngOnInit() {
-    this.routeParamsSub = this.route.params.subscribe((params: Params) => {
-      const { id } = params;
-      this.id = id as string;
-    });
+  protected retryAccountDetails() {
+    this.clientsServce.reloadAccountDetails();
+  }
+
+  protected updateAccountBalance() {
+    this.isUpdatingBalanceSig.set(true);
+    this.clientsServce.updateBalance();
   }
 
   signoutClick() {
     //TODO: implementar
+  }
+
+  async onBlockUnblockClient() {
+    const eventType = !this.clientSig().blocked ? 'Bloquear' : 'Desbloquear';
+
+    const response = await this.confirmModalService.open({
+      title: `${eventType} cliente`,
+      message: `¿Está seguro que desea cambiar el estado del cliente?`,
+      primaryButtonText: 'Aceptar',
+      secondaryButtonText: 'Cancelar',
+    });
+
+    if (response === ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
+      this.clientDataService.changeStatusClient();
+    }
   }
 
   private loadBasicInfoCardData() {
@@ -146,56 +163,32 @@ export class CardsInfoSectionComponent implements OnInit {
       },
       {
         title: 'Validación de identidad',
-        value:
-          this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
-            ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
-              ? 'success'
-              : 'error'
-            : '-', //client.dynamo && client.dynamo.kyc_valid
+        value: this.clientSig().dynamo?.kyc_valid
+          ? this.clientSig().dynamo.kyc_valid
+            ? 'success'
+            : 'error'
+          : '-',
         isBadge: true,
-        color:
-          this.clientSig()?.dynamo && this.clientSig().dynamo?.kyc_valid
-            ? this.clientSig()!.dynamo!.kyc_valid?.b_o_o_l
-              ? BadgeColors.SUCCESS
-              : BadgeColors.DANGER
-            : BadgeColors.SECONDARY,
+        color: this.clientSig().dynamo?.kyc_valid
+          ? this.clientSig().dynamo.kyc_valid
+            ? BadgeColors.SUCCESS
+            : BadgeColors.DANGER
+          : BadgeColors.SECONDARY,
       },
       {
         title: 'Wallet',
-        value:
-          this.clientSig() &&
-          this.clientSig().dynamo &&
-          this.clientSig().dynamo?.wallet_active
-            ? this.clientSig()!.dynamo!.wallet_active.b_o_o_l
-              ? 'Active'
-              : 'Blocked'
-            : '-',
+        value: this.clientSig().dynamo?.wallet_active
+          ? this.clientSig().dynamo.wallet_active
+            ? 'Active'
+            : 'Blocked'
+          : '-',
         isBadge: true,
-        color:
-          this.clientSig() &&
-          this.clientSig().dynamo &&
-          this.clientSig().dynamo!.wallet_active
-            ? this.clientSig().dynamo!.wallet_active.b_o_o_l
-              ? BadgeColors.SUCCESS
-              : BadgeColors.DANGER
-            : BadgeColors.SECONDARY,
+        color: this.clientSig().dynamo?.wallet_active
+          ? this.clientSig().dynamo.wallet_active
+            ? BadgeColors.SUCCESS
+            : BadgeColors.DANGER
+          : BadgeColors.SECONDARY,
       },
     ];
-  }
-
-  protected async getAccountDetails() {
-    if (this.id) {
-      try {
-        this.loadingAccountDetails = true;
-        this.accountDetail = await lastValueFrom(
-          this.clientsServce.getAccountDetails(this.id),
-        );
-        this.loadingAccountDetails = false;
-        this.hasAccount = true;
-      } catch (err) {
-        this.hasAccount = false;
-        this.loadingAccountDetails = false;
-      }
-    }
   }
 }

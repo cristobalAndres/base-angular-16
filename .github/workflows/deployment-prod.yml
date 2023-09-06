@@ -5,8 +5,7 @@ on:
     paths-ignore:
       - 'README.md'
       - '.github/**'
-    branches: ["master"]
-
+    branches: ['master']
 
 jobs:
   get-vault-aws-credentials:
@@ -47,5 +46,5 @@ jobs:
       project_name: 'cw-cl-backoffice-web-manager'
       ecr_repository: 'cw-cl-backoffice-web-manager'
       image_tag: ${{ github.sha }}-prod
-      deploy_enviroment: ${{ github.ref == 'refs/heads/develop' && 'develop' || github.ref == 'refs/heads/qa' && 'qa' || github.ref == 'refs/heads/master' && 'production' }}
+      deploy_enviroment: master
     secrets: inherit

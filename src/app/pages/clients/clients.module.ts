@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '@app/shared';
 import { ErrorRetryComponent } from '@app/shared/components/errors';
 import { RutPipe } from '@app/shared/pipes';
+import { ServicesEpayService } from '@app/shared/services/epay';
 import { ClientsRoutingModule } from './clients-routing.module';
 import { ClientsComponent } from './clients.component';
 import {
@@ -26,6 +27,8 @@ import {
   TransactionSectionComponent,
   TransactionsFiltersComponent,
 } from './features/client-detail.ts/features';
+import { EpayTransactionMapper } from './features/client-detail.ts/features/transaction-section/mappers/epay-transaction-mapper';
+import { TransactionMapper } from './features/client-detail.ts/features/transaction-section/mappers/transaction-mappper';
 import { PaymentsMethodsTableComponent } from './features/client-detail.ts/ui/paymenths-methods-table';
 import { TransactionsDetailModalComponent } from './features/client-detail.ts/ui/transactions-detail-modal/transactions-detail-modal.component';
 import {
@@ -47,6 +50,9 @@ import {
     PaymentMethodsDataService,
     TransactionsService,
     TransactionsFiltersService,
+    ServicesEpayService,
+    EpayTransactionMapper,
+    TransactionMapper,
     DatePipe,
     RutPipe,
   ],
