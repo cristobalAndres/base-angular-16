@@ -22,7 +22,12 @@
       />
     </div>
     <div class="col-md-auto">
-      <button type="button" class="btn btn-primary" (click)="generateReport()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="generateReport()"
+        [disabled]="isLoading()"
+      >
         Generar
       </button>
     </div>

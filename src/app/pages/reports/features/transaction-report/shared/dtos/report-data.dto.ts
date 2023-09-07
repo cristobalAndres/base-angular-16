@@ -3,4 +3,5 @@ export interface ReportDataDto {
   endDate: Date | undefined;
   status: string | undefined;
   type: string | undefined;
+  email: string | undefined;
 }
