@@ -3,53 +3,43 @@
     <div class="dp-hidden position-absolute">
       <div class="input-group">
         <input
-          name="datepickerStart"
+          name="datepicker"
           class="form-control"
           ngbDatepicker
-          #datepickerStart="ngbDatepicker"
+          #datepicker="ngbDatepicker"
           [autoClose]="'outside'"
-          (dateSelect)="onStartDateSelection($event)"
+          (dateSelect)="onDateSelection($event)"
           [displayMonths]="2"
+          [dayTemplate]="dayTemplate"
           outsideDays="hidden"
           [startDate]="startDate()!"
           tabindex="-1"
         />
-        <input
-          name="datepickerEnd"
-          class="form-control"
-          ngbDatepicker
-          #datepickerEnd="ngbDatepicker"
-          [autoClose]="'outside'"
-          [displayMonths]="2"
-          outsideDays="hidden"
-          (dateSelect)="onEndDateSelection($event)"
-          tabindex="-1"
-        />
+        <ng-template #dayTemplate let-date let-focused="focused">
+          <span
+            class="custom-day"
+            [class.focused]="focused"
+            [class.range]="isRange(date)"
+            [class.faded]="isHovered(date) || isInnerRange(date)"
+            (mouseenter)="hoveredDate.set(date)"
+            (mouseleave)="hoveredDate.set(null)"
+          >
+            {{ date.day }}
+          </span>
+        </ng-template>
       </div>
     </div>
     <ng-container
-      *ngTemplateOutlet="
-        datePicker;
-        context: { date: startDate, datePickerContext: datepickerStart }
-      "
+      *ngTemplateOutlet="datePicker; context: { date: startDate }"
     />
   </div>
   <div class="col-12 col-md-6">
-    <ng-container
-      *ngTemplateOutlet="
-        datePicker;
-        context: { date: endDate, datePickerContext: datepickerEnd }
-      "
-    />
+    <ng-container *ngTemplateOutlet="datePicker; context: { date: endDate }" />
   </div>
 </form>
 
 <!-- TODO: Move this to a separated component -->
-<ng-template
-  #datePicker
-  let-date="date"
-  let-datePickerContext="datePickerContext"
->
+<ng-template #datePicker let-date="date">
   <div class="input-group">
     <input
       #dpDate
@@ -61,7 +51,7 @@
     />
     <button
       class="btn btn-outline-secondary bi bi-calendar3"
-      (click)="datePickerContext.toggle()"
+      (click)="datepicker.toggle()"
       type="button"
     ></button>
   </div>

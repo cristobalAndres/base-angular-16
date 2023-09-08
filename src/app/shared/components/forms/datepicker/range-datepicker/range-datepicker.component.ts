@@ -51,16 +51,19 @@ export class RangeDatepickerComponent {
     );
   }
 
-  protected onStartDateSelection(date: NgbDate) {
-    if (!this.startDate()) {
+  protected onDateSelection(date: NgbDate) {
+    if (!this.startDate() && !this.endDate()) {
       this.startDate.set(date);
       return;
     }
-    this.startDate.set(date);
-  }
 
-  protected onEndDateSelection(date: NgbDate) {
-    this.endDate.set(date);
+    if (!this.endDate() && date.after(this.startDate())) {
+      this.endDate.set(date);
+      return;
+    }
+
+    this.startDate.set(date);
+    this.endDate.set(null);
   }
 
   protected isHovered(date: NgbDate) {
