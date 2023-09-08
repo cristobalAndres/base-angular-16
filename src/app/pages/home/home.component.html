@@ -1,17 +1,20 @@
 <div class="container">
   <div class="row">
-    <div class="col-6 mt-4" *ngFor="let card of cards | visibleItems | async">
+    <div
+      class="col-12 col-md-6 mt-4 d-flex flex-column"
+      *ngFor="let card of cards | visibleItems | async"
+    >
       <button
-        class="card card-hover"
+        class="card card-hover flex-grow-1 d-flex justify-content-center align-items-center"
         (click)="redirectCard(card.route)"
         tabindex="0"
       >
         <div class="card-body">
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 d-flex justify-content-center">
               <i class="bi bi-{{ card.icon }} icon-card"></i>
             </div>
-            <div class="col-12">
+            <div class="col-12 text-center">
               <h3 class="card-title">{{ card.title }}</h3>
               <p class="card-text">{{ card.description }}</p>
             </div>
