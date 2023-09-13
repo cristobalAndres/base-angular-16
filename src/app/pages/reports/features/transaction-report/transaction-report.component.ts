@@ -97,7 +97,7 @@ export class TransactionReportComponent {
         tap(() => {
           this.toastService.clear();
           this.toastService.show({
-            body: 'Se ha generado el reporte correctamente.',
+            body: 'El reporte se ha generado correctamente, se le enviará un correo para descargar el reporte.',
             color: ToastsColors.SUCCESS,
           });
         }),
