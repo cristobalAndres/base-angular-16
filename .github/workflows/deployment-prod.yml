@@ -5,8 +5,7 @@ on:
     paths-ignore:
       - 'README.md'
       - '.github/**'
-    branches: ["master"]
-
+    branches: ['master']
 
 jobs:
   get-vault-aws-credentials:

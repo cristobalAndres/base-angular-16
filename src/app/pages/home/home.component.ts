@@ -31,6 +31,13 @@ export class HomeComponent {
       route: '/transactions',
       permissions: [Role.ADMIN],
     },
+    {
+      icon: 'archive',
+      title: 'Reportes',
+      description: 'Busca y genera los reportes disponibles.',
+      route: '/reports',
+      permissions: [Role.ADMIN],
+    },
   ];
 
   constructor(private router: Router) {}

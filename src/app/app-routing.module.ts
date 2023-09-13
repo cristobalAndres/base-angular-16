@@ -19,6 +19,13 @@ const routes: Routes = [
         canActivate: [AuthGuard.canActivate],
       },
       {
+        path: 'reports',
+        canMatch: [AuthGuard.canLoad, RoleGuard],
+        loadChildren: () =>
+          import('./pages/reports').then((m) => m.ReportsModule),
+        data: { roles: [Role.ADMIN] },
+      },
+      {
         path: 'clients',
         canMatch: [AuthGuard.canLoad, RoleGuard],
         loadChildren: () =>
