@@ -1,11 +1,5 @@
 import { ClientDto } from './client.dto';
-
-export type Pagination = Readonly<{
-  current_page: number;
-  per_page: number;
-  total_items: number;
-  total_pages: number;
-}>;
+import { Pagination } from './pagination.dto';
 
 export type ClientsResponseDto = Readonly<{
   data: ClientDto[];

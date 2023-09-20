@@ -45,6 +45,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
       permissions: [Role.ADMIN],
       isActiveRoute: false,
     },
+    {
+      name: 'Banners',
+      link: '/banners',
+      icon: 'image',
+      permissions: [Role.ADMIN],
+      isActiveRoute: false,
+    },
   ];
 
   constructor() {

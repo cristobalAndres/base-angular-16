@@ -38,6 +38,13 @@ export class HomeComponent {
       route: '/reports',
       permissions: [Role.ADMIN],
     },
+    {
+      icon: 'image',
+      title: 'Banners',
+      description: 'Busca, edita y elimina los banners mostrados en la app.',
+      route: '/banners',
+      permissions: [Role.ADMIN],
+    },
   ];
 
   constructor(private router: Router) {}

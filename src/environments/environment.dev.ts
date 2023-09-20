@@ -3,7 +3,7 @@ import { Environment } from './environment.type';
 export const environment: Environment = {
   production: false,
   apiUrl:
-    'https://sqbtyilwv2.execute-api.us-east-1.amazonaws.com/dev/cw-cl-users-back-manager/api/v1',
+    'https://zuhimnhv2m.execute-api.us-east-1.amazonaws.com/dev/cw-cl-users-back-manager/api/v1',
   apiReportUrl:
     'https://zuhimnhv2m.execute-api.us-east-1.amazonaws.com/dev/cw-cl-report-manager/api/v1',
   apiKYC:

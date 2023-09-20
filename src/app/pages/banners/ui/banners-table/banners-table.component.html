@@ -1,0 +1,60 @@
+<table class="table default">
+  <thead class="table">
+    <tr class="d-flex">
+      <th class="col-1">Id promoción</th>
+      <th class="col-2">Título</th>
+      <th class="col-1">Tipo de acción</th>
+      <th class="col-1">Url de acción</th>
+      <th class="col-2">Desde</th>
+      <th class="col-2">Hasta</th>
+      <th class="col-1">Activo</th>
+      <th class="col-1">Creado</th>
+      <th class="col-1">Herramienta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="d-flex" *ngFor="let banner of banners">
+      <th class="col-1">{{ banner.id }}</th>
+      <th class="col-2">{{ banner.title_text }}</th>
+      <th class="col-1">{{ banner.action_type }}</th>
+      <th class="col-1">{{ banner.action_type_url }}</th>
+      <th class="col-2">{{ banner.from_date }}</th>
+      <th class="col-2">{{ banner.to_date }}</th>
+      <th class="col-1">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            [checked]="banner.active"
+            disabled
+          />
+        </div>
+      </th>
+      <th class="col-1">{{ banner.from_date }}</th>
+      <th class="col-1">
+        <div class="tool-button">
+          <app-icon-button
+            icon="bi bi-eye"
+            tooltip="Ver detalle"
+            (clickEmiter)="showBannerDetail()"
+            class="no-border"
+          />
+        </div>
+        <div class="tool-button">
+          <app-icon-button
+            icon="bi bi-pencil-square"
+            tooltip="Ver detalle"
+            (clickEmiter)="showBannerDetail()"
+          />
+        </div>
+        <div class="tool-button">
+          <app-icon-button
+            icon="bi bi-trash"
+            tooltip="Ver detalle"
+            (clickEmiter)="showBannerDetail()"
+          />
+        </div>
+      </th>
+    </tr>
+  </tbody>
+</table>

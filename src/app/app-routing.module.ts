@@ -39,6 +39,13 @@ const routes: Routes = [
           import('./pages/transactions').then((m) => m.TransactionsModule),
         data: { roles: [Role.ADMIN] },
       },
+      {
+        path: 'banners',
+        canMatch: [AuthGuard.canLoad, RoleGuard],
+        loadChildren: () =>
+          import('./pages/banners').then((m) => m.BannersModule),
+        data: { roles: [Role.ADMIN] },
+      },
     ],
   },
   { path: '**', redirectTo: '/login' },

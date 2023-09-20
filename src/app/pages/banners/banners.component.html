@@ -1,0 +1,25 @@
+<div class="row pb-4">
+  <app-navigate-button to="/" message="Volver" />
+</div>
+
+<div class="container-fluid">
+  <div class="row row-actions">
+    <div class="col">
+      <input type="file" (change)="uploadImageBanner($event)" />
+    </div>
+    <div class="col"></div>
+    <div class="col create-action">
+      <app-icon-button
+        icon="bi bi-upload"
+        tooltip="Crear banner"
+        (clickEmiter)="createBanner()"
+      ></app-icon-button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="row row-search-banner">
+      <input type="text" class="search-banner" name="Buscar" id="" />
+    </div>
+    <app-banners-table [banners]="bannerList()"></app-banners-table>
+  </div>
+</div>
