@@ -59,7 +59,12 @@ export class FindAllCashInsService {
   readonly isLoading$ = new BehaviorSubject<boolean>(true);
   readonly hasError$ = new BehaviorSubject<boolean>(false);
 
-  searchCashIns(search: NonNullable<FindAllCashInsQueryParamsDto['search']>) {
+  searchCashIns(search?: FindAllCashInsQueryParamsDto['search']) {
+    if (!search) {
+      this.queryParams$.next({ ...FindAllCashInsService.INITIAL_QUERY_PARAMS });
+      return;
+    }
+
     this.queryParams$.next({
       ...FindAllCashInsService.INITIAL_QUERY_PARAMS,
       search,

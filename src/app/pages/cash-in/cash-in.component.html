@@ -16,7 +16,7 @@
     <div class="container-fluid">
       <div class="row justify-content-between align-items-center g-4">
         <div class="col-12 col-xl-8">
-          <app-cash-ins-filters />
+          <app-cash-ins-filters (changeSearch)="searchCashIns($event)" />
         </div>
         <div class="col-12 col-xl-4">
           <app-pagination

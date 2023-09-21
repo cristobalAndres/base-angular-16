@@ -3,8 +3,7 @@ import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SharedModule } from '@app/shared';
 import { FindAllCashInsService } from './data-access';
-import { CashInsFiltersComponent } from './features';
-import { CashInsTableComponent } from './ui';
+import { CashInsFiltersComponent, CashInsTableComponent } from './ui';
 
 @Component({
   selector: 'app-cash-in',
@@ -35,7 +34,7 @@ export class CashInComponent {
     this.findAllCashInsService.changePage(pageNumber);
   }
 
-  protected searchCashIns(search: string) {
+  protected searchCashIns(search?: string) {
     this.findAllCashInsService.searchCashIns(search);
   }
 
