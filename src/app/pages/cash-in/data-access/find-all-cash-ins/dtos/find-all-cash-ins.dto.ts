@@ -5,24 +5,24 @@
 export type FindAllCashInsDto = Readonly<
   Partial<{
     rut: string;
-    verificationDigit: string;
+    verification_digit: string;
     name: string;
-    bankName: string;
-    accountNumber: string;
+    bank_name: string;
+    account_number: string;
     amount: number;
     channel: string;
-    paymentInfoStatus: string;
+    payment_info_status: string;
 
     /**
      * @description Format: `dd/MM/yyyy`
      * @example 27/09/2023
      */
-    transactionDate: string;
+    transaction_date: string;
 
     /**
      * @description Format: `yyyy-MM-dd'T'HH:mm:ss`
      * @example 2021-09-27T12:00:00
      */
-    refundDate: string;
+    refund_date: string;
   }>
 >;

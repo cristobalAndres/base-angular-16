@@ -1,0 +1,32 @@
+<div class="table-responsive">
+  <table class="table default">
+    <thead class="">
+      <tr class="d-flex">
+        <th class="col-1" scope="col">RUT</th>
+        <th class="col-1" scope="col">DV</th>
+        <th class="col-2" scope="col">Nombre del cliente</th>
+        <th class="col-2" scope="col">Banco</th>
+        <th class="col-1" scope="col">Cuenta del cliente</th>
+        <th class="col-1" scope="col">Cantidad</th>
+        <th class="col-2" scope="col">Fecha de transacción</th>
+        <th class="col-2" scope="col">Fecha de devolución</th>
+        <th class="col-2" scope="col">Canal</th>
+        <th class="col-1" scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cashIn of cashIns" class="d-flex">
+        <th class="col-1" scope="row">{{ cashIn.rut }}</th>
+        <td class="col-1">{{ cashIn.verification_digit }}</td>
+        <td class="col-2">{{ cashIn.name }}</td>
+        <td class="col-2">{{ cashIn.bank_name }}</td>
+        <td class="col-1">{{ cashIn.account_number }}</td>
+        <td class="col-1 currency">{{ cashIn.amount | number : '1.0-2' }}</td>
+        <td class="col-2">{{ cashIn.transaction_date }}</td>
+        <td class="col-2">{{ cashIn.refund_date | date : 'medium' }}</td>
+        <td class="col-2">{{ cashIn.channel }}</td>
+        <td class="col-1">{{ cashIn.payment_info_status }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

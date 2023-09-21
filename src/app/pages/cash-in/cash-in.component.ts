@@ -1,11 +1,29 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FindAllCashInsService } from './data-access';
+import { CashInsTableComponent } from './ui';
 
 @Component({
   selector: 'app-cash-in',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CashInsTableComponent],
   templateUrl: './cash-in.component.html',
   styleUrls: ['./cash-in.component.scss'],
 })
-export class CashInComponent {}
+export class CashInComponent {
+  private readonly findAllCashInsService = inject(FindAllCashInsService);
+
+  protected readonly cashInsSig = toSignal(this.findAllCashInsService.cashIns$);
+  protected readonly paginationSig = toSignal(
+    this.findAllCashInsService.pagination$,
+  );
+
+  protected changePage(pageNumber: number) {
+    this.findAllCashInsService.changePage(pageNumber);
+  }
+
+  protected searchCashIns(search: string) {
+    this.findAllCashInsService.searchCashIns(search);
+  }
+}
