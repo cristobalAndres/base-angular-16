@@ -10,7 +10,7 @@ export class PaymentInfoStatusPipe implements PipeTransform {
   } as const satisfies Record<string, string>;
 
   transform(value: unknown): string | undefined {
-    if (!value) return;
+    if (!value) return 'Sin información';
 
     return (
       PaymentInfoStatusPipe.PAYMENT_INFO_STATUS[

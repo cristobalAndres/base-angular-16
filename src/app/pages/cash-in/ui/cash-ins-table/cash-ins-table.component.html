@@ -11,7 +11,7 @@
         <th class="col-2" scope="col">Fecha de transacción</th>
         <th class="col-2" scope="col">Fecha de devolución</th>
         <th class="col-2" scope="col">Canal</th>
-        <th class="col-1" scope="col">Estado</th>
+        <th class="col-2" scope="col">Estado</th>
       </tr>
     </thead>
     <tbody>
@@ -25,7 +25,7 @@
         <td class="col-2">{{ cashIn.transaction_date }}</td>
         <td class="col-2">{{ cashIn.refund_date | date : 'medium' }}</td>
         <td class="col-2">{{ cashIn.channel | channel }}</td>
-        <td class="col-1">
+        <td class="col-2">
           {{ cashIn.payment_info_status | paymentInfoStatus }}
         </td>
       </tr>
