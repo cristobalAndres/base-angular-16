@@ -20,21 +20,21 @@ const routes: Routes = [
       },
       {
         path: 'reports',
-        canMatch: [AuthGuard.canLoad, RoleGuard],
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
         loadChildren: () =>
           import('./pages/reports').then((m) => m.ReportsModule),
         data: { roles: [Role.ADMIN] },
       },
       {
         path: 'clients',
-        canMatch: [AuthGuard.canLoad, RoleGuard],
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
         loadChildren: () =>
           import('./pages/clients').then((m) => m.ClientsModule),
         data: { roles: [Role.ADMIN] },
       },
       {
         path: 'transactions',
-        canMatch: [AuthGuard.canLoad, RoleGuard],
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
         loadChildren: () =>
           import('./pages/transactions').then((m) => m.TransactionsModule),
         data: { roles: [Role.ADMIN] },
