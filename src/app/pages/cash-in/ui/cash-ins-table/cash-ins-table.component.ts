@@ -1,11 +1,12 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { FindAllCashInsDto } from '../../data-access';
+import { ChannelPipe, PaymentInfoStatusPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-cash-ins-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PaymentInfoStatusPipe, ChannelPipe],
   templateUrl: './cash-ins-table.component.html',
 })
 export class CashInsTableComponent {
