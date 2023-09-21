@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { PaginatedDto } from '@app/shared/dtos';
-import { ToastService } from '@app/shared/services';
-import { ToastsColors } from '@app/shared/services/toasts';
 import { NgHttpCachingHeaders } from 'ng-http-caching';
 import {
   BehaviorSubject,
   EMPTY,
   catchError,
+  finalize,
   map,
   shareReplay,
   switchMap,
+  tap,
 } from 'rxjs';
 import { FindAllCashInsDto, FindAllCashInsQueryParamsDto } from './dtos';
 
@@ -24,7 +24,6 @@ export class FindAllCashInsService {
   };
 
   private readonly httpClient = inject(HttpClient);
-  private readonly toastService = inject(ToastService);
 
   private readonly queryParams$ =
     new BehaviorSubject<FindAllCashInsQueryParamsDto>({
@@ -32,6 +31,8 @@ export class FindAllCashInsService {
     });
 
   private readonly findAllCashIns$ = this.queryParams$.pipe(
+    tap(() => this.isLoading$.next(true)),
+    tap(() => this.hasError$.next(false)),
     switchMap((queryParams) =>
       this.httpClient
         .get<PaginatedDto<FindAllCashInsDto>>('cash-ins', {
@@ -39,14 +40,13 @@ export class FindAllCashInsService {
           headers: { [NgHttpCachingHeaders.ALLOW_CACHE]: '1' },
         })
         .pipe(
+          finalize(() => this.isLoading$.next(false)),
           catchError(() => {
-            this.toastService.show({
-              body: 'Error al obtener cash ins',
-              color: ToastsColors.DANGER,
-            });
+            this.hasError$.next(true);
 
             return EMPTY;
           }),
+          tap(() => this.hasError$.next(false)),
         ),
     ),
     shareReplay({ bufferSize: 1, refCount: true }),
@@ -56,6 +56,8 @@ export class FindAllCashInsService {
   readonly pagination$ = this.findAllCashIns$.pipe(
     map(({ pagination }) => pagination),
   );
+  readonly isLoading$ = new BehaviorSubject<boolean>(true);
+  readonly hasError$ = new BehaviorSubject<boolean>(false);
 
   searchCashIns(search: NonNullable<FindAllCashInsQueryParamsDto['search']>) {
     this.queryParams$.next({
@@ -69,5 +71,9 @@ export class FindAllCashInsService {
       ...this.queryParams$.value,
       currentPage: pageNumber,
     });
+  }
+
+  retry() {
+    this.queryParams$.next({ ...this.queryParams$.value });
   }
 }
