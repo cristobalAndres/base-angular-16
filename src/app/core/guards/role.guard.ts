@@ -1,21 +1,30 @@
-import { Injectable } from '@angular/core';
-import { CanMatch, Route } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanMatchFn, Data } from '@angular/router';
 import { Role } from '@app/shared/enums';
-import { Observable } from 'rxjs';
 import { AuthService } from '../../shared/services/auth/auth.service';
 
-interface RouteData {
-  roles: Role[];
-}
+type RouteRoles = Readonly<{
+  roles: readonly Role[];
+}>;
 
-@Injectable({
-  providedIn: 'root',
-})
-export class RoleGuard implements CanMatch {
-  constructor(private authService: AuthService) {}
+const canMatchGuard: CanMatchFn = (route) => {
+  const authService = inject(AuthService);
 
-  canMatch(route: Route): Observable<boolean> | Promise<boolean> | boolean {
-    const expectedRole = (route.data as RouteData).roles;
-    return this.authService.hasRole(expectedRole);
-  }
+  if (!hasRoles(route.data))
+    throw new Error(
+      `Invalid route data for RoleGuard: ${String(route.data?.['roles'])}`,
+    );
+
+  return authService.hasRole(route.data.roles);
+};
+
+export const RoleGuard = {
+  canMatch: canMatchGuard,
+} as const;
+
+function hasRoles(value?: Data): value is RouteRoles {
+  if (!value) return false;
+  if (!Array.isArray(value['roles'])) return false;
+
+  return value['roles'].every((role) => role in Role);
 }
