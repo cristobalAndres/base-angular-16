@@ -4,13 +4,18 @@ import { UpdateBannerRequestDto } from '@app/pages/clients/shared';
 import { BannerListResponseDto } from '@app/pages/clients/shared/dtos/banner-list-response.dto';
 import { BannerListDto } from '@app/pages/clients/shared/dtos/banner-list.dto';
 import { CreateBannerDto } from '@app/pages/clients/shared/dtos/create-banner-request.dto';
+import { GetBannersParams } from '@app/pages/clients/shared/dtos/get-banners-params.dto';
+import { createHttpParams } from '@app/shared/utils';
 
 @Injectable()
 export class BannersService {
   private readonly httpClient = inject(HttpClient);
 
-  getAllBanners() {
-    return this.httpClient.get<BannerListResponseDto>('offers');
+  getAllBanners(getBannersParams: GetBannersParams) {
+    const { currentPage = 1, search = '' } = getBannersParams;
+    return this.httpClient.get<BannerListResponseDto>('offers', {
+      params: createHttpParams({ currentPage, search }),
+    });
   }
 
   createBanner(body: CreateBannerDto) {

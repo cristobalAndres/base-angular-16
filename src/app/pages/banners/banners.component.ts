@@ -1,11 +1,13 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import {
   ActionType,
+  Pagination,
   PromotionType,
   UpdateBannerRequestDto,
 } from '../clients/shared';
 import { BannerListResponseDto } from '../clients/shared/dtos/banner-list-response.dto';
 import { BannerListDto } from '../clients/shared/dtos/banner-list.dto';
+import { BannerFiltersDto } from '../clients/shared/dtos/banners-filter.dto';
 import { CreateBannerDto } from '../clients/shared/dtos/create-banner-request.dto';
 import { BannersService } from './data-access/banners-service';
 
@@ -17,7 +19,17 @@ import { BannersService } from './data-access/banners-service';
 export class BannersComponent implements OnInit {
   private readonly bannersService = inject(BannersService);
   public bannerList = signal<BannerListDto[]>([]);
+  protected isLoading = signal<boolean>(false);
+  public paginationBannerList = signal<Pagination>({
+    per_page: 10,
+    total_items: 0,
+    total_pages: 0,
+    current_page: 0,
+  });
   protected allBanners = computed(() => this.getAllBanners());
+  private currentPageSig = signal(1);
+  private search = signal<BannerFiltersDto>({ search: '' });
+  protected hasError = signal<boolean>(false);
 
   ngOnInit() {
     this.getAllBanners();
@@ -29,13 +41,39 @@ export class BannersComponent implements OnInit {
   }
 
   getAllBanners() {
-    return this.bannersService
-      .getAllBanners()
-      .subscribe((result: BannerListResponseDto) => {
-        // eslint-disable-next-line no-console
-        console.log('result: ', result);
-        this.bannerList.set(result.data);
+    this.isLoading.set(true);
+    this.bannersService
+      .getAllBanners({
+        currentPage: this.currentPageSig(),
+        search: this.search().search,
+        perPage: 10,
+      })
+      .subscribe({
+        next: (result: BannerListResponseDto) => {
+          this.bannerList.set(result.data);
+          this.paginationBannerList.set(result.pagination);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.hasError.set(true);
+        },
       });
+  }
+
+  protected retryButtonClick() {
+    this.hasError.set(false);
+    this.getAllBanners();
+  }
+
+  onSearchButtonClick(bannersFilters: BannerFiltersDto) {
+    this.search.set(bannersFilters);
+    this.getAllBanners();
+  }
+
+  onBannerCurrentPageChange(currentPage: number) {
+    this.currentPageSig.set(currentPage);
+    this.getAllBanners();
   }
 
   createBanner() {

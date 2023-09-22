@@ -1,0 +1,21 @@
+<div class="">
+  <div class="row g-4">
+    <div class="col-md-auto">
+      <input
+        type="text"
+        class="form-control input-text"
+        placeholder="Buscar"
+        aria-label="search"
+        #search
+      />
+    </div>
+
+    <div class="col-md-auto">
+      <app-icon-button
+        [ngbTooltip]="'Limpiar filtros'"
+        [icon]="'bi-eraser'"
+        (clickEmiter)="filtersReset()"
+      />
+    </div>
+  </div>
+</div>
