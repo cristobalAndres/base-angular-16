@@ -8,6 +8,7 @@ import { ChannelPipe, PaymentInfoStatusPipe } from '../../shared/pipes';
   standalone: true,
   imports: [CommonModule, PaymentInfoStatusPipe, ChannelPipe],
   templateUrl: './cash-ins-table.component.html',
+  styleUrls: ['./cash-ins-table.component.scss'],
 })
 export class CashInsTableComponent {
   @Input({ required: true }) cashIns!: readonly FindAllCashInsDto[];

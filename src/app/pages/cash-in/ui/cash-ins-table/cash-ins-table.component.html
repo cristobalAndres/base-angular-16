@@ -18,11 +18,13 @@
       <tr *ngFor="let cashIn of cashIns" class="d-flex">
         <th class="col-1" scope="row">{{ cashIn.rut }}</th>
         <td class="col-1">{{ cashIn.verification_digit }}</td>
-        <td class="col-2">{{ cashIn.name }}</td>
-        <td class="col-2">{{ cashIn.bank_name }}</td>
+        <td class="col-2 capitalize">{{ cashIn.name | lowercase }}</td>
+        <td class="col-2 capitalize">{{ cashIn.bank_name | lowercase }}</td>
         <td class="col-1">{{ cashIn.account_number }}</td>
         <td class="col-1 currency">{{ cashIn.amount | number : '1.0-2' }}</td>
-        <td class="col-2">{{ cashIn.transaction_date }}</td>
+        <td class="col-2">
+          {{ cashIn.transaction_date | date : 'mediumDate' }}
+        </td>
         <td class="col-2">{{ cashIn.refund_date | date : 'medium' }}</td>
         <td class="col-2">{{ cashIn.channel | channel }}</td>
         <td class="col-2">
