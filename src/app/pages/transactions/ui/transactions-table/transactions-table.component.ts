@@ -8,13 +8,6 @@ import { TransactionDto } from '@app/shared/services/transactions';
   standalone: true,
   imports: [CommonModule, TransactionStatusPipe, TransactionTypePipe],
   templateUrl: './transactions-table.component.html',
-  styles: [
-    `
-      .currency::before {
-        content: '$ ';
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionsTableComponent {
