@@ -1,0 +1,36 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Promociones y Banners</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      aria-label="Close"
+      (click)="closeModal()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-select
+      [withPlaceholder]="true"
+      [placeholder]="'Selecciona un reporte'"
+      [options]="options"
+      (optionChange)="onChangePromotionType($event)"
+    />
+
+    <div class="mb-4"></div>
+
+    <ng-container *ngIf="promotionTypeSelected() === PROMOTION_OPTIONS.BANNER">
+      <app-banner />
+    </ng-container>
+    <ng-container
+      *ngIf="promotionTypeSelected() === PROMOTION_OPTIONS.PROMOTION"
+    >
+      <app-promotion />
+    </ng-container>
+    <ng-container
+      *ngIf="promotionTypeSelected() === PROMOTION_OPTIONS.BANNER_AND_PROMOTION"
+    >
+      <app-banner-and-promotion />
+    </ng-container>
+  </div>
+</div>
