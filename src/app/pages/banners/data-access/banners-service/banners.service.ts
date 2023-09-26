@@ -19,7 +19,11 @@ export class BannersService {
   }
 
   createBanner(body: CreateBannerDto) {
-    return this.httpClient.post<string>(`/offers`, body);
+    const cleanBody = Object.fromEntries(
+      Object.entries(body).filter(([, value]) => value !== ''),
+    );
+
+    return this.httpClient.post<string>(`/offers`, cleanBody);
   }
 
   getBannerById(bannerId: string) {
@@ -35,6 +39,9 @@ export class BannersService {
   }
 
   uploadBannerImage(formData: FormData) {
-    return this.httpClient.post(`offers/upload-offer-image`, formData);
+    return this.httpClient.post<{ image_url: string }>(
+      `offers/upload-offer-image`,
+      formData,
+    );
   }
 }
