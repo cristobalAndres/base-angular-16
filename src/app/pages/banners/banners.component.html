@@ -36,6 +36,7 @@
     <app-banners-table
       [banners]="bannerList()"
       (editBannerEvent)="getBannerById($event)"
+      (deleteBannerEvent)="deleteBannerById($event)"
     ></app-banners-table>
   </div>
   <div class="row">
