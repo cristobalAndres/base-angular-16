@@ -11,20 +11,20 @@ import { IconButtonComponent } from '@app/shared/components/buttons';
   imports: [CommonModule, IconButtonComponent],
 })
 export class BannersTableComponent implements OnInit {
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
   @Input({ required: true }) banners!: ReadonlyArray<BannerListDto>;
 
   @Output() editBannerEvent: EventEmitter<string> = new EventEmitter<string>();
-
-  ngOnInit(): void {
-    // eslint-disable-next-line no-console
-    console.log(this.banners);
-  }
-  showBannerDetail() {
-    // eslint-disable-next-line no-console
-    console.log('showBannerDetail');
-  }
+  @Output() deleteBannerEvent: EventEmitter<string> =
+    new EventEmitter<string>();
 
   editBannerClick(id: string) {
     this.editBannerEvent.emit(id);
+  }
+
+  deleteBannerClick(id: string) {
+    this.deleteBannerEvent.emit(id);
   }
 }
