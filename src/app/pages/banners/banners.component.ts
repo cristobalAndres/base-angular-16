@@ -146,6 +146,7 @@ export class BannersComponent implements OnInit {
           }),
         ),
         tap(() => this.getAllBanners()),
+        first(),
       )
       .subscribe();
   }
