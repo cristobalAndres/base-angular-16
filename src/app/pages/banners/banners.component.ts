@@ -1,4 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { first, tap } from 'rxjs';
 import {
   ActionType,
   Pagination,
@@ -8,8 +10,9 @@ import {
 import { BannerListResponseDto } from '../clients/shared/dtos/banner-list-response.dto';
 import { BannerListDto } from '../clients/shared/dtos/banner-list.dto';
 import { BannerFiltersDto } from '../clients/shared/dtos/banners-filter.dto';
-import { CreateBannerDto } from '../clients/shared/dtos/create-banner-request.dto';
 import { BannersService } from './data-access/banners-service';
+import { CreateBannerComponent } from './features/create-banner/create-banner.component';
+import { BannerDto } from './shared/dtos/banner-dto';
 
 @Component({
   selector: 'app-banners',
@@ -18,6 +21,10 @@ import { BannersService } from './data-access/banners-service';
 })
 export class BannersComponent implements OnInit {
   private readonly bannersService = inject(BannersService);
+  private readonly modalService = inject(NgbModal);
+
+  modalReference: NgbModalRef | undefined;
+
   public bannerList = signal<BannerListDto[]>([]);
   protected isLoading = signal<boolean>(false);
   public paginationBannerList = signal<Pagination>({
@@ -77,39 +84,31 @@ export class BannersComponent implements OnInit {
   }
 
   createBanner() {
-    const bodyBanner: CreateBannerDto = {
-      action_type: ActionType.WEBVIEW,
-      active: true,
-      country: 'CL',
-      from_date: '2023-09-08T13:49:45.890Z',
-      to_date: '2023-09-15T13:49:45.890Z',
-      id_promotion: '123456789ABC',
-      type_promotion: PromotionType.PROMOTION,
-      action_type_url: 'https://action-type-url.com',
-      title_text: 'Title text',
-      image_banner_url: 'https://img-banner-url.com',
-      image_tile_url: 'https://img-title-url.com',
-      filter_attributes: ['asd'],
-      badge_text: 'badget',
-      badge_background_color: '#eb4034',
-    };
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    return this.bannersService
-      .createBanner(bodyBanner)
-      .subscribe((result: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log('banner creado: ', result);
-      });
+    this.modalReference = this.modalService.open(CreateBannerComponent, {
+      size: 'xl',
+      centered: true,
+    });
   }
 
-  getBannerById() {
-    const bannerId = 'e8d5dc45-c050-4ab0-9973-46592f0eee14';
+  getBannerById(bannerId: string) {
     this.bannersService
       .getBannerById(bannerId)
-      .subscribe((result: BannerListDto) => {
-        // eslint-disable-next-line no-console
-        console.log('getBannerById: ', result);
-      });
+      .pipe(
+        first(),
+        tap((result: BannerDto) => this.openModalToEdit(result)),
+      )
+      .subscribe();
+  }
+
+  openModalToEdit(promotion: BannerDto) {
+    const modalRef = this.modalService.open(CreateBannerComponent, {
+      size: 'xl',
+      centered: true,
+    });
+
+    if (modalRef.componentInstance instanceof CreateBannerComponent) {
+      modalRef.componentInstance.promotionToEdit = promotion;
+    }
   }
 
   deleteBannerById() {
