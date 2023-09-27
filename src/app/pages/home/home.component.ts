@@ -39,6 +39,13 @@ export class HomeComponent {
       permissions: [Role.ADMIN],
     },
     {
+      icon: 'image',
+      title: 'Banners',
+      description: 'Busca, edita y elimina los banners mostrados en la app.',
+      route: '/banners',
+      permissions: [Role.ADMIN],
+    },
+    {
       icon: 'credit-card',
       title: 'Cash In',
       description: 'Busca los cash in actuales.',

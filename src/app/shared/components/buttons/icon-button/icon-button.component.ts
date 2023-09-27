@@ -29,8 +29,9 @@ import {
     `
       .icon-button {
         border-width: 2px;
-        width: 60px;
+        width: 35px;
         line-height: 2px;
+        padding-left: 8px;
         border: solid 2px var(--primary-color);
       }
       .icon-button:hover {
