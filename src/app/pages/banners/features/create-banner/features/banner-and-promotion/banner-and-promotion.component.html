@@ -67,10 +67,7 @@
             [placeholder]="'Seleccione comercios'"
             [settings]="dropdownSettings"
             [data]="dropdownList"
-            (onSelect)="onItemSelect($event)"
-            (onSelectAll)="onSelectAll($event)"
-            (onDeSelect)="onItemDeSelect($event)"
-            (onDeSelectAll)="onDeSelectAll()"
+            formControlName="commerces"
           >
           </ng-multiselect-dropdown>
         </div>
@@ -127,11 +124,17 @@
         </div>
       </div>
 
-      <div class="row mb-3">
+      <div *ngIf="previewImage" class="row mb-3">
+        <span class="form-check-label">New Image</span>
         <img
           [src]="previewImage ? URL.createObjectURL(previewImage) : ''"
           alt=""
         />
+      </div>
+
+      <div *ngIf="imageBannerUrl()" class="row mb-3">
+        <span class="form-check-label">Current Image</span>
+        <img [src]="imageBannerUrl() ? imageBannerUrl() : ''" alt="" />
       </div>
 
       <app-reactive-form-input-text
@@ -176,16 +179,22 @@
 
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <button
+          *ngIf="!promotionToEdit"
           class="btn btn-primary"
           type="button"
           (click)="saveForm()"
-          [disabled]="
-            bannerAndPromotionForm.invalid ||
-            selectedItems.length === 0 ||
-            isLoading()
-          "
+          [disabled]="bannerAndPromotionForm.invalid || isLoading()"
         >
           Save
+        </button>
+        <button
+          *ngIf="promotionToEdit"
+          class="btn btn-primary"
+          type="button"
+          (click)="updateForm()"
+          [disabled]="bannerAndPromotionForm.invalid || isLoading()"
+        >
+          Update
         </button>
       </div>
     </div>
