@@ -200,17 +200,17 @@ export class PromotionComponent implements OnInit {
           this.isLoading.set(false);
           this.toastService.clear();
           this.toastService.show({
-            body: 'Error al crear banner',
+            body: 'Error al crear promotion',
             color: ToastsColors.DANGER,
             delay: 5000,
           });
-          throw Error('Error al crear banner');
+          throw Error('Error al crear promotion');
         }),
         tap(() => this.isLoading.set(false)),
         tap(() => this.toastService.clear()),
         tap(() =>
           this.toastService.show({
-            body: 'Banner creado correctamente',
+            body: 'Promotion creado correctamente',
             color: ToastsColors.SUCCESS,
             delay: 2000,
           }),
@@ -228,7 +228,7 @@ export class PromotionComponent implements OnInit {
 
     const result = await this.confirmModalService.open({
       title: 'Confirmar',
-      message: '¿Está seguro que desea actualizar el banner?',
+      message: '¿Está seguro que desea actualizar el promotion?',
       primaryButtonText: 'Confirmar',
       secondaryButtonText: 'Cancelar',
     });
@@ -294,17 +294,17 @@ export class PromotionComponent implements OnInit {
         this.isLoading.set(false);
         this.toastService.clear();
         this.toastService.show({
-          body: 'Error al actualizar banner',
+          body: 'Error al actualizar promotion',
           color: ToastsColors.DANGER,
           delay: 5000,
         });
-        throw Error('Error al actualizar banner');
+        throw Error('Error al actualizar promotion');
       }),
       tap(() => this.isLoading.set(false)),
       tap(() => this.toastService.clear()),
       tap(() =>
         this.toastService.show({
-          body: 'Banner actualizado correctamente',
+          body: 'Promotion actualizado correctamente',
           color: ToastsColors.SUCCESS,
           delay: 2000,
         }),
