@@ -63,6 +63,13 @@ export class TransactionReportComponent {
 
   public async generateReport() {
     this.isLoading.set(true);
+    this.toastService.clear();
+    this.toastService.show({
+      body: 'Generando reporte...',
+      color: ToastsColors.PRIMARY,
+    });
+
+    this.endDate?.setDate(this.endDate?.getDate() + 1);
 
     const email = await this.getEmail();
     const data = {
@@ -80,18 +87,20 @@ export class TransactionReportComponent {
         retry(2),
         finalize(() => this.isLoading.set(false)),
         catchError((error: unknown) => {
+          this.toastService.clear();
           this.toastService.show({
             body: 'No se ha podido generar el reporte.',
             color: ToastsColors.DANGER,
           });
           return throwError(() => error);
         }),
-        tap(() =>
+        tap(() => {
+          this.toastService.clear();
           this.toastService.show({
-            body: 'Se ha generado el reporte correctamente.',
+            body: 'El reporte se ha generado correctamente, se le enviará un correo para descargar el reporte.',
             color: ToastsColors.SUCCESS,
-          }),
-        ),
+          });
+        }),
       )
       .subscribe();
   }

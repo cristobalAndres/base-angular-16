@@ -52,6 +52,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
       permissions: [Role.ADMIN],
       isActiveRoute: false,
     },
+    {
+      name: 'Cash In',
+      link: '/cash-in',
+      icon: 'credit-card',
+      permissions: [Role.ADMIN],
+      isActiveRoute: false,
+    },
   ];
 
   constructor() {

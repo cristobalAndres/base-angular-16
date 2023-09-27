@@ -8,7 +8,7 @@ import { BannersComponent } from './banners.component';
 import { BannersService } from './data-access/banners-service';
 import { CreateBannerModule } from './features/create-banner';
 import { BannersFilterComponent } from './ui/banners-filter';
-import { BannersTableComponent } from './ui/banners-table/banners-table.component';
+import { BannersTableComponent } from './ui/banners-table';
 
 @NgModule({
   declarations: [BannersComponent],

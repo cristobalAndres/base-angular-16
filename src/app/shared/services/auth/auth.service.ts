@@ -23,7 +23,7 @@ export class AuthService {
     return Auth.currentAuthenticatedUser() as Promise<AuthUser>;
   }
 
-  async hasRole(roles: Role[]) {
+  async hasRole(roles: readonly Role[]) {
     const user = await this.getUser();
     const userRolesAttribute = user.attributes[this.ROLES_ATTRIBUTE];
     if (!userRolesAttribute) return true;

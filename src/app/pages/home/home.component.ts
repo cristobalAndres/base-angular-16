@@ -45,6 +45,13 @@ export class HomeComponent {
       route: '/banners',
       permissions: [Role.ADMIN],
     },
+    {
+      icon: 'credit-card',
+      title: 'Cash In',
+      description: 'Busca los cash in actuales.',
+      route: '/cash-in',
+      permissions: [Role.ADMIN],
+    },
   ];
 
   constructor(private router: Router) {}

@@ -20,37 +20,37 @@ const routes: Routes = [
       },
       {
         path: 'reports',
-        canMatch: [AuthGuard.canLoad, RoleGuard],
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
         loadChildren: () =>
           import('./pages/reports').then((m) => m.ReportsModule),
         data: { roles: [Role.ADMIN] },
       },
       {
-        path: 'banners',
-        canMatch: [AuthGuard.canLoad, RoleGuard],
-        loadChildren: () =>
-          import('./pages/banners').then((m) => m.BannersModule),
-        data: { roles: [Role.ADMIN] },
-      },
-      {
         path: 'clients',
-        canMatch: [AuthGuard.canLoad, RoleGuard],
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
         loadChildren: () =>
           import('./pages/clients').then((m) => m.ClientsModule),
         data: { roles: [Role.ADMIN] },
       },
       {
         path: 'transactions',
-        canMatch: [AuthGuard.canLoad, RoleGuard],
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
         loadChildren: () =>
           import('./pages/transactions').then((m) => m.TransactionsModule),
         data: { roles: [Role.ADMIN] },
       },
       {
         path: 'banners',
-        canMatch: [AuthGuard.canLoad, RoleGuard],
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
         loadChildren: () =>
           import('./pages/banners').then((m) => m.BannersModule),
+        data: { roles: [Role.ADMIN] },
+      },
+      {
+        path: 'cash-in',
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
+        loadChildren: () =>
+          import('./pages/cash-in').then((m) => m.CashInModule),
         data: { roles: [Role.ADMIN] },
       },
     ],
