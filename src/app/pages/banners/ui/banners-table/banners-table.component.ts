@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BannerListDto } from '@app/pages/clients/shared/dtos/banner-list.dto';
 import { IconButtonComponent } from '@app/shared/components/buttons';
 
@@ -10,10 +10,7 @@ import { IconButtonComponent } from '@app/shared/components/buttons';
   styleUrls: ['./banners-table.component.scss'],
   imports: [CommonModule, IconButtonComponent],
 })
-export class BannersTableComponent implements OnInit {
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
+export class BannersTableComponent {
   @Input({ required: true }) banners!: ReadonlyArray<BannerListDto>;
 
   @Output() editBannerEvent: EventEmitter<string> = new EventEmitter<string>();
