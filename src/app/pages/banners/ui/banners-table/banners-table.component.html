@@ -36,7 +36,6 @@
           <app-icon-button
             icon="bi bi-eye"
             tooltip="Ver detalle"
-            (clickEmiter)="showBannerDetail()"
             class="no-border"
           />
         </div>
@@ -51,7 +50,7 @@
           <app-icon-button
             icon="bi bi-trash"
             tooltip="Ver detalle"
-            (clickEmiter)="showBannerDetail()"
+            (clickEmiter)="deleteBannerClick(banner.id)"
           />
         </div>
       </th>

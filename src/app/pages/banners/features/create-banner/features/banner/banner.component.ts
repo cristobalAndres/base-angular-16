@@ -159,7 +159,7 @@ export class BannerComponent implements OnInit {
       secondaryButtonText: 'Cancelar',
     });
 
-    if (result === ConfirmModalResponse.SECONDARY_BUTTON_CLICKED) {
+    if (result !== ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
       return;
     }
 
@@ -228,7 +228,7 @@ export class BannerComponent implements OnInit {
       secondaryButtonText: 'Cancelar',
     });
 
-    if (result === ConfirmModalResponse.SECONDARY_BUTTON_CLICKED) {
+    if (result !== ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
       return;
     }
 

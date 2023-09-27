@@ -1,12 +1,11 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ToastService } from '@app/shared/services';
+import { ConfirmModalService } from '@app/shared/services/modals/confirm-modal/confirm-modal.service';
+import { ConfirmModalResponse } from '@app/shared/services/modals/confirm-modal/enums/confirm-moda-respnse.enum';
+import { ToastsColors } from '@app/shared/services/toasts';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { first, tap } from 'rxjs';
-import {
-  ActionType,
-  Pagination,
-  PromotionType,
-  UpdateBannerRequestDto,
-} from '../clients/shared';
+import { catchError, first, tap } from 'rxjs';
+import { Pagination } from '../clients/shared';
 import { BannerListResponseDto } from '../clients/shared/dtos/banner-list-response.dto';
 import { BannerListDto } from '../clients/shared/dtos/banner-list.dto';
 import { BannerFiltersDto } from '../clients/shared/dtos/banners-filter.dto';
@@ -22,6 +21,8 @@ import { BannerDto } from './shared/dtos/banner-dto';
 export class BannersComponent implements OnInit {
   private readonly bannersService = inject(BannersService);
   private readonly modalService = inject(NgbModal);
+  private readonly confirmModalService = inject(ConfirmModalService);
+  private readonly toastService = inject(ToastService);
 
   modalReference: NgbModalRef | undefined;
 
@@ -40,11 +41,6 @@ export class BannersComponent implements OnInit {
 
   ngOnInit() {
     this.getAllBanners();
-    // this.createBanner();
-    // this.getBannerById();
-    // this.deleteBannerById();
-    // this.updateBannerById();
-    // this.uploadImageBanner();
   }
 
   getAllBanners() {
@@ -111,55 +107,47 @@ export class BannersComponent implements OnInit {
     }
   }
 
-  deleteBannerById() {
-    const bannerId = 'e8d5dc45-c050-4ab0-9973-46592f0eee14';
-    this.bannersService
-      .deleteBannerById(bannerId)
-      .subscribe((result: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log('deleteBannerById: ', result);
-      });
-  }
+  async deleteBannerById(bannerId: string) {
+    const result = await this.confirmModalService.open({
+      title: 'Confirmar',
+      message: '¿Está seguro que desea eliminar el registro?',
+      primaryButtonText: 'Confirmar',
+      secondaryButtonText: 'Cancelar',
+    });
 
-  updateBannerById() {
-    const bannerId = '2f0d8e61-8b72-4bbd-8b4b-915c8b614ff1';
-    const bodyBanner: UpdateBannerRequestDto = {
-      action_type: ActionType.WEBVIEW,
-      active: true,
-      country: 'CL',
-      from_date: '2023-09-08T13:49:45.890Z',
-      to_date: '2023-09-15T13:49:45.890Z',
-      id_promotion: '123456789ABC',
-      type_promotion: PromotionType.PROMOTION,
-      action_type_url: 'https://action-type-url.com',
-      title_text: 'LOMO LISO 9.990 KG',
-      image_banner_url: 'https://img-banner-url.com',
-      image_tile_url: 'https://img-title-url.com',
-      badge_text: 'badget',
-      badge_background_color: '#eb4034',
-      filter_attributes: ['comercio_jumbo'],
-    };
-    this.bannersService
-      .updateBannerById(bannerId, bodyBanner)
-      .subscribe((result: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log('updateBannerById: ', result);
-      });
-  }
-
-  uploadImageBanner(event: Event) {
-    // console.log('event: ', event);
-    const img = (event.target as HTMLInputElement).files?.item(0);
-    // console.log('img:', img);
-    const formData: FormData = new FormData();
-    if (!img) {
+    if (result !== ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
       return;
     }
-    formData.append('file', img);
-    // console.log('after formData: ', formData.get('file'));
-    this.bannersService.uploadBannerImage(formData).subscribe((link) => {
-      // eslint-disable-next-line no-console
-      console.log('uploadImageBanner: ', link);
+
+    this.toastService.show({
+      body: 'Eliminando registro.',
+      color: ToastsColors.PRIMARY,
+      delay: 5000,
     });
+
+    this.bannersService
+      .deleteBannerById(bannerId)
+      .pipe(
+        catchError(() => {
+          this.toastService.clear();
+          this.toastService.show({
+            body: 'Error al eliminar registro.',
+            color: ToastsColors.DANGER,
+            delay: 5000,
+          });
+          throw Error('Error al eliminar registro.');
+        }),
+        tap(() => this.toastService.clear()),
+        tap(() =>
+          this.toastService.show({
+            body: 'Registro actualizado correctamente',
+            color: ToastsColors.SUCCESS,
+            delay: 2000,
+          }),
+        ),
+        tap(() => this.getAllBanners()),
+        first(),
+      )
+      .subscribe();
   }
 }
