@@ -1,6 +1,6 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h5 class="modal-title" *ngIf="!promotionToEdit">Promociones y Banners</h5>
+    <h5 class="modal-title" *ngIf="!promotionToEdit">Banners y Promociones</h5>
     <h5 class="modal-title" *ngIf="promotionToEdit">
       Editando: {{ TypePromotion | uppercase }}
     </h5>
@@ -17,7 +17,7 @@
       <app-select
         *ngIf="!promotionToEdit"
         [withPlaceholder]="true"
-        [placeholder]="'Selecciona un reporte'"
+        [placeholder]="'Seleccione tipo de promoción'"
         [options]="options"
         (optionChange)="onChangePromotionType($event)"
       />

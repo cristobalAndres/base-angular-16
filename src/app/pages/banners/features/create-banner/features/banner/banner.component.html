@@ -62,7 +62,7 @@
     <div class="col-1"></div>
     <div class="col">
       <div class="mb-3 row">
-        <label for="comercios" class="col-sm-4 col-form-label">Commerces</label>
+        <label for="commerces" class="col-sm-4 col-form-label">Commerces</label>
         <div class="col-sm-8">
           <ng-multiselect-dropdown
             [placeholder]="'Seleccione comercios'"
@@ -75,21 +75,21 @@
       </div>
 
       <div class="mb-3 row">
-        <div class="form-check form-switch">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            role="switch"
-            formControlName="active"
-          />
-          <label class="form-check-label" for="flexSwitchCheckDefault"
-            >Active</label
-          >
+        <label for="active" class="col-sm-4 col-form-label">Active</label>
+        <div class="col-sm-8">
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+              formControlName="active"
+            />
+          </div>
         </div>
       </div>
 
       <div class="mb-3 row">
-        <label for="id_promotion" class="col-sm-4 col-form-label"
+        <label for="action_type" class="col-sm-4 col-form-label"
           >Tipo de acción</label
         >
         <div class="col-sm-8">
