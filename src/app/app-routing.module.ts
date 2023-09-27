@@ -40,6 +40,13 @@ const routes: Routes = [
         data: { roles: [Role.ADMIN] },
       },
       {
+        path: 'banners',
+        canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
+        loadChildren: () =>
+          import('./pages/banners').then((m) => m.BannersModule),
+        data: { roles: [Role.ADMIN] },
+      },
+      {
         path: 'cash-in',
         canMatch: [AuthGuard.canMatch, RoleGuard.canMatch],
         loadChildren: () =>

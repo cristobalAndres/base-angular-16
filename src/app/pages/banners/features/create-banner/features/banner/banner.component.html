@@ -1,0 +1,179 @@
+<form [formGroup]="bannerForm" autocomplete="off">
+  <div class="row">
+    <div class="col">
+      <app-reactive-form-input-text
+        inputId="id_promotion"
+        [control]="bannerForm.controls.id_promotion"
+        label="Id Promotion"
+        [minlength]="3"
+        placeholder=""
+      />
+
+      <app-reactive-form-input-text
+        inputId="title_text"
+        [control]="bannerForm.controls.title_text"
+        label="Title Text"
+        [minlength]="3"
+        placeholder=""
+      />
+
+      <app-reactive-form-input-text
+        inputId="off_text"
+        [control]="bannerForm.controls.off_text"
+        label="Off Text"
+        [minlength]="3"
+        placeholder=""
+      />
+
+      <app-reactive-form-input-text
+        inputId="badge_text"
+        [control]="bannerForm.controls.badge_text"
+        label="Badge Text"
+        [minlength]="3"
+        placeholder=""
+      />
+
+      <app-reactive-form-input-text
+        inputId="badge_background_color"
+        [control]="bannerForm.controls.badge_background_color"
+        label="Badge Background Color"
+        type="color"
+        [minlength]="3"
+        placeholder=""
+      />
+
+      <app-reactive-form-input-text
+        inputId="from_date"
+        [control]="bannerForm.controls.from_date"
+        type="date"
+        label="From Date"
+        placeholder=""
+      />
+
+      <app-reactive-form-input-text
+        inputId="to_date"
+        [control]="bannerForm.controls.to_date"
+        [min]="bannerForm.controls.from_date.value?.toString()"
+        type="date"
+        label="To Date"
+        placeholder=""
+      />
+    </div>
+    <div class="col-1"></div>
+    <div class="col">
+      <div class="mb-3 row">
+        <label for="comercios" class="col-sm-4 col-form-label">Commerces</label>
+        <div class="col-sm-8">
+          <ng-multiselect-dropdown
+            [placeholder]="'Seleccione comercios'"
+            [settings]="dropdownSettings"
+            [data]="dropdownList"
+            formControlName="commerces"
+          >
+          </ng-multiselect-dropdown>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            formControlName="active"
+          />
+          <label class="form-check-label" for="flexSwitchCheckDefault"
+            >Active</label
+          >
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="id_promotion" class="col-sm-4 col-form-label"
+          >Tipo de acción</label
+        >
+        <div class="col-sm-8">
+          <select formControlName="action_type" class="form-select">
+            <option *ngFor="let action of action_types" [value]="action.id">
+              {{ action.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <app-reactive-form-input-text
+        *ngIf="bannerForm.controls.action_type.value === 'webview'"
+        inputId="action_type_url"
+        [control]="bannerForm.controls.action_type_url"
+        type="text"
+        label="Action Type Url"
+        placeholder=""
+      />
+
+      <div class="mb-3 row">
+        <label for="image_banner_url" class="col-sm-4 col-form-label"
+          >Select image</label
+        >
+        <div class="col-sm-8">
+          <input
+            type="file"
+            class="form-control"
+            id="image_banner_url"
+            accept="image/png, image/jpeg"
+            (change)="onFileChange($event)"
+          />
+        </div>
+      </div>
+
+      <div *ngIf="previewImage" class="row mb-3">
+        <span class="form-check-label">New Image</span>
+        <img
+          [src]="previewImage ? URL.createObjectURL(previewImage) : ''"
+          alt=""
+        />
+      </div>
+
+      <div *ngIf="imageBannerUrl()" class="row mb-3">
+        <span class="form-check-label">Current Image</span>
+        <img [src]="imageBannerUrl() ? imageBannerUrl() : ''" alt="" />
+      </div>
+
+      <app-reactive-form-input-text
+        inputId="header_text"
+        [control]="bannerForm.controls.header_text"
+        type="text"
+        label="Header Text"
+        placeholder=""
+      />
+
+      <app-reactive-form-input-text
+        inputId="subtitle_text"
+        [control]="bannerForm.controls.subtitle_text"
+        type="text"
+        label="Subtitle Text"
+        placeholder=""
+      />
+
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button
+          *ngIf="!promotionToEdit"
+          class="btn btn-primary"
+          type="button"
+          (click)="saveForm()"
+          [disabled]="bannerForm.invalid || isLoading()"
+        >
+          Save
+        </button>
+        <button
+          *ngIf="promotionToEdit"
+          class="btn btn-primary"
+          type="button"
+          (click)="updateForm()"
+          [disabled]="bannerForm.invalid || isLoading()"
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
