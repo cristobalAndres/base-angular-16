@@ -33,7 +33,10 @@
         />
       </div>
     </div>
-    <app-banners-table [banners]="bannerList()"></app-banners-table>
+    <app-banners-table
+      [banners]="bannerList()"
+      (editBannerEvent)="getBannerById($event)"
+    ></app-banners-table>
   </div>
   <div class="row">
     <app-error-retry

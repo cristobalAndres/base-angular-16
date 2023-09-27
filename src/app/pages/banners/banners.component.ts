@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { first, tap } from 'rxjs';
 import {
   ActionType,
   Pagination,
@@ -11,6 +12,7 @@ import { BannerListDto } from '../clients/shared/dtos/banner-list.dto';
 import { BannerFiltersDto } from '../clients/shared/dtos/banners-filter.dto';
 import { BannersService } from './data-access/banners-service';
 import { CreateBannerComponent } from './features/create-banner/create-banner.component';
+import { BannerDto } from './shared/dtos/banner-dto';
 
 @Component({
   selector: 'app-banners',
@@ -88,14 +90,25 @@ export class BannersComponent implements OnInit {
     });
   }
 
-  getBannerById() {
-    const bannerId = 'e8d5dc45-c050-4ab0-9973-46592f0eee14';
+  getBannerById(bannerId: string) {
     this.bannersService
       .getBannerById(bannerId)
-      .subscribe((result: BannerListDto) => {
-        // eslint-disable-next-line no-console
-        console.log('getBannerById: ', result);
-      });
+      .pipe(
+        first(),
+        tap((result: BannerDto) => this.openModalToEdit(result)),
+      )
+      .subscribe();
+  }
+
+  openModalToEdit(promotion: BannerDto) {
+    const modalRef = this.modalService.open(CreateBannerComponent, {
+      size: 'xl',
+      centered: true,
+    });
+
+    if (modalRef.componentInstance instanceof CreateBannerComponent) {
+      modalRef.componentInstance.promotionToEdit = promotion;
+    }
   }
 
   deleteBannerById() {
