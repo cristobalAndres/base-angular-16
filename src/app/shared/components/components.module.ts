@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { NavigateButtonComponent } from './buttons';
+import { IconButtonComponent, NavigateButtonComponent } from './buttons';
+import { ErrorRetryComponent } from './errors';
 import {
   ButtonDatepickerComponent,
   InputDatepickerComponent,
@@ -19,6 +20,7 @@ import { PaginationComponent } from './tables';
     InputNumberFilterComponent,
     InputTextFilterComponent,
     NavigateButtonComponent,
+    IconButtonComponent,
     PaginationComponent,
     ButtonDatepickerComponent,
     InputDatepickerComponent,
@@ -26,11 +28,13 @@ import { PaginationComponent } from './tables';
     RangeDatepickerFilterComponent,
     SelectComponent,
     SpinnerComponent,
+    ErrorRetryComponent,
   ],
   exports: [
     InputNumberFilterComponent,
     InputTextFilterComponent,
     NavigateButtonComponent,
+    IconButtonComponent,
     PaginationComponent,
     ButtonDatepickerComponent,
     InputDatepickerComponent,
@@ -38,6 +42,7 @@ import { PaginationComponent } from './tables';
     RangeDatepickerFilterComponent,
     SelectComponent,
     SpinnerComponent,
+    ErrorRetryComponent,
   ],
 })
 export class ComponentsModule {}
