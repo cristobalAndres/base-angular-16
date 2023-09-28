@@ -2,5 +2,14 @@ import { GetTransactionsCommonParamsDto } from '@app/shared/services/transaction
 
 export type GetTransactionsParamsDto = Pick<
   GetTransactionsCommonParamsDto,
-  'endDate' | 'startDate' | 'statusFilter' | 'perPage' | 'currentPage'
+  | 'endDate'
+  | 'startDate'
+  | 'statusFilter'
+  | 'payMethodFilter'
+  | 'storeName'
+  | 'posId'
+  | 'clienteId'
+  | 'userId'
+  | 'perPage'
+  | 'currentPage'
 >;

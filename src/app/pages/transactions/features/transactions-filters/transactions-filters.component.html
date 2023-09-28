@@ -1,16 +1,64 @@
 <div class="container">
-  <div class="row g-4">
-    <div class="col-md-7">
+  <div class="row g-1">
+    <!-- <div class="col-md-2">
+      <app-select [withPlaceholder]="false" [options]="dateRange" />
+    </div>
+    <div class="col-md-5">
       <app-range-datepicker
         (startDateChange)="onStartDateChange($event)"
         (endDateChange)="onEndDateChange($event)"
       />
+    </div> -->
+    <div class="col-md-9">
+      <app-range-datepicker-filter
+        (startDateChange)="onStartDateChange($event)"
+        (endDateChange)="onEndDateChange($event)"
+      />
     </div>
-    <div class="col-md-auto">
+    <div class="col-md-3">
+      <app-input-text-filter
+        [name]="'storeName'"
+        [placeHolderText]="'Local'"
+        [isLoading]="true"
+        (searchEvent)="onTextSearch($event)"
+      />
+    </div>
+    <!-- <div class="col-md-3">
+      <app-input-number-filter
+        [name]="'posId'"
+        [placeHolderNumber]="'Caja'"
+        [isLoading]="true"
+        (searchEvent)="onNumberSearch($event)"
+      />
+    </div> -->
+    <div class="col-md-3">
+      <app-select
+        placeholder="Método Pago"
+        [options]="payMethodOptions"
+        (optionChange)="onPayMethodChange($event)"
+      />
+    </div>
+    <div class="col-md-3">
       <app-select
         placeholder="Estados"
         [options]="statusOptions"
         (optionChange)="onStatusChange($event)"
+      />
+    </div>
+    <!-- <div class="col-md-3">
+      <app-input-text-filter
+        [name]="'clienteId'"
+        [placeHolderText]="'Rut'"
+        [isLoading]="true"
+        (searchEvent)="onTextSearch($event)"
+      />
+    </div> -->
+    <div class="col-md-3">
+      <app-input-text-filter
+        [name]="'userId'"
+        [placeHolderText]="'CognitoId'"
+        [isLoading]="true"
+        (searchEvent)="onTextSearch($event)"
       />
     </div>
     <div class="col-md-auto">

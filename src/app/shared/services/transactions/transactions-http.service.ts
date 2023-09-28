@@ -9,7 +9,7 @@ import {
   GetTransactionsCommonParamsDto,
   TransactionsResponseDto,
 } from './dtos';
-import { TransactionStatus } from './enums';
+import { TransactionPayMethod, TransactionStatus } from './enums';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsHttpService {
@@ -21,9 +21,14 @@ export class TransactionsHttpService {
     const {
       currentPage = 1,
       statusFilter = TransactionStatus.ALL,
+      payMethodFilter = TransactionPayMethod.ALL,
       perPage = 10,
       startDate,
       endDate,
+      storeName,
+      posId,
+      clienteId,
+      userId,
     } = getTransactionsCommonParamsDto;
 
     const httpParams = Object.entries({
@@ -31,8 +36,15 @@ export class TransactionsHttpService {
       perPage,
       currentPage,
       statusFilter,
+      payMethodFilter,
+      // startDate: startDate?.toUTCString(),
+      // endDate: endDate?.toUTCString(),
       startDate: startDate?.toISOString(),
       endDate: endDate?.toISOString(),
+      storeName,
+      posId,
+      clienteId,
+      userId,
     }).reduce((params, [key, value]) => {
       if (value !== undefined) params[key] ??= value;
       return params;
