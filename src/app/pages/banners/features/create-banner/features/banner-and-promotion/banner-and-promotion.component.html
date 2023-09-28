@@ -53,6 +53,7 @@
       <app-reactive-form-input-text
         inputId="to_date"
         [control]="bannerAndPromotionForm.controls.to_date"
+        [min]="bannerAndPromotionForm.controls.from_date.value?.toString()"
         type="date"
         label="To Date"
         placeholder=""

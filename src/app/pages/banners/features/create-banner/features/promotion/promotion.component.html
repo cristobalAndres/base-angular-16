@@ -53,6 +53,7 @@
       <app-reactive-form-input-text
         inputId="to_date"
         [control]="promotionForm.controls.to_date"
+        [min]="promotionForm.controls.from_date.value?.toString()"
         type="date"
         label="To Date"
         placeholder=""
@@ -185,7 +186,7 @@
           (click)="saveForm()"
           [disabled]="promotionForm.invalid || isLoading()"
         >
-          Save
+          Save {{ isLoading() }}
         </button>
         <button
           *ngIf="promotionToEdit"

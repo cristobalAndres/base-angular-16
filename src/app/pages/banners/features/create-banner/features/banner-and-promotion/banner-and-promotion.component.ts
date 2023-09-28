@@ -10,22 +10,20 @@ import {
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BannersService } from '@app/pages/banners/data-access/banners-service';
 import { BannerDto } from '@app/pages/banners/shared/dtos/banner-dto';
-import {
-  ActionType,
-  CreateBannerDto,
-  PromotionType,
-  UpdateBannerRequestDto,
-} from '@app/pages/clients/shared';
+import { ActionType, PromotionType } from '@app/pages/clients/shared';
 import { ReactiveFormInputTextComponent } from '@app/shared/components/reactive-form';
 import { ToastService } from '@app/shared/services';
 import { ConfirmModalService } from '@app/shared/services/modals/confirm-modal/confirm-modal.service';
-import { ConfirmModalResponse } from '@app/shared/services/modals/confirm-modal/enums/confirm-moda-respnse.enum';
-import { ToastsColors } from '@app/shared/services/toasts';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ListItem } from 'ng-multiselect-dropdown/multiselect.model';
-import { catchError, first, mergeMap, pipe, tap } from 'rxjs';
-import { Commerces } from '../../dtos/commerces.enum';
+import { finalize } from 'rxjs';
+import { PromotionsService } from '../../data-access/promotions.service';
+import {
+  PromotionFormDto,
+  PromotionFormSettingsDto,
+} from '../../dtos/promotion-form.dto';
+import { Commerces } from '../../enums/commerces.enum';
 
 @Component({
   selector: 'app-banner-and-promotion',
@@ -37,13 +35,15 @@ import { Commerces } from '../../dtos/commerces.enum';
     ReactiveFormInputTextComponent,
     NgMultiSelectDropDownModule,
   ],
-  providers: [BannersService],
+  providers: [BannersService, PromotionsService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BannerAndPromotionComponent implements OnInit {
   @Input() promotionToEdit: BannerDto | undefined;
 
   private readonly fb = inject(FormBuilder);
+  private readonly promotionsService = inject(PromotionsService);
+
   private readonly bannerService = inject(BannersService);
   private readonly toastService = inject(ToastService);
   private readonly modalService = inject(NgbModal);
@@ -160,69 +160,28 @@ export class BannerAndPromotionComponent implements OnInit {
       throw new Error('Formulario invalido');
     }
 
-    const result = await this.confirmModalService.open({
-      title: 'Confirmar',
-      message: '¿Está seguro que desea crear el banner?',
-      primaryButtonText: 'Confirmar',
-      secondaryButtonText: 'Cancelar',
-    });
-
-    if (result !== ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
-      return;
-    }
+    const settings: PromotionFormSettingsDto = {
+      modal: {
+        title: 'Confirmar',
+        message: '¿Está seguro que desea crear banner y promoción?',
+        primaryButtonText: 'Confirmar',
+        secondaryButtonText: 'Cancelar',
+      },
+      toast: {
+        errorMessage: 'Error al crear banner y promoción',
+        successMessage: 'Banner y promoción creado correctamente',
+      },
+    };
 
     this.isLoading.set(true);
-    this.toastService.show({
-      body: 'Cargando...',
-      color: ToastsColors.PRIMARY,
-      delay: 20000,
+    const saveForm$ = await this.promotionsService.saveForm({
+      image: this.previewImage,
+      form: this.bannerAndPromotionForm.value as PromotionFormDto,
+      settings,
+      typePromotion: PromotionType.BANNER_AND_PROMOTION,
     });
 
-    const formData = new FormData();
-    formData.append('file', this.previewImage);
-
-    this.bannerService
-      .uploadBannerImage(formData)
-      .pipe(
-        mergeMap(({ image_url }) => {
-          const commerces =
-            this.bannerAndPromotionForm.get('commerces')?.value ?? [];
-
-          const formValue = { ...this.bannerAndPromotionForm.value };
-
-          delete formValue.commerces;
-
-          const body = {
-            ...formValue,
-            image_banner_url: image_url,
-            image_tile_url: image_url,
-            filter_attributes: commerces?.map((i) => i.id.toString()),
-          };
-          return this.bannerService.createBanner(body as CreateBannerDto);
-        }),
-        catchError(() => {
-          this.isLoading.set(false);
-          this.toastService.clear();
-          this.toastService.show({
-            body: 'Error al crear banner and promotion',
-            color: ToastsColors.DANGER,
-            delay: 5000,
-          });
-          throw Error('Error al crear banner and promotion');
-        }),
-        tap(() => this.isLoading.set(false)),
-        tap(() => this.toastService.clear()),
-        tap(() =>
-          this.toastService.show({
-            body: 'Banner and promotion creado correctamente',
-            color: ToastsColors.SUCCESS,
-            delay: 2000,
-          }),
-        ),
-        tap(() => this.modalService.dismissAll()),
-        first(),
-      )
-      .subscribe();
+    saveForm$?.pipe(finalize(() => this.isLoading.set(false))).subscribe();
   }
 
   async updateForm() {
@@ -230,92 +189,28 @@ export class BannerAndPromotionComponent implements OnInit {
       throw new Error('Formulario invalido');
     }
 
-    const result = await this.confirmModalService.open({
-      title: 'Confirmar',
-      message: '¿Está seguro que desea actualizar banner and promotion?',
-      primaryButtonText: 'Confirmar',
-      secondaryButtonText: 'Cancelar',
-    });
-
-    if (result !== ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
-      return;
-    }
-
-    this.isLoading.set(true);
-    this.toastService.show({
-      body: 'Cargando...',
-      color: ToastsColors.PRIMARY,
-      delay: 20000,
-    });
-
-    if (this.previewImage) {
-      return this.updateBannerWithImage().subscribe();
-    }
-
-    return this.updateBanner(undefined)
-      .pipe(this.genericPipeToUpdate())
-      .subscribe();
-  }
-
-  updateBannerWithImage() {
-    if (!this.previewImage) {
-      throw new Error('Image is required');
-    }
-
-    const formData = new FormData();
-    formData.append('file', this.previewImage);
-
-    return this.bannerService.uploadBannerImage(formData).pipe(
-      mergeMap(({ image_url }) => {
-        return this.updateBanner(image_url);
-      }),
-      this.genericPipeToUpdate(),
-    );
-  }
-
-  updateBanner(image_url: string | undefined) {
-    const commerces = this.bannerAndPromotionForm.get('commerces')?.value ?? [];
-
-    const formValue = { ...this.bannerAndPromotionForm.value };
-
-    delete formValue.commerces;
-
-    const body = {
-      ...formValue,
-      image_banner_url: image_url ?? this.promotionToEdit?.image_banner_url,
-      image_tile_url: image_url ?? this.promotionToEdit?.image_tile_url,
-      filter_attributes: commerces?.map((i) => i.id.toString()),
+    const settings: PromotionFormSettingsDto = {
+      modal: {
+        title: 'Confirmar',
+        message: '¿Está seguro que desea actualizar el banner y promoción?',
+        primaryButtonText: 'Confirmar',
+        secondaryButtonText: 'Cancelar',
+      },
+      toast: {
+        errorMessage: 'Error al actualizar banner y promoción',
+        successMessage: 'Banner y promoción actualizado correctamente',
+      },
     };
 
-    return this.bannerService.updateBannerById(
-      this.promotionToEdit?.id ?? '',
-      body as UpdateBannerRequestDto,
-    );
-  }
+    this.isLoading.set(true);
+    const updateForm$ = await this.promotionsService.updateForm({
+      image: this.previewImage ?? undefined,
+      form: this.bannerAndPromotionForm.value as PromotionFormDto,
+      settings,
+      typePromotion: PromotionType.BANNER_AND_PROMOTION,
+      id: this.promotionToEdit?.id ?? '',
+    });
 
-  genericPipeToUpdate() {
-    return pipe(
-      catchError(() => {
-        this.isLoading.set(false);
-        this.toastService.clear();
-        this.toastService.show({
-          body: 'Error al actualizar banner and promotion',
-          color: ToastsColors.DANGER,
-          delay: 5000,
-        });
-        throw Error('Error al actualizar banner and promotion');
-      }),
-      tap(() => this.isLoading.set(false)),
-      tap(() => this.toastService.clear()),
-      tap(() =>
-        this.toastService.show({
-          body: 'Banner and promotion actualizado correctamente',
-          color: ToastsColors.SUCCESS,
-          delay: 2000,
-        }),
-      ),
-      tap(() => this.modalService.dismissAll()),
-      first(),
-    );
+    updateForm$?.pipe(finalize(() => this.isLoading.set(false))).subscribe();
   }
 }
