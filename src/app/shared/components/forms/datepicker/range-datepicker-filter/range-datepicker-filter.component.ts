@@ -17,20 +17,11 @@ import {
   NgbDatepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { SelectComponent, SelectionDto } from '../../select';
-import { ButtonDatepickerComponent } from '../button-datepicker';
-import { InputDatepickerComponent } from '../input-datepicker';
 
 @Component({
   selector: 'app-range-datepicker-filter',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgbDatepickerModule,
-    FormsModule,
-    SelectComponent,
-    InputDatepickerComponent,
-    ButtonDatepickerComponent,
-  ],
+  imports: [CommonModule, NgbDatepickerModule, FormsModule, SelectComponent],
   templateUrl: './range-datepicker-filter.component.html',
   styleUrls: ['./range-datepicker-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
