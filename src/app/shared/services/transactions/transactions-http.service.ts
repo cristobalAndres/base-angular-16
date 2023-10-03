@@ -37,8 +37,6 @@ export class TransactionsHttpService {
       currentPage,
       statusFilter,
       payMethodFilter,
-      // startDate: startDate?.toUTCString(),
-      // endDate: endDate?.toUTCString(),
       startDate: startDate?.toISOString(),
       endDate: endDate?.toISOString(),
       storeName,
