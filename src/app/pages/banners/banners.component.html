@@ -6,7 +6,7 @@
   <div class="card-body">
     <div class="row mb-2">
       <div class="col-sm-8">
-        <h5 class="card-title">Administra banners</h5>
+        <h5 class="card-title">Administra banners {{ hasError() }}</h5>
         <p class="card-subtitle text-body-secondary">
           Administra los banners, promociones y ofertas de CencoPayments.
         </p>
@@ -44,17 +44,24 @@
             />
           </div>
         </div>
-        <app-banners-table
-          [banners]="bannerList()"
-          (editBannerEvent)="getBannerById($event)"
-          (deleteBannerEvent)="deleteBannerById($event)"
-        ></app-banners-table>
-      </div>
-      <div class="row">
-        <app-error-retry
-          *ngIf="hasError()"
-          (emitRetryButton)="retryButtonClick()"
-        />
+        <hr />
+        <div class="row">
+          <div class="col">
+            <app-banners-table
+              *ngIf="!isLoading()"
+              [banners]="bannerList()"
+              (editBannerEvent)="getBannerById($event)"
+              (deleteBannerEvent)="deleteBannerById($event)"
+            ></app-banners-table>
+            <app-spinner *ngIf="isLoading()"></app-spinner>
+          </div>
+        </div>
+        <div class="row">
+          <app-error-retry
+            *ngIf="hasError()"
+            (emitRetryButton)="retryButtonClick()"
+          />
+        </div>
       </div>
     </div>
   </div>
