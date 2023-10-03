@@ -1,10 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { BannersService } from '@app/pages/banners/data-access/banners-service';
 import { RefreshService } from '@app/pages/banners/data-access/refresh-service/refresh.service';
-import {
-  CreateBannerDto,
-  UpdateBannerRequestDto,
-} from '@app/pages/clients/shared';
 import { ToastService } from '@app/shared/services';
 import { ConfirmModalService } from '@app/shared/services/modals/confirm-modal/confirm-modal.service';
 import { ToastsColors } from '@app/shared/services/toasts';
@@ -37,7 +33,7 @@ export class PromotionsService {
 
     const body = { ...formValue };
 
-    return this.bannerService.createBanner(body as CreateBannerDto).pipe(
+    return this.bannerService.createBanner(body).pipe(
       catchError(() => {
         this.toastService.clear();
         this.toastService.show({
@@ -85,10 +81,7 @@ export class PromotionsService {
 
     const body = { ...formValue };
 
-    return this.bannerService.updateBannerById(
-      id,
-      body as UpdateBannerRequestDto,
-    );
+    return this.bannerService.updateBannerById(id, body);
   }
 
   private genericPipeToUpdate(settings: PromotionFormSettingsDto) {
