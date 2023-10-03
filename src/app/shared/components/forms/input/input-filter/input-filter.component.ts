@@ -21,15 +21,16 @@ import {
 } from 'rxjs';
 
 @Component({
-  selector: 'app-input-text-filter',
+  selector: 'app-input-filter',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './input-text.component.html',
-  styleUrls: ['./input-text.component.scss'],
+  templateUrl: './input-filter.component.html',
+  styleUrls: ['./input-filter.component.scss'],
 })
-export class InputTextFilterComponent implements AfterViewInit, OnDestroy {
+export class InputFilterComponent implements AfterViewInit, OnDestroy {
   private inputEvent$!: Subscription;
 
+  @Input() type = 'text';
   @Input() name = '';
 
   @Input() placeHolderText = 'Buscar';
