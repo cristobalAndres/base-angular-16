@@ -1,14 +1,5 @@
 <div class="container">
   <div class="row g-1">
-    <!-- <div class="col-md-2">
-      <app-select [withPlaceholder]="false" [options]="dateRange" />
-    </div>
-    <div class="col-md-5">
-      <app-range-datepicker
-        (startDateChange)="onStartDateChange($event)"
-        (endDateChange)="onEndDateChange($event)"
-      />
-    </div> -->
     <div class="col-md-9">
       <app-range-datepicker-filter
         (startDateChange)="onStartDateChange($event)"
@@ -16,17 +7,20 @@
       />
     </div>
     <div class="col-md-3">
-      <app-input-text-filter
+      <app-input-filter
+        [type]="'text'"
         [name]="'storeName'"
         [placeHolderText]="'Local'"
         [isLoading]="true"
         (searchEvent)="onTextSearch($event)"
       />
     </div>
+    <!-- Filtro solicitado, pero el campo no es parte de la tabla, por lo que se deja implementado pero no visible-->
     <!-- <div class="col-md-3">
-      <app-input-number-filter
+      <app-input-filter
+        [type]="'number'"
         [name]="'posId'"
-        [placeHolderNumber]="'Caja'"
+        [placeHolderText]="'Caja'"
         [isLoading]="true"
         (searchEvent)="onNumberSearch($event)"
       />
@@ -45,8 +39,10 @@
         (optionChange)="onStatusChange($event)"
       />
     </div>
+    <!-- Filtro solicitado, pero el campo no es parte de la tabla, por lo que se deja implementado pero no visible-->
     <!-- <div class="col-md-3">
-      <app-input-text-filter
+      <app-input-filter
+        [type]="'type'"
         [name]="'clienteId'"
         [placeHolderText]="'Rut'"
         [isLoading]="true"
@@ -54,7 +50,8 @@
       />
     </div> -->
     <div class="col-md-3">
-      <app-input-text-filter
+      <app-input-filter
+        [type]="'text'"
         [name]="'userId'"
         [placeHolderText]="'CognitoId'"
         [isLoading]="true"
@@ -63,6 +60,7 @@
     </div>
     <div class="col-md-auto">
       <app-icon-button
+        text="text"
         [ngbTooltip]="'Limpiar filtros'"
         [icon]="'bi-eraser'"
         (clickEmiter)="filtersReset()"

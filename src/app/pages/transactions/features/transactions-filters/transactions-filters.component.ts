@@ -10,8 +10,7 @@ import {
 import { SharedModule } from '@app/shared';
 import { IconButtonComponent } from '@app/shared/components/buttons';
 import {
-  InputNumberFilterComponent,
-  InputTextFilterComponent,
+  InputFilterComponent,
   RangeDatepickerComponent,
   SelectComponent,
   SelectionDto,
@@ -39,11 +38,8 @@ export class TransactionsFiltersComponent {
     TransactionsFiltersService,
   );
 
-  @ViewChildren(InputTextFilterComponent)
-  inputTextFilterComponent!: QueryList<InputTextFilterComponent>;
-
-  @ViewChild(InputNumberFilterComponent)
-  inputNumberFilterComponent!: InputNumberFilterComponent;
+  @ViewChildren(InputFilterComponent)
+  inputFilterComponent!: QueryList<InputFilterComponent>;
 
   @ViewChild(RangeDatepickerComponent)
   rangeDatePickerComponent!: RangeDatepickerComponent;
@@ -63,8 +59,6 @@ export class TransactionsFiltersComponent {
     });
   }
 
-  //#region CargaCombos
-  //Metodos de Pago
   protected readonly payMethodOptions: SelectionDto<TransactionPayMethod>[] =
     Object.values(TransactionPayMethod).map((transactionPayMethod) => ({
       value: transactionPayMethod,
@@ -72,23 +66,18 @@ export class TransactionsFiltersComponent {
         TransactionPayMethodPipe.TRANSACTION_PAYMETHODS[transactionPayMethod],
     }));
 
-  //Estados
   protected readonly statusOptions: SelectionDto<TransactionStatus>[] =
     Object.values(TransactionStatus).map((transactionStatus) => ({
       value: transactionStatus,
       label: TransactionStatusPipe.TRANSACTION_STATUSES[transactionStatus],
     }));
-  //#endregion
 
-  //#region Filtro
-  //Estado
   protected onStatusChange(status: TransactionStatus | undefined) {
     this.transactionsFiltersService.updateTransactionsFilters({
       statusFilter: status,
     });
   }
 
-  //Metodo de Pago
   protected onPayMethodChange(payMethod: TransactionPayMethod | undefined) {
     this.transactionsFiltersService.updateTransactionsFilters({
       payMethodFilter: payMethod,
@@ -106,7 +95,7 @@ export class TransactionsFiltersComponent {
   protected onTextSearch(valueAndname: { value: string; name: string }) {
     if (valueAndname.name == 'storeName') {
       this.transactionsFiltersService.updateTransactionsFilters({
-        storeName: valueAndname.value, //this.receivedValue.value.toString(),
+        storeName: valueAndname.value,
       });
       return;
     }
@@ -122,16 +111,14 @@ export class TransactionsFiltersComponent {
       });
     }
   }
-  //#endregion
 
   protected filtersReset() {
     this.rangeDatePickerComponent.reset();
     this.selectComponents.toArray().forEach((selectComponent) => {
       selectComponent.reset();
     });
-    this.inputTextFilterComponent.toArray().forEach((inputComponent) => {
+    this.inputFilterComponent.toArray().forEach((inputComponent) => {
       inputComponent.reset();
     });
-    this.inputNumberFilterComponent.reset();
   }
 }
