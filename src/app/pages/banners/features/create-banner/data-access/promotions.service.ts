@@ -1,17 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { BannersService } from '@app/pages/banners/data-access/banners-service';
+import { RefreshService } from '@app/pages/banners/data-access/refresh-service/refresh.service';
 import {
   CreateBannerDto,
-  PromotionType,
   UpdateBannerRequestDto,
 } from '@app/pages/clients/shared';
 import { ToastService } from '@app/shared/services';
 import { ConfirmModalService } from '@app/shared/services/modals/confirm-modal/confirm-modal.service';
-import { ConfirmModalResponse } from '@app/shared/services/modals/confirm-modal/enums/confirm-moda-respnse.enum';
 import { ToastsColors } from '@app/shared/services/toasts';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ListItem } from 'ng-multiselect-dropdown/multiselect.model';
-import { catchError, first, mergeMap, pipe, tap } from 'rxjs';
+import { catchError, first, pipe, tap } from 'rxjs';
 import {
   PromotionFormDto,
   PromotionFormSettingsDto,
@@ -25,62 +23,21 @@ export class PromotionsService {
   private readonly toastService = inject(ToastService);
   private readonly modalService = inject(NgbModal);
   private readonly confirmModalService = inject(ConfirmModalService);
+  private readonly refreshService = inject(RefreshService);
 
-  async saveForm(data: {
-    image: File;
+  saveForm(data: {
     form: PromotionFormDto;
     settings: PromotionFormSettingsDto;
-    typePromotion: PromotionType;
   }) {
-    const { image, form, settings, typePromotion } = data;
+    const { form, settings } = data;
 
-    const result = await this.confirmModalService.open({
-      title: settings.modal.title,
-      message: settings.modal.message,
-      primaryButtonText: settings.modal.primaryButtonText,
-      secondaryButtonText: settings.modal.secondaryButtonText,
-    });
+    const formValue = { ...form };
 
-    if (result !== ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
-      return;
-    }
+    delete formValue.commerces;
 
-    this.toastService.show({
-      body: 'Cargando...',
-      color: ToastsColors.PRIMARY,
-      delay: 20000,
-    });
+    const body = { ...formValue };
 
-    const formData = new FormData();
-    formData.append('file', image);
-
-    return this.bannerService.uploadBannerImage(formData).pipe(
-      mergeMap(({ image_url }) => {
-        const commerces = form.commerces ?? [];
-        const formValue = { ...form };
-
-        delete formValue.commerces;
-
-        let body = {};
-
-        if (typePromotion === PromotionType.BANNER) {
-          body = this.getBodyByBanner(formValue, commerces, image_url);
-        }
-
-        if (typePromotion === PromotionType.PROMOTION) {
-          body = this.getBodyByPromotion(formValue, commerces, image_url);
-        }
-
-        if (typePromotion === PromotionType.BANNER_AND_PROMOTION) {
-          body = this.getBodyByBannderAndPromotion(
-            formValue,
-            commerces,
-            image_url,
-          );
-        }
-
-        return this.bannerService.createBanner(body as CreateBannerDto);
-      }),
+    return this.bannerService.createBanner(body as CreateBannerDto).pipe(
       catchError(() => {
         this.toastService.clear();
         this.toastService.show({
@@ -98,105 +55,19 @@ export class PromotionsService {
           delay: 2000,
         }),
       ),
+      tap(() => this.refreshService.refresh.next(true)),
       tap(() => this.modalService.dismissAll()),
       first(),
     );
   }
 
-  private getBodyByBanner(
-    formValue: CreateBannerDto,
-    commerces: ListItem[],
-    imagenUrl?: string,
-  ) {
-    return {
-      ...formValue,
-      image_banner_url: imagenUrl ?? formValue?.image_banner_url,
-      filter_attributes: commerces?.map((i) => i.id.toString()),
-    };
-  }
-
-  private getBodyByPromotion(
-    formValue: CreateBannerDto,
-    commerces: ListItem[],
-    imagenUrl?: string,
-  ) {
-    return {
-      ...formValue,
-      image_tile_url: imagenUrl ?? formValue?.image_tile_url,
-      filter_attributes: commerces?.map((i) => i.id.toString()),
-    };
-  }
-
-  private getBodyByBannderAndPromotion(
-    formValue: CreateBannerDto,
-    commerces: ListItem[],
-    imagenUrl?: string,
-  ) {
-    return {
-      ...formValue,
-      image_banner_url: imagenUrl ?? formValue?.image_banner_url,
-      image_tile_url: imagenUrl ?? formValue?.image_tile_url,
-      filter_attributes: commerces?.map((i) => i.id.toString()),
-    };
-  }
-
-  async updateForm(data: {
+  updateForm(data: {
     id: string;
-    image?: File;
     form: PromotionFormDto;
     settings: PromotionFormSettingsDto;
-    typePromotion: PromotionType;
   }) {
-    const { image, settings } = data;
-
-    const result = await this.confirmModalService.open({
-      title: settings.modal.title,
-      message: settings.modal.message,
-      primaryButtonText: settings.modal.primaryButtonText,
-      secondaryButtonText: settings.modal.secondaryButtonText,
-    });
-
-    if (result !== ConfirmModalResponse.PRIMARY_BUTTON_CLICKED) {
-      return;
-    }
-    this.toastService.show({
-      body: 'Cargando...',
-      color: ToastsColors.PRIMARY,
-      delay: 20000,
-    });
-
-    if (image) {
-      return this.updateBannerWithImage(data);
-    }
-
     const dataToUpdate = { ...data, image_url: undefined };
     return this.updateBanner(dataToUpdate).pipe(
-      this.genericPipeToUpdate(data.settings),
-    );
-  }
-
-  private updateBannerWithImage(data: {
-    id: string;
-    image?: File;
-    form: PromotionFormDto;
-    settings: PromotionFormSettingsDto;
-    typePromotion: PromotionType;
-  }) {
-    const { image } = data;
-
-    if (!image) {
-      throw new Error('Image is required');
-    }
-
-    const formData = new FormData();
-    formData.append('file', image);
-
-    return this.bannerService.uploadBannerImage(formData).pipe(
-      mergeMap(({ image_url }) => {
-        const dataToUpdate = { ...data, image_url };
-
-        return this.updateBanner(dataToUpdate);
-      }),
       this.genericPipeToUpdate(data.settings),
     );
   }
@@ -205,30 +76,14 @@ export class PromotionsService {
     id: string;
     form: PromotionFormDto;
     settings: PromotionFormSettingsDto;
-    typePromotion: PromotionType;
-    image_url?: string;
   }) {
-    const { id, form, image_url } = data;
-
-    const commerces = form.commerces ?? [];
+    const { id, form } = data;
 
     const formValue = { ...form };
 
     delete formValue.commerces;
 
-    let body = {};
-
-    if (form.type_promotion === PromotionType.BANNER) {
-      body = this.getBodyByBanner(formValue, commerces, image_url);
-    }
-
-    if (form.type_promotion === PromotionType.PROMOTION) {
-      body = this.getBodyByPromotion(formValue, commerces, image_url);
-    }
-
-    if (form.type_promotion === PromotionType.BANNER_AND_PROMOTION) {
-      body = this.getBodyByBannderAndPromotion(formValue, commerces, image_url);
-    }
+    const body = { ...formValue };
 
     return this.bannerService.updateBannerById(
       id,
@@ -255,7 +110,8 @@ export class PromotionsService {
           delay: 2000,
         }),
       ),
-      tap(() => this.modalService.dismissAll()),
+      tap(() => this.modalService.dismissAll({ refresh: true })),
+      tap(() => this.refreshService.refresh.next(true)),
       first(),
     );
   }
