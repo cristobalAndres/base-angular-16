@@ -12,7 +12,7 @@
       (click)="closeModal()"
     ></button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body mx-4">
     <div class="mb-4">
       <app-select
         *ngIf="!promotionToEdit"
@@ -23,30 +23,67 @@
       />
     </div>
 
-    <ng-container
-      *ngIf="
-        promotionTypeSelected() === PROMOTION_OPTIONS.BANNER ||
-        promotionToEdit?.type_promotion === PROMOTION_OPTIONS.BANNER
-      "
-    >
-      <app-banner [promotionToEdit]="promotionToEdit" />
-    </ng-container>
-    <ng-container
-      *ngIf="
-        promotionTypeSelected() === PROMOTION_OPTIONS.PROMOTION ||
-        promotionToEdit?.type_promotion === PROMOTION_OPTIONS.PROMOTION
-      "
-    >
-      <app-promotion [promotionToEdit]="promotionToEdit" />
-    </ng-container>
-    <ng-container
-      *ngIf="
-        promotionTypeSelected() === PROMOTION_OPTIONS.BANNER_AND_PROMOTION ||
-        promotionToEdit?.type_promotion ===
-          PROMOTION_OPTIONS.BANNER_AND_PROMOTION
-      "
-    >
-      <app-banner-and-promotion [promotionToEdit]="promotionToEdit" />
+    <ng-container *ngIf="promotionToEdit || promotionTypeSelected()">
+      <h5 class="mb-4">1. Images</h5>
+
+      <div class="mb-4">
+        <app-image-form
+          *ngIf="promotionTypeSelected() || promotionToEdit"
+          [isBannerRequired]="isBannerRequired"
+          [showBanner]="showBanner"
+          [isPromotionRequired]="isPromotionRequired"
+          [showPromotion]="showPromotion"
+          [previewBannerImageURL]="promotionToEdit?.image_banner_url ?? ''"
+          [previewPromotionImageURL]="promotionToEdit?.image_tile_url ?? ''"
+          (bannerFileChange)="onBannerFileChange($event)"
+          (promotionFileChange)="onPromotionFileChange($event)"
+          (isValidForm)="imagesFormValue($event)"
+        />
+      </div>
+
+      <h5 class="mb-4">2. Banner and Promotion info</h5>
+
+      <div class="mb-4">
+        <app-common-form
+          [promotionToEdit]="promotionToEdit"
+          (formChanges)="commonFormValue($event)"
+        />
+      </div>
+
+      <ng-container
+        *ngIf="
+          isPromotionOrBannerAndPromotion ||
+          (promotionToEdit &&
+            promotionToEdit?.type_promotion !== PROMOTION_OPTIONS.BANNER)
+        "
+      >
+        <h5 class="mb-4">3. Promotion info</h5>
+        <app-promotion
+          [promotionToEdit]="promotionToEdit"
+          (formChanges)="promotionFormValue($event)"
+        />
+      </ng-container>
+
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button
+          *ngIf="!promotionToEdit"
+          class="btn btn-primary"
+          type="button"
+          (click)="saveForm()"
+          [disabled]="isDisabledButton"
+        >
+          Save
+        </button>
+        <button
+          *ngIf="promotionToEdit"
+          class="btn btn-primary"
+          type="button"
+          (click)="saveForm()"
+          [disabled]="isloading() || !isValidForm"
+        >
+          Update {{ isloading() }}
+        </button>
+      </div>
     </ng-container>
   </div>
 </div>
