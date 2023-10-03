@@ -1,4 +1,3 @@
-<!-- eslint-disable @angular-eslint/template/elements-content -->
 <form class="form-row g-1">
   <div class="form-group row g-1">
     <app-select
@@ -59,35 +58,39 @@
 <ng-template #datePickerIni let-date="date">
   <div class="input-group">
     <input
-      #dpDate
+      #dpStartDate
       class="form-control"
       placeholder="yyyy-mm-dd"
       name="dpFromDateIni"
       [(ngModel)]="inputDateIni"
-      (blur)="validateInput(dpDate.value, 1)"
+      (blur)="validateInput(dpStartDate.value, 1)"
     />
     <button
       class="btn btn-outline-secondary bi bi-calendar3"
-      (click)="datepicker.toggle()"
+      (click)="datepicker.toggle(); buttonClick('startDate')"
       type="button"
-    ></button>
+    >
+      <!-- espacio en blanco que elimina error @angular-eslint -->
+    </button>
   </div>
 </ng-template>
 
 <ng-template #datePickerFin let-date="date">
   <div class="input-group">
     <input
-      #dpDate
+      #dpEndDate
       class="form-control"
       placeholder="yyyy-mm-dd"
       name="dpFromDateFin"
       [(ngModel)]="inputDateFin"
-      (blur)="validateInput(dpDate.value, 2)"
+      (blur)="validateInput(dpEndDate.value, 2)"
     />
     <button
       class="btn btn-outline-secondary bi bi-calendar3"
-      (click)="datepicker.toggle()"
+      (click)="datepicker.toggle(); buttonClick('endDate')"
       type="button"
-    ></button>
+    >
+      <!-- espacio en blanco que elimina error @angular-eslint -->
+    </button>
   </div>
 </ng-template>

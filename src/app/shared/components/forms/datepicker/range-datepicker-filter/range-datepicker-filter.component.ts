@@ -40,6 +40,7 @@ export class RangeDatepickerFilterComponent {
   private readonly calendar = inject(NgbCalendar);
   protected readonly formatter = inject(NgbDateParserFormatter);
 
+  protected dateEdit: string | undefined;
   protected inputDateIni = this.formatter.format(this.calendar.getToday());
   protected inputDateFin: string | undefined;
 
@@ -82,24 +83,26 @@ export class RangeDatepickerFilterComponent {
   }
 
   protected onDateSelection(date: NgbDate) {
-    if (!this.startDate() && !this.endDate()) {
+    if (this.selectionType === 'single') {
       this.startDate.set(date);
       this.inputDateIni = this.formatter.format(date);
-      return;
-    }
 
-    if (!this.endDate() && date.after(this.startDate())) {
       this.endDate.set(date);
       this.inputDateFin = this.formatter.format(date);
-      return;
-    }
-
-    this.startDate.set(date);
-    this.inputDateIni = this.formatter.format(date);
-
-    if (this.selectionType === 'single') {
-      this.endDate.set(null);
-      this.inputDateFin = '';
+    } else {
+      if (this.dateEdit === 'startDate') {
+        if (date.after(this.endDate())) {
+          this.endDate.set(date);
+        } else {
+          this.startDate.set(date);
+        }
+      } else if (this.dateEdit === 'endDate') {
+        if (date.before(this.startDate())) {
+          this.startDate.set(date);
+        } else {
+          this.endDate.set(date);
+        }
+      }
     }
   }
 
@@ -149,7 +152,6 @@ export class RangeDatepickerFilterComponent {
     }
   }
 
-  // Método para analizar una cadena de fecha en formato "yyyy-MM-dd"
   private parseDate(input: string): string | null {
     const parts = input.split('-');
     if (parts.length === 3) {
@@ -166,20 +168,21 @@ export class RangeDatepickerFilterComponent {
         day >= 1 &&
         day <= 31
       ) {
-        // La fecha es válida, devolverla en el formato deseado
         return `${year}-${this.padNumber(month)}-${this.padNumber(day)}`;
       }
     }
-    // La fecha no es válida, devuelve null
     return null;
   }
 
-  // Método auxiliar para asegurarse de que los números tengan dos dígitos
   private padNumber(num: number): string {
     return num < 10 ? `0${num}` : `${num}`;
   }
 
-  protected calculateCalendar() {
+  protected buttonClick(dateEdit: string) {
+    this.dateEdit = dateEdit;
+  }
+
+  protected calculateCalendar(): void {
     this.displayMonths = this.selectionType === 'single' ? 1 : 2;
 
     const iniDateStr =
@@ -208,7 +211,7 @@ export class RangeDatepickerFilterComponent {
     this.inputDateIni = this.formatter.format(this.startDate());
     this.inputDateFin =
       this.selectionType === 'single'
-        ? ''
+        ? this.formatter.format(this.startDate())
         : this.formatter.format(this.endDate());
   }
 
