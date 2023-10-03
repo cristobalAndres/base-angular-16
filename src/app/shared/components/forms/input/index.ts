@@ -1,2 +1,1 @@
-export * from './input-number';
-export * from './input-text';
+export * from './input-filter';

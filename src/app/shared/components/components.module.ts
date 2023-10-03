@@ -3,8 +3,7 @@ import { NgModule } from '@angular/core';
 import { IconButtonComponent, NavigateButtonComponent } from './buttons';
 import { ErrorRetryComponent } from './errors';
 import {
-  InputNumberFilterComponent,
-  InputTextFilterComponent,
+  InputFilterComponent,
   RangeDatepickerComponent,
   RangeDatepickerFilterComponent,
   SelectComponent,
@@ -15,8 +14,7 @@ import { PaginationComponent } from './tables';
 @NgModule({
   imports: [
     CommonModule,
-    InputNumberFilterComponent,
-    InputTextFilterComponent,
+    InputFilterComponent,
     NavigateButtonComponent,
     IconButtonComponent,
     PaginationComponent,
@@ -27,8 +25,7 @@ import { PaginationComponent } from './tables';
     ErrorRetryComponent,
   ],
   exports: [
-    InputNumberFilterComponent,
-    InputTextFilterComponent,
+    InputFilterComponent,
     NavigateButtonComponent,
     IconButtonComponent,
     PaginationComponent,
