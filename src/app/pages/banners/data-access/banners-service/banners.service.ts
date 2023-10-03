@@ -7,7 +7,9 @@ import { GetBannersParams } from '@app/pages/clients/shared/dtos/get-banners-par
 import { createHttpParams } from '@app/shared/utils';
 import { BannerDto } from '../../shared/dtos/banner-dto';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class BannersService {
   private readonly httpClient = inject(HttpClient);
 
@@ -35,10 +37,15 @@ export class BannersService {
   }
 
   updateBannerById(bannerId: string, body: UpdateBannerRequestDto) {
-    return this.httpClient.put(`/offers/${bannerId}`, body);
+    const cleanBody = Object.fromEntries(
+      Object.entries(body).filter(([, value]) => value !== ''),
+    );
+    return this.httpClient.put(`/offers/${bannerId}`, cleanBody);
   }
 
-  uploadBannerImage(formData: FormData) {
+  uploadBannerImage(image: File) {
+    const formData = new FormData();
+    formData.append('file', image);
     return this.httpClient.post<{ image_url: string }>(
       `offers/upload-offer-image`,
       formData,
