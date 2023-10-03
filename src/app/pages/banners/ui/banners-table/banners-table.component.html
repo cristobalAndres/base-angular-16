@@ -4,23 +4,29 @@
       <tr class="d-flex">
         <th class="col-1">Id promoción</th>
         <th class="col-2">Título</th>
+        <th class="col-1">Tipo</th>
         <th class="col-1">Tipo de acción</th>
         <th class="col-1">Url de acción</th>
-        <th class="col-2">Desde</th>
-        <th class="col-2">Hasta</th>
+        <th class="col-1">Desde</th>
+        <th class="col-1">Hasta</th>
         <th class="col-1">Activo</th>
         <th class="col-1">Creado</th>
-        <th class="col-1">Herramienta</th>
+        <th class="col-2">Herramienta</th>
       </tr>
     </thead>
     <tbody class="table-hover">
       <tr class="d-flex" *ngFor="let banner of banners">
         <th class="col-1">{{ banner.id }}</th>
         <th class="col-2">{{ banner.title_text }}</th>
+        <th class="col-1">{{ banner.type_promotion | promotionType }}</th>
         <th class="col-1">{{ banner.action_type }}</th>
-        <th class="col-1">{{ banner.action_type_url }}</th>
-        <th class="col-2">{{ banner.from_date | date : 'dd/MM/yyyy' }}</th>
-        <th class="col-2">{{ banner.to_date | date : 'dd/MM/yyyy' }}</th>
+        <th class="col-1">
+          <ng-container *ngIf="banner.action_type_url">
+            <a [href]="banner.action_type_url" target="_blank">link</a>
+          </ng-container>
+        </th>
+        <th class="col-1">{{ banner.from_date | date : 'dd/MM/yyyy' }}</th>
+        <th class="col-1">{{ banner.to_date | date : 'dd/MM/yyyy' }}</th>
         <th class="col-1">
           <div class="form-check form-switch">
             <input
@@ -32,7 +38,7 @@
           </div>
         </th>
         <th class="col-1">{{ banner.created_at | date : 'medium' }}</th>
-        <th class="col-1">
+        <th class="col-2">
           <div class="tool-button">
             <app-icon-button
               icon="bi bi-pencil-square"
