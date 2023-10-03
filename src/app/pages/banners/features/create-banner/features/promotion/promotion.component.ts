@@ -16,7 +16,7 @@ import { ReactiveFormInputTextComponent } from '@app/shared/components/reactive-
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { Subscription } from 'rxjs';
 import { PromotionsService } from '../../data-access/promotions.service';
-import { PromotionFormData } from '../../dtos/promotion-form-controls.dto copy';
+import { PromotionFormData } from '../../dtos/promotion-form-controls.dto';
 
 @Component({
   selector: 'app-promotion',

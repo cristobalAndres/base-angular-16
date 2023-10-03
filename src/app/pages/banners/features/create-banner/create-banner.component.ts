@@ -24,7 +24,7 @@ import {
 import {
   PromotionFormControlsDto,
   PromotionFormData,
-} from './dtos/promotion-form-controls.dto copy';
+} from './dtos/promotion-form-controls.dto';
 
 @Component({
   selector: 'app-create-banner',
