@@ -1,48 +1,68 @@
 <div class="row pb-4">
   <app-navigate-button to="/" message="Volver" />
 </div>
-<div class="container-fluid">
-  <div class="row row-actions">
-    <div class="col create-action">
-      <div class="row">
-        <app-icon-button
-          icon="bi bi-upload"
-          tooltip="Crear banner"
-          (clickEmiter)="createBanner()"
-        ></app-icon-button>
+
+<div class="card shadow border-light row" *ngIf="!hasError()">
+  <div class="card-body">
+    <div class="row mb-2">
+      <div class="col-sm-8">
+        <h5 class="card-title">Administra banners</h5>
+        <p class="card-subtitle text-body-secondary">
+          Administra los banners, promociones y ofertas de CencoPayments.
+        </p>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="action-buttons">
+          <app-icon-button
+            icon="bi bi-upload"
+            tooltip="Crear banner"
+            (clickEmiter)="createBanner()"
+          ></app-icon-button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row" *ngIf="!hasError()">
-    <div class="row justify-content-between align-items-center g-4">
-      <div class="col-12 col-xl-8">
-        <app-banners-filter
-          [isLoading]="isLoading()"
-          (searchEvent)="onSearchButtonClick($event)"
-        ></app-banners-filter>
-      </div>
-      <div class="col-12 col-xl-4">
-        <app-pagination
-          *ngIf="paginationBannerList().total_items !== 0"
-          itemName="Banners"
-          (pageChange)="onBannerCurrentPageChange($event)"
-          [page]="paginationBannerList().current_page!"
-          [totalPages]="paginationBannerList().total_pages!"
-          [totalItems]="paginationBannerList().total_items!"
-          [itemsPerPage]="paginationBannerList().per_page"
-        />
+
+    <div class="container-fluid">
+      <div class="row" *ngIf="!hasError()">
+        <div class="row justify-content-between align-items-center g-4">
+          <div class="col-12 col-xl-8">
+            <app-banners-filter
+              [isLoading]="isLoading()"
+              (searchEvent)="onSearchButtonClick($event)"
+            ></app-banners-filter>
+          </div>
+          <div class="col-12 col-xl-4">
+            <app-pagination
+              *ngIf="paginationBannerList().total_items !== 0"
+              itemName="Banners"
+              (pageChange)="onBannerCurrentPageChange($event)"
+              [page]="paginationBannerList().current_page!"
+              [totalPages]="paginationBannerList().total_pages!"
+              [totalItems]="paginationBannerList().total_items!"
+              [itemsPerPage]="paginationBannerList().per_page"
+            />
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col">
+            <app-banners-table
+              *ngIf="!isLoading()"
+              [banners]="bannerList()"
+              (editBannerEvent)="getBannerById($event)"
+              (deleteBannerEvent)="deleteBannerById($event)"
+            ></app-banners-table>
+            <app-spinner *ngIf="isLoading()"></app-spinner>
+          </div>
+        </div>
+        <div class="row">
+          <app-error-retry
+            *ngIf="hasError()"
+            (emitRetryButton)="retryButtonClick()"
+          />
+        </div>
       </div>
     </div>
-    <app-banners-table
-      [banners]="bannerList()"
-      (editBannerEvent)="getBannerById($event)"
-      (deleteBannerEvent)="deleteBannerById($event)"
-    ></app-banners-table>
-  </div>
-  <div class="row">
-    <app-error-retry
-      *ngIf="hasError()"
-      (emitRetryButton)="retryButtonClick()"
-    />
   </div>
 </div>

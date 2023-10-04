@@ -3,9 +3,10 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from '@app/shared/components/forms';
 import { ReactiveFormInputTextComponent } from '@app/shared/components/reactive-form';
+import { NgbAccordionModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateBannerComponent } from './create-banner.component';
-import { BannerAndPromotionComponent } from './features/banner-and-promotion/banner-and-promotion.component';
-import { BannerComponent } from './features/banner/banner.component';
+import { CommonFormComponent } from './features/common-form/common-form.component';
+import { ImageFormComponent } from './features/images-form/images-form.component';
 import { PromotionComponent } from './features/promotion/promotion.component';
 
 @NgModule({
@@ -14,10 +15,13 @@ import { PromotionComponent } from './features/promotion/promotion.component';
     CommonModule,
     ReactiveFormInputTextComponent,
     ReactiveFormsModule,
-    BannerComponent,
     PromotionComponent,
-    BannerAndPromotionComponent,
+
     SelectComponent,
+    NgbAccordionModule,
+    NgbAlertModule,
+    CommonFormComponent,
+    ImageFormComponent,
   ],
 })
 export class CreateBannerModule {}

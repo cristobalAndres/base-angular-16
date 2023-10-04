@@ -1,5 +1,9 @@
-.create-action {
-  text-align: right;
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 .search-banner {
   width: 230px;
