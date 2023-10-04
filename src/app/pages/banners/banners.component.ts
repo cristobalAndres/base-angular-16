@@ -1,15 +1,17 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '@app/shared/services';
 import { ConfirmModalService } from '@app/shared/services/modals/confirm-modal/confirm-modal.service';
 import { ConfirmModalResponse } from '@app/shared/services/modals/confirm-modal/enums/confirm-moda-respnse.enum';
 import { ToastsColors } from '@app/shared/services/toasts';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, first, tap } from 'rxjs';
+import { catchError, finalize, first, tap } from 'rxjs';
 import { Pagination } from '../clients/shared';
 import { BannerListResponseDto } from '../clients/shared/dtos/banner-list-response.dto';
 import { BannerListDto } from '../clients/shared/dtos/banner-list.dto';
 import { BannerFiltersDto } from '../clients/shared/dtos/banners-filter.dto';
 import { BannersService } from './data-access/banners-service';
+import { RefreshService } from './data-access/refresh-service/refresh.service';
 import { CreateBannerComponent } from './features/create-banner/create-banner.component';
 import { BannerDto } from './shared/dtos/banner-dto';
 
@@ -23,6 +25,7 @@ export class BannersComponent implements OnInit {
   private readonly modalService = inject(NgbModal);
   private readonly confirmModalService = inject(ConfirmModalService);
   private readonly toastService = inject(ToastService);
+  private readonly refreshService = inject(RefreshService);
 
   modalReference: NgbModalRef | undefined;
 
@@ -38,6 +41,13 @@ export class BannersComponent implements OnInit {
   private currentPageSig = signal(1);
   private search = signal<BannerFiltersDto>({ search: '' });
   protected hasError = signal<boolean>(false);
+
+  refresh$ = this.refreshService.refresh
+    .pipe(
+      takeUntilDestroyed(),
+      tap(() => this.getAllBanners()),
+    )
+    .subscribe();
 
   ngOnInit() {
     this.getAllBanners();
@@ -87,11 +97,18 @@ export class BannersComponent implements OnInit {
   }
 
   getBannerById(bannerId: string) {
+    this.toastService.show({
+      body: 'Cargando registro.',
+      color: ToastsColors.PRIMARY,
+      delay: 30000,
+    });
+
     this.bannersService
       .getBannerById(bannerId)
       .pipe(
         first(),
         tap((result: BannerDto) => this.openModalToEdit(result)),
+        finalize(() => this.toastService.clear()),
       )
       .subscribe();
   }

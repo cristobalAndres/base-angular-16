@@ -48,7 +48,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     {
       name: 'Banner',
       link: '/banners',
-      icon: 'archive',
+      icon: 'image',
       permissions: [Role.ADMIN],
       isActiveRoute: false,
     },

@@ -1,3 +1,5 @@
+import { PromotionType } from '../enums';
+
 export type BannerListDto = Readonly<{
   action_type: string;
   action_type_url: string;
@@ -8,5 +10,5 @@ export type BannerListDto = Readonly<{
   id_promotion: string;
   title_text: string;
   to_date: string;
-  type_promotion: string;
+  type_promotion: PromotionType;
 }>;

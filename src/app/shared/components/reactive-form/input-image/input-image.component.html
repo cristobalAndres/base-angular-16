@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="mb-3 row">
+    <label [for]="inputId" class="col-sm-4 col-form-label">{{ label }}</label>
+    <div class="col-sm-8">
+      <input
+        type="file"
+        class="form-control"
+        [id]="inputId"
+        accept="image/png, image/jpeg"
+        (change)="onFileChange($event)"
+        [formControl]="control"
+        [ngClass]="{
+          'is-invalid': control.invalid  && control.touched,
+          'is-valid': control.valid && control.touched,
+        }"
+      />
+      <ng-container *ngIf="control.invalid && control.touched">
+        <div class="invalid-feedback" *ngIf="control.hasError('maxFileSize')">
+          El peso máximo de la imagen es de 1MB
+        </div>
+        <div class="invalid-feedback" *ngIf="!control.hasError('maxFileSize')">
+          Es requerida la imagen
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mb-3">
+    <img
+      *ngIf="previewImage || previewUrlImage"
+      [src]="
+        previewImage ? URL.createObjectURL(previewImage) : previewUrlImage ?? ''
+      "
+      alt=""
+      class="img-thumbnail custom-image"
+    />
+    <svg
+      *ngIf="!previewImage && !previewUrlImage"
+      class="img-thumbnail custom-image"
+    >
+      <rect width="100%" height="100%" fill="#868e96"></rect>
+      <text x="40%" y="50%" fill="#dee2e6">No image</text>
+    </svg>
+  </div>
+</div>
