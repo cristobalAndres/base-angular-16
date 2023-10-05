@@ -21,3 +21,7 @@ app-root {
 .text-white {
   color: white;
 }
+
+.currency::before {
+  content: '$ ';
+}

@@ -1,0 +1,30 @@
+<form [formGroup]="promotionForm" autocomplete="off">
+  <div class="row">
+    <div class="col">
+      <app-reactive-form-input-text
+        inputId="action_button_title"
+        [control]="promotionForm.controls.action_button_title"
+        type="text"
+        label="Action Button Title"
+        placeholder=""
+      />
+      <app-reactive-form-input-text
+        inputId="terms_and_conditions"
+        [control]="promotionForm.controls.terms_and_conditions"
+        type="text"
+        label="Terms And Conditions"
+        placeholder=""
+      />
+    </div>
+    <div class="col-1"></div>
+    <div class="col">
+      <app-reactive-form-input-text
+        inputId="main_text"
+        [control]="promotionForm.controls.main_text"
+        type="text"
+        label="Main Text"
+        placeholder=""
+      />
+    </div>
+  </div>
+</form>

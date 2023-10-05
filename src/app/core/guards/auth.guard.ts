@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
 import { Auth } from 'aws-amplify';
 
-const canLoadGuard: CanMatchFn = () => {
+const canMatchGuard: CanMatchFn = () => {
   const router = inject(Router);
   return checkAuthenticatedUser(router);
 };
@@ -13,9 +13,9 @@ const canActivateGuard: CanActivateFn = () => {
 };
 
 export const AuthGuard = {
-  canLoad: canLoadGuard,
+  canMatch: canMatchGuard,
   canActivate: canActivateGuard,
-};
+} as const;
 
 async function checkAuthenticatedUser(router: Router) {
   try {

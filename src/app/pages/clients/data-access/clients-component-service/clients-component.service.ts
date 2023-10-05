@@ -1,6 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { PaginationDto } from '@app/shared/dtos';
 import { lastValueFrom } from 'rxjs';
-import { ClientDto, Pagination } from '../../shared';
+import { ClientDto } from '../../shared';
 import { ClientsService } from '../clients-service';
 
 @Injectable()
@@ -11,7 +12,7 @@ export class ClientsComponentService {
   private readonly currentPageSig = signal(1);
   private readonly clientsSig = signal<ClientDto[]>([]);
   private readonly searchSig = signal<string | undefined>(undefined);
-  private readonly paginationSig = signal<Pagination>({
+  private readonly paginationSig = signal<PaginationDto>({
     current_page: 1,
     per_page: 0,
     total_items: 0,

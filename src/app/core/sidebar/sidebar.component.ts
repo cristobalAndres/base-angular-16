@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { Role } from '@app/shared/enums';
 import { EventType, NavigationEnd, Router } from '@angular/router';
+import { Role } from '@app/shared/enums';
 import { ServicesMonitorService } from '@app/shared/services';
 import { MonitorResponseDto } from '@app/shared/services/services-monitor/dtos';
 import { Subscription, filter, interval, lastValueFrom } from 'rxjs';
@@ -35,6 +35,27 @@ export class SidebarComponent implements OnInit, OnDestroy {
       name: 'Transacciones',
       link: '/transactions',
       icon: 'cash-stack',
+      permissions: [Role.ADMIN],
+      isActiveRoute: false,
+    },
+    {
+      name: 'Reportes',
+      link: '/reports',
+      icon: 'archive',
+      permissions: [Role.ADMIN],
+      isActiveRoute: false,
+    },
+    {
+      name: 'Banner',
+      link: '/banners',
+      icon: 'image',
+      permissions: [Role.ADMIN],
+      isActiveRoute: false,
+    },
+    {
+      name: 'Cash In',
+      link: '/cash-in',
+      icon: 'credit-card',
       permissions: [Role.ADMIN],
       isActiveRoute: false,
     },

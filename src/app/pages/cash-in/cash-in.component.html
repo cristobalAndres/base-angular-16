@@ -1,0 +1,52 @@
+<div class="row pb-4">
+  <app-navigate-button to="/" message="Volver" />
+</div>
+
+<div
+  class="card shadow border-light row"
+  *ngIf="!hasErrorSig(); else errorTemplate"
+>
+  <div class="card-body">
+    <div class="mb-2">
+      <h5 class="card-title">Visualiza Cash In</h5>
+      <p class="card-subtitle text-body-secondary">
+        Obtiene información de cash ins registrados
+      </p>
+    </div>
+    <div class="container-fluid">
+      <div class="row justify-content-between align-items-center g-4">
+        <div class="col-12 col-xl-8">
+          <app-cash-ins-filters (changeSearch)="searchCashIns($event)" />
+        </div>
+        <div class="col-12 col-xl-4">
+          <app-pagination
+            *ngIf="paginationSig() as pagination"
+            itemName="cash ins"
+            [page]="pagination.current_page"
+            (pageChange)="changePage($event)"
+            [totalPages]="pagination.total_pages"
+            [totalItems]="pagination.total_items"
+            [itemsPerPage]="pagination.per_page"
+          />
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col">
+        <app-cash-ins-table
+          *ngIf="!isLoadingSig(); else loadingTemplate"
+          [cashIns]="cashInsSig() ?? []"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #errorTemplate>
+  <app-error-retry (emitRetryButton)="retry()" />
+</ng-template>
+
+<ng-template #loadingTemplate>
+  <app-spinner />
+</ng-template>
