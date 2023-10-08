@@ -65,7 +65,7 @@ export class CommonFormComponent implements OnInit, OnDestroy {
     to_date: ['', Validators.required],
     country: ['CL'],
     commerces: [[] as ListItem[], [Validators.required]],
-    priority: [undefined as number | undefined],
+    priority: [0],
   });
 
   ngOnInit() {
@@ -95,7 +95,7 @@ export class CommonFormComponent implements OnInit, OnDestroy {
             this.promotionToEdit?.filter_attributes ?? [],
           ).includes(i.id.toString());
         }),
-        priority: this.promotionToEdit.priority,
+        priority: this.promotionToEdit.priority ?? 0,
       });
     }
 
