@@ -11,4 +11,5 @@ export type BannerListDto = Readonly<{
   title_text: string;
   to_date: string;
   type_promotion: PromotionType;
+  priority?: number;
 }>;

@@ -15,6 +15,7 @@ export type CommonFormControlDto = Partial<{
   to_date: string | null;
   country: string | null;
   commerces: ListItem[] | null | undefined;
+  priority: number | null;
 }>;
 
 export interface CommonFormData {

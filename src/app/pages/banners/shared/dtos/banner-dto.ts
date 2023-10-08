@@ -25,5 +25,6 @@ export type BannerDto = Readonly<
     image_banner_url: string;
     image_tile_url: string;
     image_full_url: string;
+    priority: number;
   }>
 >;

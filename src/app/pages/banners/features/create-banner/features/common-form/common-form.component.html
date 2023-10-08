@@ -129,6 +129,14 @@
         label="Subtitle Text"
         placeholder=""
       />
+
+      <app-reactive-form-input-text
+        inputId="priority"
+        label="Prioridad"
+        placeholder=""
+        type="number"
+        [control]="commonForm.controls.priority"
+      />
     </div>
   </div>
 </form>
