@@ -22,7 +22,9 @@ export class BannersService {
 
   createBanner(body: CreateBannerDto) {
     const cleanBody = Object.fromEntries(
-      Object.entries(body).filter(([, value]) => value !== ''),
+      Object.entries(body).filter(
+        ([, value]) => value !== '' && value !== null && value !== undefined,
+      ),
     );
 
     return this.httpClient.post<string>(`/offers`, cleanBody);
@@ -38,7 +40,9 @@ export class BannersService {
 
   updateBannerById(bannerId: string, body: UpdateBannerRequestDto) {
     const cleanBody = Object.fromEntries(
-      Object.entries(body).filter(([, value]) => value !== ''),
+      Object.entries(body).filter(
+        ([, value]) => value !== '' && value !== null && value !== undefined,
+      ),
     );
     return this.httpClient.put(`/offers/${bannerId}`, cleanBody);
   }
