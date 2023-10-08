@@ -11,6 +11,7 @@
         <th class="col-1">Hasta</th>
         <th class="col-1">Activo</th>
         <th class="col-1">Creado</th>
+        <th class="col-1">Prioridad</th>
         <th class="col-2">Herramienta</th>
       </tr>
     </thead>
@@ -38,6 +39,7 @@
           </div>
         </th>
         <th class="col-1">{{ banner.created_at | date : 'medium' }}</th>
+        <th class="col-1">{{ banner.priority }}</th>
         <th class="col-2">
           <div class="tool-button">
             <app-icon-button
