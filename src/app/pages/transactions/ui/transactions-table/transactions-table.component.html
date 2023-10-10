@@ -22,6 +22,13 @@
         <th class="col-3" scope="col">Cognito ID</th>
       </tr>
     </thead>
+    <tbody *ngIf="transactions.length === 0">
+      <tr>
+        <td colspan="19" class="text-center">
+          No existen registros para los filtros seleccionados
+        </td>
+      </tr>
+    </tbody>
     <tbody>
       <tr
         *ngFor="let transaction of transactions; trackBy: trackByTransactionId"

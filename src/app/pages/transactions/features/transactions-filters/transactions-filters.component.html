@@ -1,20 +1,66 @@
 <div class="container">
-  <div class="row g-4">
-    <div class="col-md-7">
-      <app-range-datepicker
+  <div class="row g-1">
+    <div class="col-md-9">
+      <app-range-datepicker-filter
         (startDateChange)="onStartDateChange($event)"
         (endDateChange)="onEndDateChange($event)"
       />
     </div>
-    <div class="col-md-auto">
+    <div class="col-md-3">
+      <app-input-filter
+        [type]="'text'"
+        [name]="'storeName'"
+        [placeHolderText]="'Local'"
+        [isLoading]="true"
+        (searchEvent)="onTextSearch($event)"
+      />
+    </div>
+    <!-- Filtro solicitado, pero el campo no es parte de la tabla, por lo que se deja implementado pero no visible-->
+    <!-- <div class="col-md-3">
+      <app-input-filter
+        [type]="'number'"
+        [name]="'posId'"
+        [placeHolderText]="'Caja'"
+        [isLoading]="true"
+        (searchEvent)="onNumberSearch($event)"
+      />
+    </div> -->
+    <div class="col-md-3">
+      <app-select
+        placeholder="Método Pago"
+        [options]="payMethodOptions"
+        (optionChange)="onPayMethodChange($event)"
+      />
+    </div>
+    <div class="col-md-3">
       <app-select
         placeholder="Estados"
         [options]="statusOptions"
         (optionChange)="onStatusChange($event)"
       />
     </div>
+    <!-- Filtro solicitado, pero el campo no es parte de la tabla, por lo que se deja implementado pero no visible-->
+    <!-- <div class="col-md-3">
+      <app-input-filter
+        [type]="'type'"
+        [name]="'clienteId'"
+        [placeHolderText]="'Rut'"
+        [isLoading]="true"
+        (searchEvent)="onTextSearch($event)"
+      />
+    </div> -->
+    <div class="col-md-3">
+      <app-input-filter
+        [type]="'text'"
+        [name]="'userId'"
+        [placeHolderText]="'CognitoId'"
+        [isLoading]="true"
+        (searchEvent)="onTextSearch($event)"
+      />
+    </div>
     <div class="col-md-auto">
       <app-icon-button
+        text="text"
         [ngbTooltip]="'Limpiar filtros'"
         [icon]="'bi-eraser'"
         (clickEmiter)="filtersReset()"

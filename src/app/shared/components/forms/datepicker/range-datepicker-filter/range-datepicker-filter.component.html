@@ -1,0 +1,96 @@
+<form class="form-row g-1">
+  <div class="form-group row g-1">
+    <app-select
+      [class]="selectClass"
+      [withPlaceholder]="false"
+      [options]="dateRange"
+      (optionChange)="onSelectionChange($event)"
+    />
+    <div
+      class="form-group g-1 row"
+      [class]="contentClass"
+      style="margin-top: 0px; padding-right: 0px"
+    >
+      <div [class]="datePickerClass">
+        <div class="dp-hidden position-absolute">
+          <div class="input-group">
+            <input
+              name="datepicker"
+              class="form-control"
+              ngbDatepicker
+              #datepicker="ngbDatepicker"
+              [autoClose]="'outside'"
+              (dateSelect)="onDateSelection($event)"
+              [displayMonths]="displayMonths"
+              [dayTemplate]="dayTemplate"
+              outsideDays="hidden"
+              [startDate]="startDate()!"
+              tabindex="-1"
+            />
+            <ng-template #dayTemplate let-date let-focused="focused">
+              <span
+                class="custom-day"
+                [class.focused]="focused"
+                [class.range]="isRange(date)"
+                [class.faded]="isHovered(date) || isInnerRange(date)"
+                (mouseenter)="hoveredDate.set(date)"
+                (mouseleave)="hoveredDate.set(null)"
+              >
+                {{ date.day }}
+              </span>
+            </ng-template>
+          </div>
+        </div>
+        <ng-container
+          *ngTemplateOutlet="datePickerIni; context: { date: startDate }"
+        />
+      </div>
+      <div class="col-4 col-md-6" *ngIf="selectionType === 'range'">
+        <ng-container
+          *ngTemplateOutlet="datePickerFin; context: { date: endDate }"
+        />
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- TODO: Move this to a separated component -->
+<ng-template #datePickerIni let-date="date">
+  <div class="input-group">
+    <input
+      #dpStartDate
+      class="form-control"
+      placeholder="yyyy-mm-dd"
+      name="dpFromDateIni"
+      [(ngModel)]="inputDateIni"
+      (blur)="validateInput(dpStartDate.value, 1)"
+    />
+    <button
+      class="btn btn-outline-secondary bi bi-calendar3"
+      (click)="datepicker.toggle(); buttonClick('startDate')"
+      type="button"
+    >
+      <!-- espacio en blanco que elimina error @angular-eslint -->
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #datePickerFin let-date="date">
+  <div class="input-group">
+    <input
+      #dpEndDate
+      class="form-control"
+      placeholder="yyyy-mm-dd"
+      name="dpFromDateFin"
+      [(ngModel)]="inputDateFin"
+      (blur)="validateInput(dpEndDate.value, 2)"
+    />
+    <button
+      class="btn btn-outline-secondary bi bi-calendar3"
+      (click)="datepicker.toggle(); buttonClick('endDate')"
+      type="button"
+    >
+      <!-- espacio en blanco que elimina error @angular-eslint -->
+    </button>
+  </div>
+</ng-template>
