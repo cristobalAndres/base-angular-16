@@ -8,9 +8,4 @@
       <app-menu-item [menu]="menu" [isActive]="isMouseHover" />
     </li>
   </ul>
-  <ul class="monitor nav flex-column justify-content-end">
-    <li class="nav-item" *ngFor="let metric of monitorResponse.metrics">
-      <app-monitor-item [metric]="metric" [isActive]="isMouseHover" />
-    </li>
-  </ul>
 </nav>

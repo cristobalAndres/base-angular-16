@@ -22,35 +22,7 @@ export class HomeComponent {
       title: 'Clientes',
       description: 'Busca, edita, bloquea y ve los detalles del cliente.',
       route: '/clients',
-      permissions: [Role.ADMIN],
-    },
-    {
-      icon: 'cash-stack',
-      title: 'Transacciones',
-      description: 'Busca y ve los detalles de las transacciones.',
-      route: '/transactions',
-      permissions: [Role.ADMIN],
-    },
-    {
-      icon: 'archive',
-      title: 'Reportes',
-      description: 'Busca y genera los reportes disponibles.',
-      route: '/reports',
-      permissions: [Role.ADMIN],
-    },
-    {
-      icon: 'image',
-      title: 'Banners',
-      description: 'Busca, edita y elimina los banners mostrados en la app.',
-      route: '/banners',
-      permissions: [Role.ADMIN],
-    },
-    {
-      icon: 'credit-card',
-      title: 'Cash In',
-      description: 'Busca los cash in actuales.',
-      route: '/cash-in',
-      permissions: [Role.ADMIN],
+      // permissions: [Role.ADMIN],
     },
   ];
 

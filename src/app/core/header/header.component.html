@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img
-        src="../../../../assets/logo-CencoPay-2023.svg"
+        src="../../../../assets/happy-smile.svg"
         alt=""
         width="80"
         height="50"
@@ -17,7 +17,7 @@
           id="dropdownBasic1"
           ngbDropdownToggle
         >
-          {{ user?.attributes?.email }}
+          {{ user ?? 'Usuario Prueba Test' }}
         </button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
           <button ngbDropdownItem (click)="logout()">Sign Out</button>

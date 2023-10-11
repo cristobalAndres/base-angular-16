@@ -1,9 +1,6 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { EventType, NavigationEnd, Router } from '@angular/router';
-import { Role } from '@app/shared/enums';
-import { ServicesMonitorService } from '@app/shared/services';
-import { MonitorResponseDto } from '@app/shared/services/services-monitor/dtos';
-import { Subscription, filter, interval, lastValueFrom } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 import { MenuItemDto } from './dtos';
 
 @Component({
@@ -11,14 +8,7 @@ import { MenuItemDto } from './dtos';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit, OnDestroy {
-  private servicesMonitor = inject(ServicesMonitorService);
-  private refreshInMinutes = 1000 * 60 * 5; // 5 min
-
-  private requestInterval = interval(this.refreshInMinutes).subscribe(() => {
-    void this.loadMonitorData();
-  });
-
+export class SidebarComponent implements OnDestroy {
   private router = inject(Router);
   private routerSub!: Subscription;
 
@@ -28,35 +18,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       name: 'Clientes',
       link: '/clients',
       icon: 'file-person',
-      permissions: [Role.ADMIN],
-      isActiveRoute: false,
-    },
-    {
-      name: 'Transacciones',
-      link: '/transactions',
-      icon: 'cash-stack',
-      permissions: [Role.ADMIN],
-      isActiveRoute: false,
-    },
-    {
-      name: 'Reportes',
-      link: '/reports',
-      icon: 'archive',
-      permissions: [Role.ADMIN],
-      isActiveRoute: false,
-    },
-    {
-      name: 'Banner',
-      link: '/banners',
-      icon: 'image',
-      permissions: [Role.ADMIN],
-      isActiveRoute: false,
-    },
-    {
-      name: 'Cash In',
-      link: '/cash-in',
-      icon: 'credit-card',
-      permissions: [Role.ADMIN],
+      // permissions: [Role.ADMIN],
       isActiveRoute: false,
     },
   ];
@@ -73,35 +35,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
       });
   }
 
-  protected monitorResponse: MonitorResponseDto = { metrics: [] };
-  protected isMonitorLoading = true;
-  protected hasMonitorError = false;
-
   protected isMouseHover = false;
 
   setMouseHover(isHover: boolean) {
     this.isMouseHover = isHover;
   }
 
-  ngOnInit(): void {
-    void this.loadMonitorData();
-  }
-
-  async loadMonitorData() {
-    try {
-      const resMonitorService = await lastValueFrom(
-        this.servicesMonitor.getStatusServices(),
-      );
-      this.monitorResponse = resMonitorService;
-
-      this.isMonitorLoading = false;
-    } catch {
-      this.hasMonitorError = true;
-    }
-  }
-
   ngOnDestroy(): void {
-    this.requestInterval.unsubscribe();
     this.routerSub.unsubscribe();
   }
 }

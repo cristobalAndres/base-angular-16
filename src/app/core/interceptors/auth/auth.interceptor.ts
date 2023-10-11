@@ -5,7 +5,6 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '@environment';
 import { Auth } from 'aws-amplify';
 import { Observable, from, map, switchMap } from 'rxjs';
 
@@ -15,13 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
-    const isInternalRequest = [environment.apiReportUrl].some((baseUrl) =>
-      request.url.startsWith(baseUrl),
-    );
-
     // Avoid sending the access token to external APIs
-    if (!isInternalRequest && request.url.startsWith('http'))
-      return next.handle(request);
 
     return from(Auth.currentSession()).pipe(
       map((session) => session.getAccessToken()),

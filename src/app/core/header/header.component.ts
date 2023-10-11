@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Auth } from 'aws-amplify';
+import { Router } from '@angular/router';
 import { AuthenticatorService } from '@aws-amplify/ui-angular';
-import { Router } from "@angular/router";
+import { Auth } from 'aws-amplify';
 // import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -11,24 +11,26 @@ import { Router } from "@angular/router";
   // imports: [NgbDropdownModule],
 })
 export class HeaderComponent {
-  user: any;
+  user: unknown;
 
   constructor(
     public authenticator: AuthenticatorService,
-    private router: Router) {
-      // config.autoClose = 'outside';
-    }
+    private router: Router,
+  ) {
+    // config.autoClose = 'outside';
+  }
 
   async ngOnInit() {
     try {
       this.user = await Auth.currentAuthenticatedUser();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log('error fetching user', error);
     }
   }
 
   logout() {
-    this.authenticator.signOut()
-    this.router.navigate(['/login']);
+    this.authenticator.signOut();
+    void this.router.navigate(['/login']);
   }
 }
